@@ -1,0 +1,27 @@
+{
+    "name": "lab19/cart",
+    "authors": [
+        {
+            "name": "Luke Siedle",
+            "email": "luke@lab19.dev"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Lab19\\Cart\\": "src/"
+        }
+    },
+    "require": {
+        "nuwave/lighthouse": "^3.7",
+        "barryvdh/laravel-cors": "^0.11.3"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5",
+        "orchestra/testbench-browser-kit": "^3.5"
+    },
+    "scripts": {
+        "test": [
+            ".\\vendor\\bin\\phpunit"
+        ]
+    }
+}
