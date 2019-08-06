@@ -1,0 +1,17 @@
+extend type Query {
+    products: [Product!]!
+        @paginate(
+            type: "paginator",
+            model: "Lab19\\Cart\\Module\\Products\\Product",
+            scopes: ["published", "inStock"]
+        )
+}
+
+type Product {
+    id: ID!
+    title: String!
+    status: String!
+    published: Int!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

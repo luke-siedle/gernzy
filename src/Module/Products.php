@@ -21,5 +21,6 @@
          */
         public function boot()
         {
+            $this->loadMigrationsFrom(__DIR__.'/Products/Migrations');
         }
     }

@@ -39,6 +39,7 @@
             $this->artisan('migrate', ['--database' => 'testbench'])->run();
             $this->loadLaravelMigrations(['--database' => 'testbench']);
             $this->withFactories(dirname(__DIR__) . '/Module/Users/factories');
+            $this->withFactories(dirname(__DIR__) . '/Module/Products/factories');
             $this->seed(UsersSeeder::class);
             $this->withoutExceptionHandling();
         }

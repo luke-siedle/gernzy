@@ -89,3 +89,4 @@ input UpdateCartInput {
 }
 
 #import ../Module/Users/GraphQL/user.graphql
+#import ../Module/Products/GraphQL/products.graphql
