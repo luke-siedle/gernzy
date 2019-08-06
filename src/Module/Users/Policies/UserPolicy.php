@@ -13,9 +13,13 @@ class UserPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function update(User $me)
+    public function update(User $me, User $user)
     {
-        return true;
+        if( $user ){
+            return $me->isAdmin() || $me->id === $user->id;
+        }
+
+        return $me->isAdmin();
     }
 
     /**
@@ -27,10 +31,14 @@ class UserPolicy
      */
     public function view(User $me, ?User $user = null ): bool
     {
-        if( $user && $me->id === $user->id ){
-            return true;
+        // If a model is available, we can check, but this isn't always the case
+        // for example, when fetching a list of users
+        // Discussed in some detail here
+        // https://github.com/nuwave/lighthouse/issues/244
+        if( $user ){
+            return $me->isAdmin() || $me->id === $user->id;
         }
 
-        return $me->is_admin === 1;
+        return $me->isAdmin();
     }
 }

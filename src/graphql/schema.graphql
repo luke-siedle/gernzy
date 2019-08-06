@@ -14,8 +14,7 @@ type Query {
             policy: "Lab19\\Cart\\Module\\Users\\Policies\\UserPolicy"
         )
 
-    user(id: ID @eq): User
-        @find(model: "Lab19\\Cart\\Module\\Users\\User")
+    user(id: ID @eq): User @find(model: "Lab19\\Cart\\Module\\Users\\User")
         @can(
             ability: "view",
             model: "Lab19\\Cart\\Module\\Users\\User",

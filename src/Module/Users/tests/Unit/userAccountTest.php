@@ -226,6 +226,39 @@
             $response->assertSee('You are not authorized to access user');
         }
 
+        public function testGuestUserCannotReadUsers(): void
+        {
+            $token = 'invalid-token';
+
+            $response = $this->postGraphQL(['query' => '
+                {
+                    users(count:10) {
+                        data {
+                            id
+                        }
+                    }
+                }
+            '], [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]);
+
+            $response->assertSee('You are not authorized to access users');
+
+            $response = $this->postGraphQL(['query' => '
+                {
+                    user(id:1) {
+                        id
+                        name
+                        email
+                    }
+                }
+            '], [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]);
+
+            $response->assertSee('You are not authorized to access user');
+        }
+
         public function testAdminUserCanReadUsers(): void
         {
             $adminUserLoginResponse = $this->graphQL('
