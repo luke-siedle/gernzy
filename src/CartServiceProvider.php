@@ -55,13 +55,8 @@ class CartServiceProvider extends ServiceProvider
         ));
 
         // Bind services
-        $this->app->singleton('Lab19\SessionService', function ($app) {
-            return new SessionService();
-        });
-
-        $this->app->singleton('Lab19\UserService', function ($app) {
-            return new UserService();
-        });
+        $this->app->singleton('Lab19\SessionService', SessionService::class );
+        $this->app->singleton('Lab19\UserService', UserService::class );
 
         $mutations = [
             'Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations'

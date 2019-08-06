@@ -30,7 +30,8 @@ type CartProduct {
 }
 
 extend type Mutation {
-    logIn(input: LoginInput! @spread) : LoginPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logIn")
+    logIn(input: LoginInput! @spread) : LogInPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logIn")
+    logOut : LogOutPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logOut")
 }
 
 input LoginInput {
@@ -38,7 +39,11 @@ input LoginInput {
     password: String!
 }
 
-type LoginPayload {
+type LogInPayload {
     user: User
     token: String
+}
+
+type LogOutPayload {
+    success: Boolean!
 }

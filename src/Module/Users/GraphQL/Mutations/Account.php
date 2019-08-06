@@ -30,4 +30,15 @@ class Account
 
         return $user;
     }
+
+    public function logOut($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $userService = App::make('Lab19\UserService');
+
+        $result = $userService->logOut($context->request()->bearerToken());
+
+        return [
+            'success' => $result
+        ];
+    }
 }

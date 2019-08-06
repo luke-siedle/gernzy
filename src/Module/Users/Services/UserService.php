@@ -40,6 +40,18 @@
             }
         }
 
+        public function logOut(){
+            $session = App::make('Lab19\SessionService');
+            $token = $session->getToken();
+            $user = User::where('session_token', '=', $token)->first();
+            if( $user ){
+                $user->session_token = null;
+                $user->save();
+            }
+
+            return (bool)$session->close();
+        }
+
         public function getFromToken( String $token ){
             return User::where('session_token', '=', $token)->first();
         }

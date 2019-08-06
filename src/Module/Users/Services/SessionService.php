@@ -4,17 +4,21 @@
 
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\Session;
+    use Illuminate\Http\Request;
 
     class SessionService {
 
         const NAMESPACE = 'cart';
 
-        public function __construct(){
+        public function __construct( Request $request ){
             $this->session = new Session;
             $this->session->token = Str::random(60);
             $this->session->data = [
                 'cart_uuid' => Str::uuid()
             ];
+            if( $request->bearerToken() ){
+                $this->session->token = $request->bearerToken();
+            }
         }
 
         public function setFromToken( $token ){
@@ -39,6 +43,10 @@
 
         public function save(){
             $this->session->save();
+        }
+
+        public function close(){
+            return $this->session->delete();
         }
 
         public function get( $key = null ){
