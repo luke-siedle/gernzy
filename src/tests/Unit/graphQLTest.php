@@ -18,29 +18,16 @@
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
             $response = $this->graphQL('
                 {
-                    users(count:10) {
-                        data {
-                            id
-                            name
-                        }
-                        paginatorInfo {
-                            currentPage
-                            lastPage
-                        }
-                    }
+                  __type(name: "User") {
+                    name
+                  }
                 }
             ');
 
             $response->assertDontSee('errors');
 
-            $response->assertJsonCount(10, 'data.users.data');
-
             $response->assertJsonStructure([
-                'data' => [
-                    'users' => [
-                        'data' => [[ 'id', 'name' ]]
-                    ]
-                ]
+                'data' => [ '__type' => [ 'name' ] ]
             ]);
         }
     }

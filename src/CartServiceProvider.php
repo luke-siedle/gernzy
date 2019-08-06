@@ -12,6 +12,8 @@ use Lab19\Cart\Module\Orders as CoreOrders;
 use Lab19\Cart\Module\Users as CoreUsers;
 
 use Lab19\Cart\Module\Users\Services\SessionService;
+use Lab19\Cart\Module\Users\Services\UserService;
+use Lab19\Cart\AuthServiceProvider;
 
 
 class CartServiceProvider extends ServiceProvider
@@ -28,6 +30,7 @@ class CartServiceProvider extends ServiceProvider
         $this->app->register(CorsServiceProvider::class);
 
         // Register core packages
+        $this->app->register(AuthServiceProvider::class);
         $this->app->register(CoreShop::class);
         $this->app->register(CoreUsers::class);
         $this->app->register(CoreProducts::class);
@@ -46,18 +49,23 @@ class CartServiceProvider extends ServiceProvider
         // Add CORS dependency package to middleware
         $this->app['config']->set('lighthouse.route.middleware', array_merge(
             $middleware, [
-                \Barryvdh\Cors\HandleCors::class
+                \Barryvdh\Cors\HandleCors::class,
+                \Lab19\Cart\Middleware\CartMiddleware::class
             ]
         ));
-
-        $mutations = [
-            'Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations'
-        ];
 
         // Bind services
         $this->app->singleton('Lab19\SessionService', function ($app) {
             return new SessionService();
         });
+
+        $this->app->singleton('Lab19\UserService', function ($app) {
+            return new UserService();
+        });
+
+        $mutations = [
+            'Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations'
+        ];
 
         // $this->app['config']->set('lighthouse.namespaces.mutations', [] );
     }

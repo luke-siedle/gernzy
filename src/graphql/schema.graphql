@@ -6,8 +6,21 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query {
 
-    users: [User!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Module\\Users\\User")
-    user(id: ID @eq): User @find(model: "Lab19\\Cart\\Module\\Users\\User")
+    users: [User!]!
+        @paginate(type: "paginator" model: "Lab19\\Cart\\Module\\Users\\User")
+        @can(
+            ability: "view",
+            model: "Lab19\\Cart\\Module\\Users\\User",
+            policy: "Lab19\\Cart\\Module\\Users\\Policies\\UserPolicy"
+        )
+
+    user(id: ID @eq): User
+        @find(model: "Lab19\\Cart\\Module\\Users\\User")
+        @can(
+            ability: "view",
+            model: "Lab19\\Cart\\Module\\Users\\User",
+            policy: "Lab19\\Cart\\Module\\Users\\Policies\\UserPolicy"
+        )
 
     orders: [Order!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Module\\Orders\\Order")
     order(id: ID @eq): Order @find(model: "Lab19\\Cart\\Module\\Orders\\Order")

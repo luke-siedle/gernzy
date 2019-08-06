@@ -1,6 +1,6 @@
 input CreateAccountInput {
     name: String!
-    email: String @rules(apply: ["required", "email"])
+    email: String @rules(apply: ["required", "email", "unique:cart_users,email"])
     password: String!
     token: String
 }
@@ -27,4 +27,18 @@ type SetSessionPayload {
 type CartProduct {
     id: ID!
     quantity: Int!
+}
+
+extend type Mutation {
+    logIn(input: LoginInput! @spread) : LoginPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logIn")
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+type LoginPayload {
+    user: User
+    token: String
 }

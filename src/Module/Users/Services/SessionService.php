@@ -27,8 +27,17 @@
             }
         }
 
+        public function setUserId( Int $id ){
+            $this->session->user_id = $id;
+            $this->session->save();
+        }
+
         public function update( Array $array ){
             $this->session->data = array_merge( $this->session->data, $array );
+            $this->save();
+        }
+
+        public function save(){
             $this->session->save();
         }
 
