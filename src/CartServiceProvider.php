@@ -48,17 +48,20 @@ class CartServiceProvider extends ServiceProvider
 
         $middleware = $this->app['config']->get('lighthouse.route.middleware') ?? [];
 
-        // Add CORS dependency package to middleware
-        array_unshift($middleware, \Barryvdh\Cors\HandleCors::class);
-        array_unshift($middleware, \Lab19\Cart\Middleware\CartMiddleware::class);
+        $this->app['config']->set('lighthouse.route.middleware', array_merge($middleware, [
 
-        $this->app['config']->set('lighthouse.route.middleware', $middleware);
+            // Add CORS dependency package to middleware
+            \Barryvdh\Cors\HandleCors::class,
+
+            // Add cart middleware
+            \Lab19\Cart\Middleware\CartMiddleware::class
+        ]));
 
         // Bind services
-        $this->app->singleton('Lab19\SessionService', SessionService::class );
-        $this->app->singleton('Lab19\UserService', UserService::class );
-        $this->app->singleton('Lab19\OrderService', OrderService::class );
-        $this->app->singleton('Lab19\CartService', CartService::class );
+        $this->app->bind('Lab19\SessionService', SessionService::class );
+        $this->app->bind('Lab19\UserService', UserService::class );
+        $this->app->bind('Lab19\OrderService', OrderService::class );
+        $this->app->bind('Lab19\CartService', CartService::class );
 
         $directives = [
             'Lab19\\Cart\\Module\\Users\\GraphQL\\Directives'

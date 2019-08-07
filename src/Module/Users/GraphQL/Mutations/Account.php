@@ -45,11 +45,13 @@ class Account
     public function me($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $userService = App::make('Lab19\UserService');
+        $sessionService = App::make('Lab19\SessionService');
         $me = $userService->getUser();
         if( ! $me ){
             $cartService = App::make('Lab19\CartService');
             $me = [
-                'cart' => $cartService->getCart()
+                'cart' => $cartService->getCart(),
+                'session' => $sessionService->session
             ];
         }
 

@@ -4,6 +4,7 @@
 
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\User;
+    use Lab19\Cart\Module\Users\Session;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
     use App;
@@ -64,12 +65,14 @@
                 }
 
                 // Where it's a user-less session
-                if( $token === $session->getToken() ){
+                // and the session exists
+                if( $session->exists() && $token === $session->getToken() ){
                     return $session->close();
                 }
 
                 return false;
             }
+
             return false;
         }
 

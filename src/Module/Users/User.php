@@ -63,7 +63,7 @@ class User extends Authenticatable
      * @returns boolean
      */
     public function session(){
-        return $this->belongsTo(Session::class);
+        return $this->hasOneThrough(Session::class, Cart::class);
     }
 
     /**

@@ -32,6 +32,7 @@
             if( $token ){
                 $userService = App::make('Lab19\UserService');
                 $user = $userService->getFromToken( $token );
+
                 if( $user instanceof User ){
                     $request->merge(['user' => $user]);
                     $request->setUserResolver(function () use ($user) {

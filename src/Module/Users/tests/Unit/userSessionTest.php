@@ -1,6 +1,9 @@
 <?php
     use Lab19\Cart\Testing\TestCase;
 
+    /**
+     * @group Session
+     */
     class TestUserSession extends TestCase
     {
         public function testUserCanInitiateAndResumeSession(): void
@@ -22,23 +25,29 @@
 
             $start = $response->decodeResponseJson();
 
-            $this->assertNotNull( $start['data']['createSession']['token'] );
+            $token = $start['data']['createSession']['token'];
 
-            $response = $this->graphQL('
-                mutation {
-                    createSession {
-                        token
+            $this->assertNotNull( $token );
+
+            $response = $this->postGraphQL(['query' => '
+                {
+                    me {
+                        session {
+                            token
+                        }
                     }
                 }
-            ');
+            '], [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]);
 
             $resume = $response->decodeResponseJson();
 
-            $this->assertNotNull( $resume['data']['createSession']['token'] );
+            $this->assertNotNull( $resume['data']['me']['session']['token'] );
 
             $this->assertSame(
-                $start['data']['createSession']['token'],
-                $resume['data']['createSession']['token']
+                $token,
+                $resume['data']['me']['session']['token']
             );
         }
     }

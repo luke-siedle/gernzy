@@ -19,9 +19,19 @@
             $this->session->data = [
                 'cart_uuid' => Str::uuid()
             ];
+
+            // If the request provides a bearer token
+            // we can potentially get the session from the request
             if( $this->request->bearerToken() ){
                 $this->session->token = $request->bearerToken();
+                if( $request->session && $request->session->id ){
+                    $this->session = $request->session;
+                }
             }
+        }
+
+        public function exists(){
+            return $this->session->id !== null;
         }
 
         public function setFromToken( $token ){
