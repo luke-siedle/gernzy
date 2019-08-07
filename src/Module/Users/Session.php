@@ -4,6 +4,7 @@ namespace Lab19\Cart\Module\Users;
 
 use Illuminate\Database\Eloquent\Model;
 use Lab19\Cart\Module\Orders\Cart;
+use Lab19\Cart\Module\Users\User;
 
 class Session extends Model
 {
@@ -45,6 +46,15 @@ class Session extends Model
      */
     public function cart(){
         return $this->hasOne(Cart::class);
+    }
+
+    /**
+     * The user relationship
+     *
+     * @var array
+     */
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
 }

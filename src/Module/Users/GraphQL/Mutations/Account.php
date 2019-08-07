@@ -24,8 +24,7 @@ class Account
 
         $user = $userService->logIn(
             $args['email'],
-            $args['password'],
-            $context->request()->bearerToken()
+            $args['password']
         );
 
         return $user;
@@ -33,12 +32,27 @@ class Account
 
     public function logOut($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+
         $userService = App::make('Lab19\UserService');
 
-        $result = $userService->logOut($context->request()->bearerToken());
+        $result = $userService->logOut();
 
         return [
             'success' => $result
         ];
+    }
+
+    public function me($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $userService = App::make('Lab19\UserService');
+        $me = $userService->getUser();
+        if( ! $me ){
+            $cartService = App::make('Lab19\CartService');
+            $me = [
+                'cart' => $cartService->getCart()
+            ];
+        }
+
+        return $me;
     }
 }

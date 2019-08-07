@@ -5,16 +5,27 @@
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\User;
     use Illuminate\Support\Facades\Auth;
+    use Illuminate\Http\Request;
     use App;
 
     class UserService {
 
-        public function logIn( String $email, String $password, String $token = null ){
+        public function __construct( Request $request ){
+            $this->request = $request;
+        }
+
+        public function getUser(){
+            $this->request->session->load('user');
+            return $this->request->session->user;
+        }
+
+        public function logIn( String $email, String $password ){
 
             $session = App::make('Lab19\SessionService');
 
-            if( $token ){
-                // Allow merge of session
+            // If the user already had a session,
+            // allow this to merge
+            if( $token = $this->request->bearerToken() ){
                 $session->setFromToken( $token );
             } else {
                 // Persist a new session
@@ -42,14 +53,24 @@
 
         public function logOut(){
             $session = App::make('Lab19\SessionService');
-            $token = $session->getToken();
-            $user = User::where('session_token', '=', $token)->first();
-            if( $user ){
-                $user->session_token = null;
-                $user->save();
-            }
+            $token = $this->request->bearerToken();
+            if( $token ){
+                $user = User::where('session_token', '=', $token)->first();
+                if( $user ){
+                    // Disaccociate the session
+                    $user->session_token = null;
+                    $user->save();
+                    return $session->close();
+                }
 
-            return (bool)$session->close();
+                // Where it's a user-less session
+                if( $token === $session->getToken() ){
+                    return $session->close();
+                }
+
+                return false;
+            }
+            return false;
         }
 
         public function getFromToken( String $token ){

@@ -80,11 +80,6 @@ input UpdateCartQuantityInput {
     quantity: Int!
 }
 
-type Cart {
-    items: [CartItem!]
-}
-
-type CartItem {
-    product_id: ID!
-    quantity: Int!
+extend type Query {
+    me: User @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@me")
 }

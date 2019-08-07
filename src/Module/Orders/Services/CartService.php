@@ -15,6 +15,11 @@
             $this->session = $request->session;
         }
 
+        public function getCart(){
+            $this->session->load('cart');
+            return $this->session->cart;
+        }
+
         public function addItemsToCart( Array $items ){
             $cart = $this->session->cart;
             if( !$cart ){

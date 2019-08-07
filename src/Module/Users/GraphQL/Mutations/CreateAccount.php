@@ -33,7 +33,11 @@ class CreateAccount
         ]);
 
         $user->save();
+        $session->mergeWithUser( $user );
 
-        return [ 'user' => $user ];
+        return [
+            'user' => $user,
+            'token' => $session->getToken()
+        ];
     }
 }

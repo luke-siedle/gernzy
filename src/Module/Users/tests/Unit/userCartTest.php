@@ -54,6 +54,33 @@
             }
         ';
 
+        protected $getCartQuery = '
+            {
+                me {
+                    cart {
+                        items {
+                            product_id
+                            quantity
+                        }
+                    }
+                }
+            }
+        ';
+
+        protected $getCartQueryAuthenticated = '
+            {
+                me {
+                    id
+                    cart {
+                        items {
+                            product_id
+                            quantity
+                        }
+                    }
+                }
+            }
+        ';
+
         /**
          * @group Cart
          */
@@ -118,4 +145,22 @@
 
             $this->assertEquals(12, $result['data']['updateCartQuantity']['cart']['items'][0]['quantity'] );
         }
+
+        /**
+         *
+         * @group Cart
+         */
+        public function testGuestUserCanViewProductsAndQuantitiesInCart(): void
+        {
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQLWithSession($this->addToProductsMutation);
+            $response = $this->graphQLWithSession($this->getCartQuery);
+            $response->assertDontSee('You are not authorized');
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+
+            $this->assertEquals(5, $result['data']['me']['cart']['items'][0]['quantity'] );
+        }
+
     }

@@ -47,6 +47,10 @@
             ]);
         }
 
+        /**
+         *
+         * @group Session
+         */
         public function testCanDeleteExistingSession(): void
         {
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
@@ -113,6 +117,10 @@
             ]);
         }
 
+        /**
+         *
+         * @group Session
+         */
         public function testCannotDeleteInvalidSession(): void
         {
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
@@ -124,10 +132,6 @@
                 }
             ');
 
-            $start = $response->decodeResponseJson();
-
-            $token = $start['data']['createSession']['token'] . 'abc';
-
             $response = $this->postGraphQL(['query' => '
                 mutation {
                     logOut {
@@ -135,7 +139,7 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
+                'HTTP_Authorization' => 'Bearer ' . 'invalidToken'
             ]);
 
             $response->assertDontSee('errors');
@@ -143,5 +147,31 @@
             $logOut = $response->decodeResponseJson();
 
             $this->assertFalse($logOut['data']['logOut']['success']);
+        }
+
+        /**
+         *
+         * @group Session
+         */
+        public function testCanMergeSessionToUser(): void
+        {
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQL('
+                mutation {
+                    createSession {
+                        token
+                    }
+                }
+            ');
+
+            $result = $response->decodeResponseJson();
+
+            $token = $result['data']['createSession']['token'];
+
+            $response = $this->graphQLCreateAccountWithSession('merge@example.com', 'password', $token );
+
+            $result = $response->decodeResponseJson();
+
+            $this->assertEquals( $result['data']['createAccount']['token'], $token );
         }
     }

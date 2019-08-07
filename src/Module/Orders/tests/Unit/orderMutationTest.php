@@ -11,7 +11,7 @@
             //$this->withoutExceptionHandling();
         }
 
-        public function testCanMutateOrdersTest(): void
+        public function testSessionlessUserCannotCreateOrdersTest(): void
         {
 
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
@@ -33,25 +33,6 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-
-            $response->assertStatus(200);
-
-            $response->assertJsonStructure([
-                'data' => [
-                    'createOrder' => [
-                        'id',
-                        'cart' => [
-                            'id',
-                            'order_id'
-                        ]
-                    ]
-                ]
-            ]);
+            $response->assertSee('errors');
         }
-
-        // public function testCannotAssignProtectedValues(): void
-        // {
-
-        // }
     }

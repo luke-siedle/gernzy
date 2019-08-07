@@ -33,6 +33,7 @@ type User {
     id: ID!
     name: String!
     email: String!
+    cart: Cart,
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -49,7 +50,14 @@ type Cart {
     order_id: ID
     item_count: Int!
     order: Cart @belongsTo
+    items: [CartItem!]
 }
+
+type CartItem {
+    product_id: ID!
+    quantity: Int!
+}
+
 
 type OrderItem {
     id: ID!
@@ -58,8 +66,16 @@ type OrderItem {
 
 type Mutation {
     createOrder(input: CreateOrderInput! @spread) : Order @create(model: "Lab19\\Cart\\Module\\Orders\\Order")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Module\\Orders\\Order",
+            policy: "Lab19\\Cart\\Module\\Users\\UserPolicy"
+        )
+
     createSession : Session @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\CreateSession@create")
+
     setSession(input: SetSessionInput!) : SetSessionPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\SetSession@set")
+
     createAccount(input: CreateAccountInput! @spread): CreateAccountPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\CreateAccount@create")
 }
 

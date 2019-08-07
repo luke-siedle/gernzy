@@ -1,26 +1,27 @@
 <?php
 
     use Lab19\Cart\Testing\TestCase;
-    use Lab19\Cart\Module\Orders\Order;
+    use Lab19\Cart\Module\Orders\OrderItem;
 
-    class TestOrderLoadMigrations extends TestCase
+    class TestOrderItemLoadMigrations extends TestCase
     {
         public function setUp(): void
         {
             parent::setUp();
-            $this->withFactories(dirname(dirname(__DIR__)) . '/Module/Orders/factories');
-            factory(Order::class, 10)->create();
+            $this->withFactories(dirname(dirname(__DIR__)) . '/factories');
+            factory(OrderItem::class, 10)->create();
         }
 
-        public function testCanLoadMigrationsTest(): void
+        public function testCanQueryOrderItemsTest(): void
         {
 
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
             $response = $this->graphQL('
                 {
-                    orders(count:10) {
+                    order_items(count:10) {
                         data {
                             id
+                            order_id
                         }
                         paginatorInfo {
                             currentPage
@@ -34,14 +35,14 @@
 
             $response->assertStatus(200);
 
-            $response->assertJsonCount(10, 'data.orders.data');
-
             $response->assertJsonStructure([
                 'data' => [
-                    'orders' => [
+                    'order_items' => [
                         'data' => [[ 'id' ]]
                     ]
                 ]
             ]);
+
+            $response->assertJsonCount(10, 'data.order_items.data');
         }
     }

@@ -65,5 +65,29 @@
                 'HTTP_Authorization' => 'Bearer ' . $this->sessionToken
             ]);
         }
+
+        public function graphQLCreateAccountWithSession( $email, $password, $token = null ){
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->postGraphQL(['query' => '
+                mutation {
+                    createAccount(input: {
+                        email:"test@test.com",
+                        password: "tester",
+                        name: "Luke"
+                        }) {
+                        token
+                        user {
+                            name
+                            email
+                            id
+                        }
+                    }
+                }
+            '], [
+                'HTTP_Authorization' => 'Bearer ' . ($token ?? $this->sessionToken)
+            ]);
+
+            return $response;
+        }
     }
 

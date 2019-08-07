@@ -4,6 +4,7 @@
 
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\Session;
+    use Lab19\Cart\Module\Users\User;
     use Lab19\Cart\Module\Orders\Cart;
     use Illuminate\Http\Request;
 
@@ -12,12 +13,13 @@
         const NAMESPACE = 'cart';
 
         public function __construct( Request $request ){
+            $this->request = $request;
             $this->session = new Session;
             $this->session->token = Str::random(60);
             $this->session->data = [
                 'cart_uuid' => Str::uuid()
             ];
-            if( $request->bearerToken() ){
+            if( $this->request->bearerToken() ){
                 $this->session->token = $request->bearerToken();
             }
         }
@@ -27,9 +29,9 @@
             if( !$session ){
                 // TODO: This is dangerous, we don't want to give users the ability
                 // to arbitrarily set their token due to CSRF.
-                // We need to review where and why this is used.
-                // A token should only be creatable from the createSession method
-                // in GraphQL
+                // This is used only in the scenario where a guest user
+                // logs in and needs to merge their current session
+                // Use this method with care
                 $this->session->token = $token;
                 $this->session->save();
             } else {
@@ -43,9 +45,14 @@
             return $session;
         }
 
-        public function setUserId( Int $id ){
-            $this->session->user_id = $id;
+        public function mergeWithUser( User $user ){
+            $this->session->user_id = $user->id;
             $this->session->save();
+            $this->session->cart('load');
+            if( $cart = $this->session->cart ){
+                $cart->user_id = $user->id;
+                $cart->save();
+            }
         }
 
         public function update( Array $array ){
@@ -58,7 +65,8 @@
         }
 
         public function close(){
-            return $this->session->delete();
+            $result = $this->session->delete();
+            return $result;
         }
 
         public function get( $key = null ){

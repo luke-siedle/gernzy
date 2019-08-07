@@ -27,23 +27,25 @@
 
         private function addUserToRequest(\Illuminate\Http\Request $request): \Illuminate\Http\Request
         {
-            $userService = App::make('Lab19\UserService');
             $token = $request->bearerToken();
+
             if( $token ){
+                $userService = App::make('Lab19\UserService');
                 $user = $userService->getFromToken( $token );
                 if( $user instanceof User ){
                     $request->merge(['user' => $user]);
                     $request->setUserResolver(function () use ($user) {
                         return $user;
                     });
-                } else {
-                    $sessionService = App::make('Lab19\SessionService');
-                    $session = $sessionService->getFromToken( $token );
-                    if( $session instanceof Session ){
-                        $request->merge(['session' => $session ]);
-                    }
+                }
+
+                $sessionService = App::make('Lab19\SessionService');
+                $session = $sessionService->getFromToken( $token );
+                if( $session instanceof Session ){
+                    $request->merge(['session' => $session ]);
                 }
             }
+
             return $request;
         }
     }

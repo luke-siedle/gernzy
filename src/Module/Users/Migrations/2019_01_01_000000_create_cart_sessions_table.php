@@ -21,6 +21,7 @@ class CreateCartSessionsTable extends Migration
                 ->default(null);
             $table->json('data')->nullable();
             $table->bigInteger('cart_id')->nullable();
+            $table->bigInteger('user_id')->nullable();
             $table->timestamps();
         });
     }

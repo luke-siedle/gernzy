@@ -22,10 +22,6 @@ class SetSession
     {
         $session = App::make('Lab19\SessionService');
 
-        $token = $context->request()->bearerToken();
-
-        $session->setFromToken( $token );
-
         $session->update( $args['input'] );
 
         return $session->get();
