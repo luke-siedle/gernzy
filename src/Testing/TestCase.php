@@ -14,6 +14,8 @@
         use RefreshDatabase;
         use DatabaseMigrations;
 
+        protected $sessionToken = null;
+
         protected function getEnvironmentSetUp($app)
         {
             // Setup default database to use sqlite :memory:
@@ -42,6 +44,26 @@
             $this->withFactories(dirname(__DIR__) . '/Module/Products/factories');
             $this->seed(UsersSeeder::class);
             $this->withoutExceptionHandling();
+        }
+
+        public function graphQLWithSession( String $query ){
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            if( !$this->sessionToken ){
+                $response = $this->graphQL('
+                    mutation {
+                        createSession {
+                            token
+                        }
+                    }
+                ');
+
+                $result = $response->decodeResponseJson();
+                $this->sessionToken = $result['data']['createSession']['token'];
+            }
+
+            return $this->postGraphQL(['query' => $query], [
+                'HTTP_Authorization' => 'Bearer ' . $this->sessionToken
+            ]);
         }
     }
 

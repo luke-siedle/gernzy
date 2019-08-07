@@ -4,6 +4,7 @@
 
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\Session;
+    use Lab19\Cart\Module\Orders\Cart;
     use Illuminate\Http\Request;
 
     class SessionService {
@@ -24,11 +25,22 @@
         public function setFromToken( $token ){
             $session = Session::where('token', '=', $token )->first();
             if( !$session ){
+                // TODO: This is dangerous, we don't want to give users the ability
+                // to arbitrarily set their token due to CSRF.
+                // We need to review where and why this is used.
+                // A token should only be creatable from the createSession method
+                // in GraphQL
                 $this->session->token = $token;
                 $this->session->save();
             } else {
                 $this->session = $session;
+                return $this->session;
             }
+        }
+
+        public function getFromToken( $token ){
+            $session = Session::where('token', '=', $token )->first();
+            return $session;
         }
 
         public function setUserId( Int $id ){

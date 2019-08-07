@@ -53,8 +53,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        // Auth::extend('cart', function ($app, $name, array $config) {
-        //     return new CartGuard(Auth::createUserProvider($config['provider']));
-        // });
+
+        Gate::define('add-to-cart', function( $user ){
+            return $user;
+        });
     }
 }

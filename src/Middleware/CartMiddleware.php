@@ -3,6 +3,7 @@
     namespace Lab19\Cart\Middleware;
 
     use Lab19\Cart\Module\Users\User;
+    use Lab19\Cart\Module\Users\Session;
     use Illuminate\Support\Facades\Auth;
     use App;
 
@@ -35,6 +36,12 @@
                     $request->setUserResolver(function () use ($user) {
                         return $user;
                     });
+                } else {
+                    $sessionService = App::make('Lab19\SessionService');
+                    $session = $sessionService->getFromToken( $token );
+                    if( $session instanceof Session ){
+                        $request->merge(['session' => $session ]);
+                    }
                 }
             }
             return $request;

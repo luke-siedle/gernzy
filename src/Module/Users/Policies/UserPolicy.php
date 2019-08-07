@@ -41,4 +41,17 @@ class UserPolicy
 
         return $me->isAdmin();
     }
+
+    /**
+     * Placeholder method. GraphQL will only arrive here
+     * if the user has authorized.
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function addToCart(User $me): bool
+    {
+        return $me->id > 0;
+    }
 }

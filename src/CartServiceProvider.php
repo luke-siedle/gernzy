@@ -13,6 +13,8 @@ use Lab19\Cart\Module\Users as CoreUsers;
 
 use Lab19\Cart\Module\Users\Services\SessionService;
 use Lab19\Cart\Module\Users\Services\UserService;
+use Lab19\Cart\Module\Orders\Services\OrderService;
+use Lab19\Cart\Module\Orders\Services\CartService;
 use Lab19\Cart\AuthServiceProvider;
 
 
@@ -47,22 +49,22 @@ class CartServiceProvider extends ServiceProvider
         $middleware = $this->app['config']->get('lighthouse.route.middleware') ?? [];
 
         // Add CORS dependency package to middleware
-        $this->app['config']->set('lighthouse.route.middleware', array_merge(
-            $middleware, [
-                \Barryvdh\Cors\HandleCors::class,
-                \Lab19\Cart\Middleware\CartMiddleware::class
-            ]
-        ));
+        array_unshift($middleware, \Barryvdh\Cors\HandleCors::class);
+        array_unshift($middleware, \Lab19\Cart\Middleware\CartMiddleware::class);
+
+        $this->app['config']->set('lighthouse.route.middleware', $middleware);
 
         // Bind services
         $this->app->singleton('Lab19\SessionService', SessionService::class );
         $this->app->singleton('Lab19\UserService', UserService::class );
+        $this->app->singleton('Lab19\OrderService', OrderService::class );
+        $this->app->singleton('Lab19\CartService', CartService::class );
 
-        $mutations = [
-            'Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations'
+        $directives = [
+            'Lab19\\Cart\\Module\\Users\\GraphQL\\Directives'
         ];
 
-        // $this->app['config']->set('lighthouse.namespaces.mutations', [] );
+        $this->app['config']->set('lighthouse.namespaces.directives', $directives );
     }
 
     /**

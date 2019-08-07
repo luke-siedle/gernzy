@@ -32,6 +32,15 @@ type CartProduct {
 extend type Mutation {
     logIn(input: LoginInput! @spread) : LogInPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logIn")
     logOut : LogOutPayload @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@logOut")
+    addToCart(input: AddToCartInput!) : CartPayload
+        @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Cart@addToCart")
+        @gate(ability: "add-to-cart", sessionOnly: true )
+    removeFromCart(input: RemoveFromCartInput!) : CartPayload
+        @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Cart@removeFromCart")
+        @gate(ability: "remove-from-cart", sessionOnly: true )
+    updateCartQuantity(input: UpdateCartQuantityInput!) : CartPayload
+        @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Cart@updateCartQuantity")
+        @gate(ability: "add-to-cart", sessionOnly: true )
 }
 
 input LoginInput {
@@ -46,4 +55,36 @@ type LogInPayload {
 
 type LogOutPayload {
     success: Boolean!
+}
+
+input AddToCartInput {
+    items: [ AddToCartItemInput! ]
+}
+
+input AddToCartItemInput {
+    product_id: ID!
+    quantity: Int!
+}
+
+type CartPayload {
+    cart: Cart
+}
+
+input RemoveFromCartInput {
+    product_id: ID!
+    quantity: Int!
+}
+
+input UpdateCartQuantityInput {
+    product_id: ID!
+    quantity: Int!
+}
+
+type Cart {
+    items: [CartItem!]
+}
+
+type CartItem {
+    product_id: ID!
+    quantity: Int!
 }

@@ -34,6 +34,8 @@ class CreateSession
             'cart_uuid' => $session->get('cart_uuid')
         ];
 
+        $session->save();
+
         return $result;
     }
 }
