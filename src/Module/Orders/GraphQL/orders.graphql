@@ -4,6 +4,15 @@ extend type Mutation {
         @gate(ability: "can-checkout", sessionOnly: true)
 }
 
+extend type Query {
+    order(id: ID @eq): Order @find(model: "Lab19\\Cart\\Module\\Orders\\Order")
+        @can(
+            ability: "view",
+            model: "Lab19\\Cart\\Module\\Orders\\Order",
+            policy: "Lab19\\Cart\\Module\\Orders\\Policies\\OrderPolicy"
+        )
+}
+
 input CheckoutInput {
     name: String! @rules(apply: ["required"])
     email: String! @rules(apply: ["required", "email"])
@@ -36,8 +45,4 @@ input ShippingAddress {
 type CheckoutPayload {
     success: Boolean!
     order: Order
-}
-
-type Order {
-    id: ID!
 }

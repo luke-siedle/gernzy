@@ -60,6 +60,9 @@ class Order extends Model
      * @var array
      */
     protected $casts = [
+        'user_id' => 'int',
+        'cart_id' => 'int',
+        'currency_id' => 'int'
     ];
 
     public function cart(): HasOne

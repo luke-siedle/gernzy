@@ -22,7 +22,6 @@ type Query {
         )
 
     orders: [Order!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Module\\Orders\\Order")
-    order(id: ID @eq): Order @find(model: "Lab19\\Cart\\Module\\Orders\\Order")
 
     order_items: [OrderItem!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Module\\Orders\\OrderItem")
     order_item(id: ID @eq): OrderItem @find(model: "Lab19\\Cart\\Module\\Orders\\OrderItem")
@@ -45,6 +44,7 @@ type Session {
 
 type Order {
     id: ID!
+    name: String!
     currency_id: Int!
     cart_id: ID!
     cart: Cart @hasOne

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Lab19\Cart\Module\Users\User;
 
 use Lab19\Cart\Module\Users\Policies\UserPolicy;
+use Lab19\Cart\Module\Orders\Policies\OrderPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
+        Order::class => OrderPolicy::class
     ];
 
     /**
