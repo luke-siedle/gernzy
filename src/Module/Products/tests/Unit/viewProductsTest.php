@@ -5,17 +5,17 @@
     /**
      * @group Products
      */
-
     class TestViewProducts extends TestCase
     {
 
         public function setUp(): void
         {
             parent::setUp();
-            $this->availableCount = 3;
+            $this->availableCount = 11;
 
             factory(Product::class, $this->availableCount)->create()->each( function( $product ){
                 $product->status = 'IN_STOCK';
+                $product->title = 'Coffee pod';
                 $product->published = 1;
                 $product->save();
             });
@@ -90,6 +90,40 @@
                     'products' => [
                         'data' => [
                             ['id', 'title', 'status', 'published' ],
+                        ]
+                    ]
+                ]
+            ]);
+        }
+
+        public function testGuestUserCanSearchProductsByKeywordAndPaginateThem(): void
+        {
+            $response = $this->graphQL('
+                query {
+                    products(count:7, page:2, input: {keyword : "pod"} ) {
+                        data {
+                            id
+                            title
+                        }
+                        paginatorInfo {
+                            currentPage
+                            lastPage
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+
+            $result = $response->decodeResponseJson();
+
+            $this->assertCount(4, $result['data']['products']['data'] );
+
+            $response->assertJsonStructure([
+                'data' => [
+                    'products' => [
+                        'data' => [
+                            ['id', 'title'],
                         ]
                     ]
                 ]

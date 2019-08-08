@@ -1,10 +1,15 @@
 extend type Query {
-    products: [Product!]!
+    products(input:ProductsQueryInput): [Product!]!
         @paginate(
             type: "paginator",
             model: "Lab19\\Cart\\Module\\Products\\Product",
-            scopes: ["published", "inStock"]
+            scopes: ["published", "inStock"],
+            builder: "Lab19\\Cart\\Module\\Products\\GraphQL\\Builders\\ProductsBuilder@search"
         )
+}
+
+input ProductsQueryInput {
+    keyword: String
 }
 
 type Product {

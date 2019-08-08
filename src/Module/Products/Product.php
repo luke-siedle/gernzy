@@ -82,4 +82,13 @@
             return $query->where('published', 0 );
         }
 
+        /**
+         * Scope by keyword
+         *
+         * @var $query
+         */
+        public function scopeSearchByKeyword( $query, String $keyword ){
+            return $query->where('title', 'like', '%' . $keyword . '%' );
+        }
+
     }
