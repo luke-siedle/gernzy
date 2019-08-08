@@ -81,5 +81,6 @@ input UpdateCartQuantityInput {
 }
 
 extend type Query {
-    me: User @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Mutations\\Account@me")
+    me: User @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Queries\\Account@me")
+    myOrders: [Order!] @field(resolver: "Lab19\\Cart\\Module\\Users\\GraphQL\\Queries\\Account@myOrders")
 }

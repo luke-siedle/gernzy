@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('cart_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('cart_id')->nullable();
+            $table->bigInteger('user_id')->nullable();
 
             $table->smallInteger('currency_id')->nullable();
             $table->string('status')->nullable();

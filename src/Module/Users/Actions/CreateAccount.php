@@ -4,11 +4,13 @@ namespace Lab19\Cart\Module\Users\Actions;
 
 use Lab19\Cart\Module\Users\User;
 use Lab19\Cart\Module\Users\Services\SessionService;
+use Lab19\Cart\Module\Orders\Services\OrderService;
 
 class CreateAccount
 {
-    public function __construct( SessionService $session ){
+    public function __construct( SessionService $session, OrderService $orderService ){
         $this->session = $session;
+        $this->orderService = $orderService;
     }
 
     public function withSession( $args ){
@@ -16,6 +18,7 @@ class CreateAccount
         $user->session_token = $this->session->getToken();
         $user->save();
         $this->session->mergeWithUser( $user );
+        $this->orderService->mergePreviousOrdersWithUser( $user );
         return [
             'user' => $user,
             'token' => $this->session->getToken(),

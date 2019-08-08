@@ -34,7 +34,6 @@
          */
         protected $hidden = [
             'id',
-            'order_id',
             'session_id'
         ];
 

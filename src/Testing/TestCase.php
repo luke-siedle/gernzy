@@ -66,14 +66,14 @@
             ]);
         }
 
-        public function graphQLCreateAccountWithSession( $email, $password, $token = null ){
+        public function graphQLCreateAccountWithSession( $email = 'test@test.com', $password = 'password', $token = null ){
 
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
             $response = $this->postGraphQL(['query' => '
                 mutation {
                     createAccount(input: {
-                        email:"test@test.com",
-                        password: "tester",
+                        email:"' . $email . '",
+                        password: "' . $password . '",
                         name: "Luke"
                         }) {
                         token

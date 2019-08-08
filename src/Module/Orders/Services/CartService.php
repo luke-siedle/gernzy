@@ -5,6 +5,7 @@
     use Illuminate\Support\Str;
     use Lab19\Cart\Module\Users\User;
     use Lab19\Cart\Module\Orders\Cart;
+    use Lab19\Cart\Module\Orders\Order;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
     use Lab19\Cart\Module\Users\Services\SessionService;
@@ -24,6 +25,7 @@
                 if( $this->session->cart ){
                     // Remove association of previous cart
                     // from current session
+                    $previousCartId = $this->session->cart->id;
                     $this->session->cart->session_id = null;
                     $this->session->cart->save();
 
@@ -35,9 +37,22 @@
 
                     // Update the session's associated cart
                     $this->session->cart_id = $cart->id;
-                    $this->session->save();
+
+                    // Store the previous cart to potentially
+                    // merge with account creation if required
+                    $previousCarts = $this->sessionService->get('previous_carts') ?? [];
+                    $previousCarts[] = $previousCartId;
+                    $this->sessionService->update([
+                        'previous_carts' => $previousCarts
+                    ]);
                 }
             }
+        }
+
+        public function setOrder( Order $order ){
+            $cart = $this->getCart();
+            $cart->order_id = $order->id;
+            $cart->save();
         }
 
         public function getCart(){

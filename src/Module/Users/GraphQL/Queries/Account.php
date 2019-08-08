@@ -1,13 +1,12 @@
 <?php
 
-namespace Lab19\Cart\Module\Users\GraphQL\Mutations;
+namespace Lab19\Cart\Module\Users\GraphQL\Queries;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Illuminate\Support\Str;
-use Lab19\Cart\Module\Users\Actions\LogIn;
-use Lab19\Cart\Module\Users\Actions\LogOut;
+use Lab19\Cart\Module\Orders\Services\OrderService;
 use \App;
 
 class Account
@@ -21,36 +20,26 @@ class Account
      * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Information about the query itself, such as the execution state, the field name, path to the field from the root, and more.
      * @return mixed
      */
-    public function logIn($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function me($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $login = App::make(LogIn::class);
-
-        $result = $login->handle(
-            $args['email'],
-            $args['password']
-        );
-
-        if( !$result ){
-            throw new AuthenticationException(
-                'Invalid credentials'
-            );
+        $sessionService = App::make('Lab19\SessionService');
+        $me = $sessionService->getUser();
+        if( !$me->id ) {
+            $cartService = App::make('Lab19\CartService');
+            $me = [
+                'cart' => $cartService->getCart(),
+                'session' => $sessionService->session
+            ];
         }
 
-        return [
-            'user' => $result['user'],
-            'token' => $result['token']
-        ];
+        return $me;
     }
 
-    public function logOut($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function myOrders($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-
-        $logOut = App::make(LogOut::class);
-
-        $result = $logOut->handle();
-
-        return [
-            'success' => $result
-        ];
+        $orderService = App::make(OrderService::class);
+        $orders = $orderService->myOrders();
+        return $orders;
     }
+
 }

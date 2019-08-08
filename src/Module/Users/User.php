@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Lab19\Cart\Module\Orders\Cart;
+use Lab19\Cart\Module\Orders\Order;
 use Lab19\Cart\Module\Users\Session;
 
 class User extends Authenticatable
@@ -73,5 +74,14 @@ class User extends Authenticatable
      */
     public function cart(){
         return $this->hasOneThrough(Cart::class, Session::class);
+    }
+
+    /**
+     * Check if user is admin
+     *
+     * @returns boolean
+     */
+    public function orders(){
+        return $this->hasMany(Order::class);
     }
 }

@@ -7,9 +7,9 @@ use Lab19\Cart\Module\Orders\Services\CartService;
 
 class CreateCheckout
 {
-    public function __construct( SessionService $session, CartService $cart ){
+    public function __construct( SessionService $session, CartService $cartService ){
         $this->session = $session;
-        $this->cart = $cart;
+        $this->cartService = $cartService;
     }
 
     public function handle( $args ){
@@ -21,7 +21,9 @@ class CreateCheckout
         }
 
         $session = $this->session->raw();
+        $user = $this->session->getUser();
         $cartId = $session->cart->id;
+        $userId = $user->id;
 
         $order = new Order([
             "name" => $args["name"],
@@ -44,12 +46,17 @@ class CreateCheckout
             "payment_method" => $args["payment_method"],
             "agree_to_terms" => (int)$args["agree_to_terms"],
             "notes" => $args["notes"],
-
-            "cart_id" => $cartId,
         ]);
 
+        // Associate the order to the user
+        // and cart to the order
+        $order->user_id = $userId;
+        $order->cart_id = $cartId;
         $order->save();
-        $this->cart->reset();
+
+        $this->cartService->setOrder($order);
+        $this->cartService->reset();
+
         return $order;
     }
 }

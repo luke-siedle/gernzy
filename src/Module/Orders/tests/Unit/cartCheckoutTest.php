@@ -124,4 +124,37 @@
             $this->assertCount(0, $result['data']['me']['cart']['items']);
 
         }
+
+        /**
+         * @group Checkout1
+         */
+        public function testUserWithoutAccountCanCreateOrdersAndThenCreateAccountAndViewSavedOrder(): void
+        {
+            $this->graphQLWithSession($this->addToCartMutation);
+            $this->graphQLWithSession($this->checkoutMutation);
+
+            $this->graphQLWithSession($this->addToCartMutation);
+            $this->graphQLWithSession($this->checkoutMutation);
+
+            $this->graphQLCreateAccountWithSession('order@example.com', 'password');
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQLWithSession('
+                {
+                    myOrders {
+                        id
+                    }
+                    me {
+                        id
+                    }
+                }
+            ');
+
+            $result = $response->decodeResponseJson();
+
+            $response->assertDontSee('errors');
+
+            $this->assertCount(2, $result['data']['myOrders']);
+
+        }
     }

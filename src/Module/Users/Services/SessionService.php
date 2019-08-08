@@ -14,11 +14,13 @@
 
         public function __construct( Request $request ){
             $this->request = $request;
+            $this->user = new User;
             $this->session = new Session;
             $this->session->token = Str::random(60);
             $this->session->data = [
                 'cart_uuid' => Str::uuid()
             ];
+
 
             // If the request provides a bearer token
             // we can potentially get the session from the request
@@ -26,6 +28,9 @@
                 $this->session->token = $request->bearerToken();
                 if( $request->session && $request->session->id ){
                     $this->session = $request->session;
+                }
+                if( $this->request->user() ){
+                    $this->user = $this->request->user();
                 }
             }
         }
@@ -88,6 +93,10 @@
 
         public function getToken(){
             return $this->session->token;
+        }
+
+        public function getUser(){
+            return $this->user;
         }
 
         public function raw(){
