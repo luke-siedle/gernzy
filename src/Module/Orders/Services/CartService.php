@@ -58,7 +58,7 @@
 
         public function hasItems(){
             $cart = $this->getCart();
-            return is_array($cart->items) || count($cart->items) > 0;
+            return is_array($cart->items) && count($cart->items) > 0;
         }
 
         public function addItemsToCart( Array $items ){
