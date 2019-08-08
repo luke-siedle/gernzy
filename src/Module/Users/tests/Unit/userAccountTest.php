@@ -1,6 +1,10 @@
 <?php
     use Lab19\Cart\Testing\TestCase;
 
+    /**
+     *
+     * @group Account
+    */
     class TestUserAccount extends TestCase
     {
         public function testUserCanCreateAccount(): void
@@ -104,6 +108,28 @@
                     ]
                 ]
             ]);
+        }
+
+        /**
+         *
+         * @group Login
+         */
+        public function testUserCanFailToLoginAndSeeError(): void
+        {
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQL('
+                mutation {
+                    logIn(input:{
+                            email:"user@example.com",
+                            password: "wrong"
+                        }) {
+                        user { id }
+                        token
+                    }
+                }
+            ');
+
+            $response->assertSee('Invalid credentials');
         }
 
         public function testAdminUserCanLogInToAccount(): void

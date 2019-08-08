@@ -67,6 +67,7 @@
         }
 
         public function graphQLCreateAccountWithSession( $email, $password, $token = null ){
+
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
             $response = $this->postGraphQL(['query' => '
                 mutation {

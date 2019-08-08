@@ -151,7 +151,7 @@
 
         /**
          *
-         * @group Session
+         * @group Session1
          */
         public function testCanMergeSessionToUser(): void
         {

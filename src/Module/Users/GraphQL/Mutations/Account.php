@@ -4,7 +4,10 @@ namespace Lab19\Cart\Module\Users\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Illuminate\Support\Str;
+use Lab19\Cart\Module\Users\Actions\LogIn;
+use Lab19\Cart\Module\Users\Actions\LogOut;
 use \App;
 
 class Account
@@ -20,22 +23,31 @@ class Account
      */
     public function logIn($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $userService = App::make('Lab19\UserService');
+        $login = App::make(LogIn::class);
 
-        $user = $userService->logIn(
+        $result = $login->handle(
             $args['email'],
             $args['password']
         );
 
-        return $user;
+        if( !$result ){
+            throw new AuthenticationException(
+                'Invalid credentials'
+            );
+        }
+
+        return [
+            'user' => $result['user'],
+            'token' => $result['token']
+        ];
     }
 
     public function logOut($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
 
-        $userService = App::make('Lab19\UserService');
+        $logOut = App::make(LogOut::class);
 
-        $result = $userService->logOut();
+        $result = $logOut->handle();
 
         return [
             'success' => $result

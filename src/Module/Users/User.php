@@ -62,9 +62,9 @@ class User extends Authenticatable
      *
      * @returns boolean
      */
-    public function session(){
-        return $this->hasOneThrough(Session::class, Cart::class);
-    }
+    // public function session(){
+    //     return $this->hasOneThrough(Session::class, Cart::class);
+    // }
 
     /**
      * Check if user is admin

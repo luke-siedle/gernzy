@@ -4,14 +4,13 @@ namespace Lab19\Cart\Module\Users\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Illuminate\Support\Str;
-use Lab19\Cart\Module\Users\User;
-use App;
-
-use \Session;
+use Lab19\Cart\Module\Users\Actions\CreateAccount as CreateAccountAction;
+use Lab19\Cart\Module\Users\Services\SessionService;
+use \App;
 
 class CreateAccount
 {
+
     /**
      * Return a value for the field.
      *
@@ -23,21 +22,12 @@ class CreateAccount
      */
     public function create($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $session = \App::make('Lab19\SessionService');
-
-        $user = new User([
-            'name' => $args['name'],
-            'email' => $args['email'],
-            'password' => $args['password'],
-            'token' => $session->getToken()
-        ]);
-
-        $user->save();
-        $session->mergeWithUser( $user );
+        $createAccount = App::make(CreateAccountAction::class);
+        $result = $createAccount->withSession( $args );
 
         return [
-            'user' => $user,
-            'token' => $session->getToken()
+            'user' => $result['user'],
+            'token' => $result['token']
         ];
     }
 }
