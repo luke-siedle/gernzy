@@ -22,7 +22,26 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'telephone',
+        'mobile',
+        'shipping_address_line_1',
+        'shipping_address_line_2',
+        'shipping_address_postcode',
+        'shipping_address_state',
+        'shipping_address_country',
+        'billing_address_line_1',
+        'billing_address_line_2',
+        'billing_address_postcode',
+        'billing_address_state',
+        'billing_address_country',
+        'payment_method',
+        'agree_to_terms',
+        'notes',
+        'cart_id'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.

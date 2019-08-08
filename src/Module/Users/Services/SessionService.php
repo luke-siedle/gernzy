@@ -90,4 +90,8 @@
             return $this->session->token;
         }
 
+        public function raw(){
+            return $this->session;
+        }
+
     }

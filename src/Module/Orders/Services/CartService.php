@@ -7,17 +7,58 @@
     use Lab19\Cart\Module\Orders\Cart;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
+    use Lab19\Cart\Module\Users\Services\SessionService;
+
     use App;
 
     class CartService {
 
-        public function __construct( Request $request ){
-            $this->session = $request->session;
+        public function __construct( Request $request, SessionService $sessionService ){
+            $this->sessionService = $sessionService;
+            $this->session = $sessionService->raw();
+        }
+
+        public function reset(){
+            if( $this->session ){
+                $this->session->load('cart');
+                if( $this->session->cart ){
+                    // Remove association of previous cart
+                    // from current session
+                    $this->session->cart->session_id = null;
+                    $this->session->cart->save();
+
+                    // Create a new cart
+                    // and associate the session to it
+                    $cart = new Cart();
+                    $cart->session_id = $this->session->id;
+                    $cart->save();
+
+                    // Update the session's associated cart
+                    $this->session->cart_id = $cart->id;
+                    $this->session->save();
+                }
+            }
         }
 
         public function getCart(){
-            $this->session->load('cart');
-            return $this->session->cart;
+            if( $this->session ){
+                $this->session->load('cart');
+                if( $this->session->cart ){
+                    $cart = $this->session->cart;
+                    return $cart;
+                }
+            }
+            return new Cart();
+        }
+
+        public function getItems(){
+            $cart = $this->getCart();
+            return $cart->items;
+        }
+
+        public function hasItems(){
+            $cart = $this->getCart();
+            return count($cart->items) > 0;
         }
 
         public function addItemsToCart( Array $items ){

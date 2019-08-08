@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Lab19\Cart\Module\Users\User;
 use Lab19\Cart\Module\Users\Services\SessionService;
-use Illuminate\Auth\AuthenticationException;
 
 class LogIn
 {

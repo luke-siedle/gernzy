@@ -53,8 +53,6 @@ class TestResumeCart extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession($this->addToProductsMutation);
         $this->graphQLCreateAccountWithSession('new@example.com', 'password');
     }

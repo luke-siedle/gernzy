@@ -1,0 +1,43 @@
+extend type Mutation {
+    checkout(input: CheckoutInput!) : CheckoutPayload
+        @field(resolver: "Lab19\\Cart\\Module\\Orders\\GraphQL\\Mutations\\Checkout@checkout")
+        @gate(ability: "can-checkout", sessionOnly: true)
+}
+
+input CheckoutInput {
+    name: String! @rules(apply: ["required"])
+    email: String! @rules(apply: ["required", "email"])
+    mobile: String!
+    telephone: String!
+    billing_address: BillingAddress! @rules(apply: ["required"])
+    shipping_address: ShippingAddress! @rules(apply: ["required"])
+    use_shipping_for_billing: Boolean!
+    payment_method: String!
+    agree_to_terms: Boolean!
+    notes: String!
+}
+
+input BillingAddress {
+    line_1: String! @rules(apply: ["required"])
+    line_2: String
+    state: String! @rules(apply: ["required"])
+    postcode: String
+    country: String!
+}
+
+input ShippingAddress {
+    line_1: String! @rules(apply: ["required"])
+    line_2: String
+    state: String! @rules(apply: ["required"])
+    postcode: String
+    country: String! @rules(apply: ["required"])
+}
+
+type CheckoutPayload {
+    success: Boolean!
+    order: Order
+}
+
+type Order {
+    id: ID!
+}
