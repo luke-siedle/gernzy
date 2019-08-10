@@ -1,0 +1,54 @@
+extend type Query {
+    products(input:ProductsQueryInput): [Product!]!
+        @paginate(
+            type: "paginator",
+            model: "Lab19\\Cart\\Models\\Product",
+            scopes: ["published", "inStock"],
+            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@search"
+        )
+}
+
+input ProductsQueryInput {
+    keyword: String
+}
+
+type Product {
+    id: ID!
+    title: String!
+    status: String!
+    published: Int!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation {
+    createProduct(input:CreateProductInput!): Product
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@create")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
+    updateProduct(id:ID!, input:CreateProductInput): Product
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@update")
+        @can(
+            ability: "update",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
+    deleteProduct(id:ID!, input:CreateProductInput): DeleteResult
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@delete")
+        @can(
+            ability: "delete",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
+}
+
+input CreateProductInput {
+    title: String!
+}
+
+type DeleteResult {
+    success: Boolean!
+}

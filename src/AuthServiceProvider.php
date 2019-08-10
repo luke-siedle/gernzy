@@ -5,11 +5,14 @@ namespace Lab19\Cart;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Lab19\Cart\Module\Users\User;
 
-use Lab19\Cart\Module\Users\Policies\UserPolicy;
-use Lab19\Cart\Module\Orders\Policies\OrderPolicy;
-use Lab19\Cart\Module\Products\Policies\ProductPolicy;
+use Lab19\Cart\Models\User;
+use Lab19\Cart\Models\Order;
+use Lab19\Cart\Models\Product;
+
+use Lab19\Cart\Policies\UserPolicy;
+use Lab19\Cart\Policies\OrderPolicy;
+use Lab19\Cart\Policies\ProductPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {

@@ -2,8 +2,8 @@
 
     namespace Lab19\Cart\Middleware;
 
-    use Lab19\Cart\Module\Users\User;
-    use Lab19\Cart\Module\Users\Session;
+    use Lab19\Cart\Models\User;
+    use Lab19\Cart\Models\Session;
     use Illuminate\Support\Facades\Auth;
     use App;
 

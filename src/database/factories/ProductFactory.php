@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use Lab19\Cart\Models\User;
+use Lab19\Cart\Models\Product;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
@@ -16,12 +16,11 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+$factory->define(Product::class, function (Faker $faker) {
+    $rand = rand(0,10);
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        'remember_token' => Str::random(10),
+        'title' => $faker->title(),
+        'status' => $rand > 5 ? 'IN_STOCK' : 'OUT_OF_STOCK',
+        'published' => $rand > 5 ? 1 : 0
     ];
 });

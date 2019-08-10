@@ -6,15 +6,10 @@ use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\LighthouseServiceProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
 
-use Lab19\Cart\Module\Shop as CoreShop;
-use Lab19\Cart\Module\Products as CoreProducts;
-use Lab19\Cart\Module\Orders as CoreOrders;
-use Lab19\Cart\Module\Users as CoreUsers;
-
-use Lab19\Cart\Module\Users\Services\SessionService;
-use Lab19\Cart\Module\Users\Services\UserService;
-use Lab19\Cart\Module\Orders\Services\OrderService;
-use Lab19\Cart\Module\Orders\Services\CartService;
+use Lab19\Cart\Services\SessionService;
+use Lab19\Cart\Services\UserService;
+use Lab19\Cart\Services\OrderService;
+use Lab19\Cart\Services\CartService;
 use Lab19\Cart\AuthServiceProvider;
 
 
@@ -33,10 +28,6 @@ class CartServiceProvider extends ServiceProvider
 
         // Register core packages
         $this->app->register(AuthServiceProvider::class);
-        $this->app->register(CoreShop::class);
-        $this->app->register(CoreUsers::class);
-        $this->app->register(CoreProducts::class);
-        $this->app->register(CoreOrders::class);
 
         // Some configuration needs to be overriden by the cart
         // plugin, rather than from within the Laravel app itself
@@ -44,7 +35,7 @@ class CartServiceProvider extends ServiceProvider
         // or there's a rather cryptic "Server error" returned.
         // This happens because it won't be able to find a "schema.graphql" file.
         $this->app['config']->set('lighthouse.namespaces', [] );
-        $this->app['config']->set('lighthouse.schema.register', __DIR__ . '/graphql/schema.graphql');
+        $this->app['config']->set('lighthouse.schema.register', __DIR__ . '/GraphQL/schema/schema.graphql');
 
         $middleware = $this->app['config']->get('lighthouse.route.middleware') ?? [];
 
@@ -64,7 +55,7 @@ class CartServiceProvider extends ServiceProvider
         $this->app->bind('Lab19\CartService', CartService::class );
 
         $directives = [
-            'Lab19\\Cart\\Module\\Users\\GraphQL\\Directives'
+            'Lab19\\Cart\\GraphQL\\Directives'
         ];
 
         $this->app['config']->set('lighthouse.namespaces.directives', $directives );
@@ -77,6 +68,6 @@ class CartServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
     }
 }

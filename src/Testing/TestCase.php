@@ -6,7 +6,7 @@
     use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
     use Illuminate\Foundation\Testing\DatabaseMigrations;
     use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Lab19\Cart\Module\Users\Seeds\UsersSeeder;
+    use Lab19\Cart\Testing\Seeds\UsersSeeder;
 
     abstract class TestCase extends BaseTestCase
     {
@@ -40,8 +40,7 @@
             parent::setUp();
             $this->artisan('migrate', ['--database' => 'testbench'])->run();
             $this->loadLaravelMigrations(['--database' => 'testbench']);
-            $this->withFactories(dirname(__DIR__) . '/Module/Users/factories');
-            $this->withFactories(dirname(__DIR__) . '/Module/Products/factories');
+            $this->withFactories(dirname(__DIR__) . '/database/factories');
             $this->seed(UsersSeeder::class);
             $this->withoutExceptionHandling();
         }

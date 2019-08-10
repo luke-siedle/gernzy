@@ -1,7 +1,7 @@
 <?php
 
     use Lab19\Cart\Testing\TestCase;
-    use Lab19\Cart\Module\Users\User;
+    use Lab19\Cart\Models\User;
 
     class TestGraphQL extends TestCase
     {
