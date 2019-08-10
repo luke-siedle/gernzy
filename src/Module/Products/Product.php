@@ -27,7 +27,7 @@
          * @var array
          */
         protected $fillable = [
-            'title', 'published'
+            'title', 'status', 'published'
         ];
 
         /**

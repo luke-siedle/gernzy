@@ -20,3 +20,17 @@ type Product {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+extend type Mutation {
+    createProduct(input:CreateProductInput!): Product
+        @field(resolver: "Lab19\\Cart\\Module\\Products\\GraphQL\\Mutations\\CreateProduct@create")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Module\\Products\\Product",
+            policy: "Lab19\\Cart\\Module\\Products\\Policies\\ProductPolicy"
+        )
+}
+
+input CreateProductInput {
+    title: String!
+}

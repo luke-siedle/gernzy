@@ -33,23 +33,20 @@
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
             $response = $this->graphQL('
                 mutation {
-                    createSession(input:{
-                        email:"admin@test.com",
-                        password: "admin",
-                        name: "Luke",
-                        is_admin: 1
+                    logIn(input:{
+                        email:"admin@example.com",
+                        password: "password"
                         }) {
                         token
                         user {
                             name
                             email
                             id
-                            is_admin
                         }
                     }
                 }
             ');
 
-            $response->assertSee('errors');
+            $response->assertDontSee('errors');
         }
     }

@@ -9,6 +9,7 @@ use Lab19\Cart\Module\Users\User;
 
 use Lab19\Cart\Module\Users\Policies\UserPolicy;
 use Lab19\Cart\Module\Orders\Policies\OrderPolicy;
+use Lab19\Cart\Module\Products\Policies\ProductPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
-        Order::class => OrderPolicy::class
+        Order::class => OrderPolicy::class,
+        Product::class => ProductPolicy::class
     ];
 
     /**
