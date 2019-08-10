@@ -43,4 +43,16 @@ class ProductPolicy
     {
         return true;
     }
+
+    /**
+     * Determine if the given user can be read by the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function delete(User $me, Product $product): bool
+    {
+        return $me->isAdmin();
+    }
 }

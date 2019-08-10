@@ -29,8 +29,26 @@ extend type Mutation {
             model: "Lab19\\Cart\\Module\\Products\\Product",
             policy: "Lab19\\Cart\\Module\\Products\\Policies\\ProductPolicy"
         )
+    updateProduct(id:ID!, input:CreateProductInput): Product
+        @field(resolver: "Lab19\\Cart\\Module\\Products\\GraphQL\\Mutations\\CreateProduct@update")
+        @can(
+            ability: "update",
+            model: "Lab19\\Cart\\Module\\Products\\Product",
+            policy: "Lab19\\Cart\\Module\\Products\\Policies\\ProductPolicy"
+        )
+    deleteProduct(id:ID!, input:CreateProductInput): DeleteResult
+        @field(resolver: "Lab19\\Cart\\Module\\Products\\GraphQL\\Mutations\\CreateProduct@delete")
+        @can(
+            ability: "delete",
+            model: "Lab19\\Cart\\Module\\Products\\Product",
+            policy: "Lab19\\Cart\\Module\\Products\\Policies\\ProductPolicy"
+        )
 }
 
 input CreateProductInput {
     title: String!
+}
+
+type DeleteResult {
+    success: Boolean!
 }
