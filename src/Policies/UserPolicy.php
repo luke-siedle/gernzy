@@ -6,6 +6,19 @@ use Lab19\Cart\Models\User;
 
 class UserPolicy
 {
+
+    /**
+     * Determine if users can be created by the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function create(User $me)
+    {
+        return $me->isAdmin();
+    }
+
     /**
      * Determine if the given post can be updated by the user.
      *
@@ -39,6 +52,18 @@ class UserPolicy
             return $me->isAdmin() || $me->id === $user->id;
         }
 
+        return $me->isAdmin();
+    }
+
+    /**
+     * Determine if users can delete a user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function delete(User $me)
+    {
         return $me->isAdmin();
     }
 
