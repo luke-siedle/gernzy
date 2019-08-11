@@ -146,4 +146,73 @@
 
             $response->assertSee('errors');
         }
+
+        public function testAdminUserCanAssignAdminPermissions(): Array
+        {
+            $json = $this->createUser([
+                "name" => "Luke Siedle",
+                "email" => "luke@example.com"
+            ])->decodeResponseJson();
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQLWithSession('
+                mutation {
+                    elevateUser(id: "' . $json['data']['createUser']['id'] . '"){
+                        id
+                        name
+                        is_admin
+                    }
+                }
+            ');
+
+            $result = $response->decodeResponseJson();
+
+            $response->assertDontSee('errors');
+
+            $response->assertJsonStructure([
+                'data' => [
+                    'elevateUser' => [
+                        'id', 'name', 'is_admin'
+                    ]
+                ]
+            ]);
+
+            $response->assertDontSee('errors');
+
+            $this->assertEquals($result['data']['elevateUser']['is_admin'], 1);
+
+            return $json;
+        }
+
+        public function testAdminUserCanRevokeAdminPermissions(): void
+        {
+            $json = $this->testAdminUserCanAssignAdminPermissions();
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+            $response = $this->graphQLWithSession('
+                mutation {
+                    demoteUser(id: "' . $json['data']['createUser']['id'] . '"){
+                        id
+                        name
+                        is_admin
+                    }
+                }
+            ');
+
+            $result = $response->decodeResponseJson();
+
+            $response->assertDontSee('errors');
+
+            $response->assertJsonStructure([
+                'data' => [
+                    'demoteUser' => [
+                        'id', 'name', 'is_admin'
+                    ]
+                ]
+            ]);
+
+            $response->assertDontSee('errors');
+
+            $this->assertEquals($result['data']['demoteUser']['is_admin'], 0);
+        }
     }

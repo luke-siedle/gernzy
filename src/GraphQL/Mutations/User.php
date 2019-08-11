@@ -7,6 +7,8 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Lab19\Cart\Actions\CreateUser;
 use Lab19\Cart\Actions\UpdateUser;
 use Lab19\Cart\Actions\DeleteUser;
+use Lab19\Cart\Actions\ElevateUser;
+use Lab19\Cart\Actions\DemoteUser;
 use \App;
 
 class User
@@ -41,5 +43,19 @@ class User
         return [
             'success' => $result
         ];
+    }
+
+    public function elevate($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $elevateUser = App::make(ElevateUser::class);
+        $result = $elevateUser->handle( $args['id'] );
+        return $result;
+    }
+
+    public function demote($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $demoteUser = App::make(DemoteUser::class);
+        $result = $demoteUser->handle( $args['id'] );
+        return $result;
     }
 }
