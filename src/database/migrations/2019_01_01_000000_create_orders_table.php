@@ -40,6 +40,7 @@ class CreateOrdersTable extends Migration
 
             $table->string('payment_method')->nullable();
             $table->string('agree_to_terms')->tinyInteger();
+            $table->string('is_admin_order')->tinyInteger()->default(0);
             $table->string('notes')->string();
 
             $table->timestamps();

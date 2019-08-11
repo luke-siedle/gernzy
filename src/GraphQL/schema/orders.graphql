@@ -46,3 +46,32 @@ type CheckoutPayload {
     success: Boolean!
     order: Order
 }
+
+extend type Mutation {
+    createOrder(input: CheckoutInput!): Order
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Order@create")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Order",
+            policy: "Lab19\\Cart\\Policies\\OrderPolicy"
+        )
+    updateOrder(id: ID!, input: UpdateOrderInput!): Order
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Order@update")
+        @can(
+            ability: "update",
+            model: "Lab19\\Cart\\Models\\Order",
+            policy: "Lab19\\Cart\\Policies\\OrderPolicy"
+        )
+}
+
+input UpdateOrderInput {
+    name: String
+    email: String @rules(apply: ["email"])
+    mobile: String
+    telephone: String
+    billing_address: BillingAddress
+    shipping_address: ShippingAddress
+    use_shipping_for_billing: Boolean
+    payment_method: String
+    notes: String
+}

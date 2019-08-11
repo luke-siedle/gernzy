@@ -7,8 +7,21 @@ use Lab19\Cart\Models\Order;
 
 class OrderPolicy
 {
+
     /**
-     * Determine if the given post can be updated by the user.
+     * Determine if the user can create the order
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function create(User $me)
+    {
+        return $me->isAdmin();
+    }
+
+    /**
+     * Determine if the given order can be updated by the user.
      *
      * @param  \App\User  $user
      * @param  \App\User  $user
@@ -16,10 +29,6 @@ class OrderPolicy
      */
     public function update(User $me, Order $order)
     {
-        if( $user ){
-            return $me->isAdmin() || $me->id === $order->user_id;
-        }
-
         return $me->isAdmin();
     }
 

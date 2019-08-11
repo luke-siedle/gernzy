@@ -44,9 +44,11 @@ type Session {
 
 type Order {
     id: ID!
+    email: String!
     name: String!
     currency_id: Int!
     cart_id: ID!
+    is_admin_order: Boolean!
     cart: Cart @hasOne
 }
 
@@ -70,17 +72,8 @@ type OrderItem {
 }
 
 type Mutation {
-    createOrder(input: CreateOrderInput! @spread) : Order @create(model: "Lab19\\Cart\\Models\\Order")
-        @can(
-            ability: "create",
-            model: "Lab19\\Cart\\Models\\Order",
-            policy: "Lab19\\Cart\\Module\\Users\\UserPolicy"
-        )
-
     createSession : Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
-
     setSession(input: SetSessionInput!) : SetSessionPayload @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
-
     createAccount(input: CreateAccountInput! @spread): CreateAccountPayload @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
 }
 
