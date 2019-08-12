@@ -102,4 +102,57 @@ class TestAdminCreateOrdersTest extends TestCase
         $json = $response->decodeResponseJson();
         $this->assertEquals($json['data']['updateOrder']['email'], "luke@example.com");
     }
+
+    public function testAdminUserCanSetItemsOnOrder(): void
+    {
+        $json = $this->createOrder()->decodeResponseJson();
+        $response = $this->graphQLWithSession('
+            mutation {
+                setOrderItems(id: ' . $json['data']['createOrder']['id'] . ', input: [
+                    {
+                        product_id: 1,
+                        quantity: 1
+                    },{
+                        product_id: 2,
+                        quantity: 1
+                    }
+                ]){
+                    cart {
+                        items {
+                            product_id
+                            quantity
+                        }
+                    }
+                }
+            }
+        ');
+
+        $response->assertDontSee('errors');
+
+        $response->assertJsonStructure([
+            'data' => [
+                'setOrderItems' => [
+                    'cart' => [
+                        'items' => [['product_id', 'quantity']]
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function testAdminUserCanDeleteOrder(){
+        $response = $this->createOrder();
+        $json = $response->decodeResponseJson();
+        $response = $this->graphQLWithSession('
+            mutation {
+                deleteOrder(id: "' . $json['data']['createOrder']['id'] . '"){
+                    success
+                }
+            }
+        ');
+
+        $response->assertDontSee('errors');
+        $json = $response->decodeResponseJson();
+        $this->assertEquals($json['data']['deleteOrder']['success'], true);
+    }
 }

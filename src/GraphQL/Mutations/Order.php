@@ -7,6 +7,7 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Lab19\Cart\Actions\CreateOrder;
 use Lab19\Cart\Actions\UpdateOrder;
 use Lab19\Cart\Actions\DeleteOrder;
+use Lab19\Cart\Actions\SetOrderItems;
 use \App;
 
 class Order
@@ -41,5 +42,12 @@ class Order
         return [
             'success' => $result
         ];
+    }
+
+    public function setItems($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $setOrderItems = App::make(SetOrderItems::class);
+        $order = $setOrderItems->handle( $args['id'], $args['input'] );
+        return $order;
     }
 }

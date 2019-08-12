@@ -53,6 +53,18 @@ class OrderPolicy
     }
 
     /**
+     * Determine if the user can delete the order
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function delete(User $me)
+    {
+        return $me->isAdmin();
+    }
+
+    /**
      * Placeholder method. GraphQL will only arrive here
      * if the user has authorized.
      *

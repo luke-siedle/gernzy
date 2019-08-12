@@ -62,6 +62,20 @@ extend type Mutation {
             model: "Lab19\\Cart\\Models\\Order",
             policy: "Lab19\\Cart\\Policies\\OrderPolicy"
         )
+    setOrderItems(id: ID!, input: [SetOrderItemsInput!]): Order
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Order@setItems")
+        @can(
+            ability: "update",
+            model: "Lab19\\Cart\\Models\\Order",
+            policy: "Lab19\\Cart\\Policies\\OrderPolicy"
+        )
+    deleteOrder(id: ID!): DeleteResult
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Order@delete")
+        @can(
+            ability: "delete",
+            model: "Lab19\\Cart\\Models\\Order",
+            policy: "Lab19\\Cart\\Policies\\OrderPolicy"
+        )
 }
 
 input UpdateOrderInput {
@@ -74,4 +88,9 @@ input UpdateOrderInput {
     use_shipping_for_billing: Boolean
     payment_method: String
     notes: String
+}
+
+input SetOrderItemsInput {
+    product_id: ID!
+    quantity: Int!
 }
