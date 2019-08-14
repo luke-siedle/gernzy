@@ -34,4 +34,31 @@
             return $this->belongsTo(Product::class);
         }
 
+        /**
+         * Price scope
+         * $product->price()
+         */
+        public function scopePrices( $query )
+        {
+            return $query->where('group', 'prices');
+        }
+
+        /**
+         * Get the currency of a price
+         * $productAttribute->currency
+         */
+        public function getCurrencyAttribute()
+        {
+            return $this->attributes['key'];
+        }
+
+        /**
+         * Get the value of a price
+         * $productAttribute->value
+         */
+        public function getValueAttribute()
+        {
+            return $this->attributes['value'];
+        }
+
     }

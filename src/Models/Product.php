@@ -61,6 +61,15 @@
         }
 
         /**
+         * Attributes relation
+         *
+         * @var $query
+         */
+        public function prices(){
+            return $this->hasMany(ProductAttribute::class)->prices();
+        }
+
+        /**
          * In stock products scope
          *
          * @var $query

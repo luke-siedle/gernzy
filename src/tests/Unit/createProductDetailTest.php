@@ -131,6 +131,40 @@
             $this->assertEquals( $result['data']['createProduct']['attributes'][0]['value'], "Light roast" );
         }
 
+        /**
+         * @group ProductAttributes
+         */
+        public function testAdminUserCanCreateProductWithDetailedPricing(): void
+        {
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        price_cents: 200,
+                        price_currency: "EUR",
+                        prices: [{
+                            currency: "GBP",
+                            value: 300
+                        },{
+                            currency: "USD",
+                            value: 250
+                        }]
+                    }){
+                        prices {
+                            currency
+                            value
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+
+            $this->assertCount( 2, $result['data']['createProduct']['prices'] );
+            $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
+        }
+
         /*
         public function testAdminUserCanCreateProductVariant(): void
         {

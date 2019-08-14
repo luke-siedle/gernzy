@@ -22,6 +22,7 @@ type Product {
     created_at: DateTime!
     updated_at: DateTime!
     attributes: [ProductAttribute!]
+    prices: [ProductPrice!]
 }
 
 extend type Mutation {
@@ -53,12 +54,18 @@ input CreateProductInput {
     price_cents: Int
     price_currency: String
     attributes: [ProductAttributeInput!]
+    prices: [ProductPriceInput!]
 }
 
 input ProductAttributeInput {
     group: String!
     key: String!
     value: String!
+}
+
+input ProductPriceInput {
+    currency: String!
+    value: Int!
 }
 
 type DeleteResult {
@@ -72,4 +79,9 @@ type ProductAttribute {
     value: String!
     created_at: DateTime
     updated_at: DateTime
+}
+
+type ProductPrice {
+    currency: String!
+    value: Int!
 }

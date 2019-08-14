@@ -19,13 +19,29 @@ class CreateProduct
 
         $product->save();
 
-        // Set the attributes
-        if(isset($args['attributes']) && count($args['attributes']) > 0){
-            $product->attributes()->createMany(
-                $args['attributes']
-            );
-        }
+        $attributes = $args['attributes'] ?? [];
+        $prices = $args['prices'] ?? [];
+
+        $attributes = static::mergePricesWithAttributes(
+            $prices,
+            $attributes
+        );
+
+        $product->attributes()->createMany(
+            $attributes
+        );
 
         return $product;
+    }
+
+    static function mergePricesWithAttributes( $prices, $attributes ){
+        foreach( $prices as $price ){
+            $attributes[] = [
+                'group' => 'prices',
+                'key' => $price['currency'],
+                'value' => $price['value']
+            ];
+        }
+        return $attributes;
     }
 }
