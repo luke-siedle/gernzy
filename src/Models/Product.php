@@ -4,6 +4,7 @@
 
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\HasOne;
+    use Illuminate\Database\Eloquent\Relations\HasMany;
 
     class Product extends Model {
 
@@ -49,6 +50,15 @@
          */
         protected $casts = [
         ];
+
+        /**
+         * Attributes relation
+         *
+         * @var $query
+         */
+        public function attributes(){
+            return $this->hasMany(ProductAttribute::class);
+        }
 
         /**
          * In stock products scope

@@ -88,6 +88,49 @@
             $this->assertEquals( $result['data']['updateProduct']['price_currency'], "EUR" );
         }
 
+        /**
+         * @group ProductAttributes
+         */
+        public function testAdminUserCanUpdateProductWithArbitraryAttributes(): void
+        {
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        price_cents: 200,
+                        price_currency: "EUR",
+                        attributes: [{
+                            group: "beans",
+                            key: "bean",
+                            value: "Light roast"
+                        },{
+                            group: "beans",
+                            key: "bean",
+                            value: "Medium roast"
+                        },{
+                            group: "beans",
+                            key: "bean",
+                            value: "Dark roast"
+                        }]
+                    }){
+                        id
+                        price_cents
+                        price_currency
+                        attributes {
+                            group
+                            key
+                            value
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+
+            $this->assertEquals( $result['data']['createProduct']['attributes'][0]['value'], "Light roast" );
+        }
+
         /*
         public function testAdminUserCanCreateProductVariant(): void
         {
