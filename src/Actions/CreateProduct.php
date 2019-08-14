@@ -4,8 +4,9 @@ namespace Lab19\Cart\Actions;
 
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Models\ProductAttribute;
+use Lab19\Cart\Actions\Managers\ProductManager;
 
-class CreateProduct
+class CreateProduct extends ProductManager
 {
     public static function handle( $args ): Product
     {
@@ -32,16 +33,5 @@ class CreateProduct
         );
 
         return $product;
-    }
-
-    static function mergePricesWithAttributes( $prices, $attributes ){
-        foreach( $prices as $price ){
-            $attributes[] = [
-                'group' => 'prices',
-                'key' => $price['currency'],
-                'value' => $price['value']
-            ];
-        }
-        return $attributes;
     }
 }

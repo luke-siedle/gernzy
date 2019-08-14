@@ -91,7 +91,7 @@
         /**
          * @group ProductAttributes
          */
-        public function testAdminUserCanUpdateProductWithArbitraryAttributes(): void
+        public function testAdminUserCanCreateProductWithArbitraryAttributes(): void
         {
             $response = $this->graphQLWithSession('
                 mutation {
@@ -134,6 +134,43 @@
         /**
          * @group ProductAttributes
          */
+        public function testAdminUserCanUpdateProductWithArbitraryAttributes(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $id = $product['data']['createProduct']['id'];
+
+            $mutation = '
+                mutation {
+                    updateProduct(id: ' . $id . ', input: {
+                        attributes: [{
+                            group: "beans",
+                            key: "bean",
+                            value: "Medium roast"
+                        }]
+                    }){
+                        attributes {
+                            group
+                            key
+                            value
+                        }
+                    }
+                }
+            ';
+
+            // Run this twice, so we can be sure the attributes are removed
+            $this->graphQLWithSession( $mutation );
+            $response = $this->graphQLWithSession( $mutation );
+
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+
+            $this->assertCount(1, $result['data']['updateProduct']['attributes']);
+            $this->assertEquals( $result['data']['updateProduct']['attributes'][0]['value'], "Medium roast" );
+        }
+
+        /**
+         * @group ProductAttributes
+         */
         public function testAdminUserCanCreateProductWithDetailedPricing(): void
         {
             $response = $this->graphQLWithSession('
@@ -162,6 +199,41 @@
             $result = $response->decodeResponseJson();
 
             $this->assertCount( 2, $result['data']['createProduct']['prices'] );
+            $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
+        }
+
+        /**
+         * @group ProductAttributes
+         */
+        public function testAdminUserCanUpdateProductWithDetailedPricing(): void
+        {
+            $mutation = '
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        price_cents: 200,
+                        price_currency: "EUR",
+                        prices: [{
+                            currency: "GBP",
+                            value: 300
+                        }]
+                    }){
+                        prices {
+                            currency
+                            value
+                        }
+                    }
+                }
+            ';
+
+            // Run this twice, so we can be sure that price data isn't being merged
+            $this->graphQLWithSession( $mutation );
+            $response = $this->graphQLWithSession( $mutation );
+
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+
+            $this->assertCount( 1, $result['data']['createProduct']['prices'] );
             $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
         }
 
