@@ -10,6 +10,8 @@ class CreateProduct
     {
         $product = new Product([
             'title' => $args['title'],
+            'price_cents' => $args['price_cents'] ?? "",
+            'price_currency' => $args['price_currency'] ?? "",
             'status' => 'IN_STOCK',
             'published' => 0
         ]);

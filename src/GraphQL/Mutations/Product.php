@@ -5,13 +5,13 @@ namespace Lab19\Cart\GraphQL\Mutations;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Exceptions\GenericException;
-use Lab19\Cart\Actions\CreateProduct as CreateProductAction;
-use Lab19\Cart\Actions\UpdateProduct as UpdateProductAction;
-use Lab19\Cart\Actions\DeleteProduct as DeleteProductAction;
+use Lab19\Cart\Actions\CreateProduct;
+use Lab19\Cart\Actions\UpdateProduct;
+use Lab19\Cart\Actions\DeleteProduct;
 use Lab19\Cart\Services\SessionService;
 use \App;
 
-class CreateProduct
+class Product
 {
 
     /**
@@ -25,25 +25,21 @@ class CreateProduct
      */
     public function create($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $createProduct = App::make(CreateProductAction::class);
-
+        $createProduct = App::make(CreateProduct::class);
         $result = $createProduct->handle( $args['input'] );
-
         return $result;
     }
 
     public function update($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $updateProduct = App::make(UpdateProductAction::class);
-
+        $updateProduct = App::make(UpdateProduct::class);
         $result = $updateProduct->handle( $args['id'], $args['input'] );
-
         return $result;
     }
 
     public function delete($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $deleteProduct = App::make(DeleteProductAction::class);
+        $deleteProduct = App::make(DeleteProduct::class);
         $result = $deleteProduct->handle( $args['id'] );
         return ['success' => $result];
     }

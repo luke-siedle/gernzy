@@ -16,6 +16,8 @@ class CreateCartProductsTable extends Migration
         Schema::create('cart_products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
+            $table->string('price_cents')->bigInteger()->nullable();
+            $table->string('price_currency')->string()->nullable();
             $table->string('status');
             $table->tinyInteger('published')->default(0);
             $table->timestamps();

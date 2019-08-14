@@ -27,7 +27,11 @@
          * @var array
          */
         protected $fillable = [
-            'title', 'status', 'published'
+            'title',
+            'status',
+            'published',
+            'price_cents',
+            'price_currency'
         ];
 
         /**

@@ -17,27 +17,29 @@ type Product {
     title: String!
     status: String!
     published: Int!
+    price_cents: Int
+    price_currency: String
     created_at: DateTime!
     updated_at: DateTime!
 }
 
 extend type Mutation {
     createProduct(input:CreateProductInput!): Product
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@create")
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@create")
         @can(
             ability: "create",
             model: "Lab19\\Cart\\Models\\Product",
             policy: "Lab19\\Cart\\Policies\\ProductPolicy"
         )
     updateProduct(id:ID!, input:CreateProductInput): Product
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@update")
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@update")
         @can(
             ability: "update",
             model: "Lab19\\Cart\\Models\\Product",
             policy: "Lab19\\Cart\\Policies\\ProductPolicy"
         )
     deleteProduct(id:ID!, input:CreateProductInput): DeleteResult
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateProduct@delete")
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@delete")
         @can(
             ability: "delete",
             model: "Lab19\\Cart\\Models\\Product",
@@ -47,6 +49,8 @@ extend type Mutation {
 
 input CreateProductInput {
     title: String!
+    price_cents: Int
+    price_currency: String
 }
 
 type DeleteResult {
