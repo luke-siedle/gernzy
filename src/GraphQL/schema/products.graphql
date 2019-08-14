@@ -19,6 +19,8 @@ type Product {
     published: Int!
     price_cents: Int
     price_currency: String
+    short_description: String
+    long_description: String
     created_at: DateTime!
     updated_at: DateTime!
     attributes: [ProductAttribute!]
@@ -53,6 +55,8 @@ input CreateProductInput {
     title: String!
     price_cents: Int
     price_currency: String
+    short_description: String
+    long_description: String
     attributes: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
 }
@@ -61,6 +65,8 @@ input UpdateProductInput {
     title: String
     price_cents: Int
     price_currency: String
+    short_description: String
+    long_description: String
     attributes: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
 }

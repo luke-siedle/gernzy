@@ -7,6 +7,20 @@
     class TestCreateProductDetailTest extends TestCase
     {
 
+        protected $createProductDetailedMutation = '
+            mutation {
+                createProduct(input: {
+                    title: "1x Cappuccino",
+                    short_description: "A Cappuccino is a espresso-based coffee drink originating from Italy.",
+                    long_description: "A Cappuccino is an espresso-based coffee drink that originated in Italy, and is traditionally prepared with steamed milk foam (microfoam). \n\nThis description can support newlines too!"
+                }){
+                    short_description
+                    long_description
+                }
+            }
+        ';
+
+
         public function setUp(): void
         {
             parent::setUp();
@@ -37,6 +51,37 @@
                     }
                 }
             ');
+        }
+
+        public function testAdminUserCanCreateProductWithDetailedFields(): void
+        {
+            $response = $this->graphQLWithSession($this->createProductDetailedMutation);
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+            $this->assertStringStartsWith( "A Cappuccino", $result['data']['createProduct']['short_description']);
+            $this->assertStringStartsWith( "A Cappuccino", $result['data']['createProduct']['long_description']);
+        }
+
+        public function testAdminUserCanUpdateProductWithDetailedFields(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $id = $product['data']['createProduct']['id'];
+            $response = $this->graphQLWithSession('
+                mutation {
+                    updateProduct(id: ' . $id . ', input: {
+                        short_description: "A Cappuccino is a espresso-based coffee drink originating from Italy.",
+                        long_description: "A Cappuccino is an espresso-based coffee drink that originated in Italy, and is traditionally prepared with steamed milk foam (microfoam). \n\nThis description can support newlines too!"
+                    }){
+                        short_description
+                        long_description
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $result = $response->decodeResponseJson();
+            $this->assertStringStartsWith( "A Cappuccino", $result['data']['updateProduct']['short_description']);
+            $this->assertStringStartsWith( "A Cappuccino", $result['data']['updateProduct']['long_description']);
         }
 
         public function testAdminUserCanCreateProductWithADefaultPrice(): void

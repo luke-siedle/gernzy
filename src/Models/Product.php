@@ -32,7 +32,9 @@
             'status',
             'published',
             'price_cents',
-            'price_currency'
+            'price_currency',
+            'short_description',
+            'long_description'
         ];
 
         /**

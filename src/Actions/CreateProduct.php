@@ -14,6 +14,8 @@ class CreateProduct extends ProductManager
             'title' => $args['title'],
             'price_cents' => $args['price_cents'] ?? "",
             'price_currency' => $args['price_currency'] ?? "",
+            'short_description' => $args['short_description'] ?? "",
+            'long_description' => $args['long_description'] ?? "",
             'status' => 'IN_STOCK',
             'published' => 0
         ]);
