@@ -6,6 +6,7 @@ extend type Query {
             scopes: ["published", "inStock"],
             builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@search"
         )
+    product(id: ID @eq): Product @find(model: "Lab19\\Cart\\Models\\Product")
 }
 
 input ProductsQueryInput {
@@ -14,6 +15,7 @@ input ProductsQueryInput {
 
 type Product {
     id: ID!
+    parent_id: ID
     title: String!
     status: String!
     published: Int!
@@ -25,6 +27,8 @@ type Product {
     updated_at: DateTime!
     attributes: [ProductAttribute!]
     prices: [ProductPrice!]
+    sizes: [ProductSize!]
+    variants:[Product!]
 }
 
 extend type Mutation {
@@ -35,7 +39,7 @@ extend type Mutation {
             model: "Lab19\\Cart\\Models\\Product",
             policy: "Lab19\\Cart\\Policies\\ProductPolicy"
         )
-    updateProduct(id:ID!, input:UpdateProductInput): Product
+    updateProduct(id:ID!, input:UpdateProductInput!): Product
         @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@update")
         @can(
             ability: "update",
@@ -59,6 +63,7 @@ input CreateProductInput {
     long_description: String
     attributes: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
+    sizes: [ProductSizeInput!]
 }
 
 input UpdateProductInput {
@@ -82,6 +87,10 @@ input ProductPriceInput {
     value: Int!
 }
 
+input ProductSizeInput {
+    size: String!
+}
+
 type DeleteResult {
     success: Boolean!
 }
@@ -98,4 +107,18 @@ type ProductAttribute {
 type ProductPrice {
     currency: String!
     value: Int!
+}
+
+type ProductSize {
+    size: String!
+}
+
+extend type Mutation {
+    createProductVariant(id: ID!, input: CreateProductInput!): Product
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@createVariant")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
 }

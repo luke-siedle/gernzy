@@ -72,6 +72,33 @@
         }
 
         /**
+         * Attributes relation
+         *
+         * @var $query
+         */
+        public function sizes(){
+            return $this->hasMany(ProductAttribute::class)->sizes();
+        }
+
+        /**
+         * Variants relation
+         *
+         * @var $query
+         */
+        public function variants(){
+            return $this->hasMany(Product::class, 'parent_id');
+        }
+
+        /**
+         * Variants relation
+         *
+         * @var $query
+         */
+        public function parent(){
+            return $this->belongsTo(Product::class, 'parent_id');
+        }
+
+        /**
          * In stock products scope
          *
          * @var $query

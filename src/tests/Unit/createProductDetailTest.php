@@ -282,27 +282,48 @@
             $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
         }
 
-        /*
+        /**
+         * @group ProductVariants
+         */
         public function testAdminUserCanCreateProductVariant(): void
         {
+            $product = $this->createProduct()->decodeResponseJson();
+            $id = $product['data']['createProduct']['id'];
             $response = $this->graphQLWithSession('
                 mutation {
-                    createProductVariant(id: 1, input: {
+                    createProductVariant( id: ' . $id . ', input: {
                         title: "1x Cappuccino (Small)",
-                        price: "2.00",
-                        attributes: [{
-                            group: "sizes",
-                            key: "sizes",
-                            value: "Small"
+                        price_cents: 200,
+                        price_currency: "EUR",
+                        sizes: [{
+                            size: "Small"
                         }]
                     }) {
                         id
-                        title
+                        parent_id
+                        sizes {
+                            size
+                        }
                     }
                 }
             ');
 
             $response->assertDontSee('errors');
+            $response = $this->graphQLWithSession('
+                {
+                    product(id:' . $id . '){
+                        variants {
+                            id
+                            sizes {
+                                size
+                            }
+                        }
+                    }
+                }
+            ');
+
+            $result = $response->decodeResponseJson();
+            $response->assertDontSee('errors');
+            $this->assertEquals($result['data']['product']['variants'][0]['sizes'][0]['size'], "Small");
         }
-        */
     }

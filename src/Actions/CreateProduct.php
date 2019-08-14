@@ -24,9 +24,15 @@ class CreateProduct extends ProductManager
 
         $attributes = $args['attributes'] ?? [];
         $prices = $args['prices'] ?? [];
+        $sizes = $args['sizes'] ?? [];
 
         $attributes = static::mergePricesWithAttributes(
             $prices,
+            $attributes
+        );
+
+        $attributes = static::mergeSizesWithAttributes(
+            $sizes,
             $attributes
         );
 

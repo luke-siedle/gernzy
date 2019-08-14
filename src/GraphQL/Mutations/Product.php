@@ -6,6 +6,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Exceptions\GenericException;
 use Lab19\Cart\Actions\CreateProduct;
+use Lab19\Cart\Actions\CreateProductVariant;
 use Lab19\Cart\Actions\UpdateProduct;
 use Lab19\Cart\Actions\DeleteProduct;
 use Lab19\Cart\Services\SessionService;
@@ -27,6 +28,13 @@ class Product
     {
         $createProduct = App::make(CreateProduct::class);
         $result = $createProduct->handle( $args['input'] );
+        return $result;
+    }
+
+    public function createVariant($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $createProductVariant = App::make(CreateProductVariant::class);
+        $result = $createProductVariant->handle( $args['id'], $args['input'] );
         return $result;
     }
 
