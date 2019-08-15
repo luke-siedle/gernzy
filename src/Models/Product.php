@@ -5,6 +5,9 @@
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\HasOne;
     use Illuminate\Database\Eloquent\Relations\HasMany;
+    use Illuminate\Database\Eloquent\Relations\MorphToMany;
+
+    use Lab19\Cart\Models\Category;
 
     class Product extends Model {
 
@@ -52,6 +55,15 @@
          */
         protected $casts = [
         ];
+
+        /**
+         * Categories relation
+         *
+         * @var $query
+         */
+        public function categories(){
+            return $this->morphToMany(Category::class, 'cart_categorizable');
+        }
 
         /**
          * Attributes relation

@@ -5,6 +5,7 @@ namespace Lab19\Cart\Actions;
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Models\ProductAttribute;
 use Lab19\Cart\Actions\Managers\ProductManager;
+use Lab19\Cart\Models\Category;
 
 class CreateProduct extends ProductManager
 {
@@ -25,6 +26,23 @@ class CreateProduct extends ProductManager
         $attributes = $args['attributes'] ?? [];
         $prices = $args['prices'] ?? [];
         $sizes = $args['sizes'] ?? [];
+        $categories = $args['categories'] ?? [];
+
+        $createCategories = [];
+        foreach( $categories as $category ){
+            if( isset($category['id']) ){
+                $cat = Category::find($category['id']);
+                if( $cat ){
+                    $product->categories()->attach( $cat );
+                }
+            } else if(isset($category['title'])) {
+                $createCategories[] = [
+                    'title' => $category['title']
+                ];
+            }
+        }
+
+        $product->categories()->createMany($createCategories);
 
         $attributes = static::mergePricesWithAttributes(
             $prices,
@@ -42,4 +60,5 @@ class CreateProduct extends ProductManager
 
         return $product;
     }
+
 }

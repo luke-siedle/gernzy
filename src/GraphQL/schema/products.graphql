@@ -29,6 +29,12 @@ type Product {
     prices: [ProductPrice!]
     sizes: [ProductSize!]
     variants:[Product!]
+    categories: [ProductCategory!]
+}
+
+type ProductCategory {
+    id: Int!
+    title: String!
 }
 
 extend type Mutation {
@@ -64,6 +70,12 @@ input CreateProductInput {
     attributes: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
     sizes: [ProductSizeInput!]
+    categories: [CategoryInput!]
+}
+
+input CategoryInput {
+    title: String
+    id: ID
 }
 
 input UpdateProductInput {

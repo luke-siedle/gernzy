@@ -326,4 +326,65 @@
             $response->assertDontSee('errors');
             $this->assertEquals($result['data']['product']['variants'][0]['sizes'][0]['size'], "Small");
         }
+
+        /**
+         * @group ProductCategory
+         */
+        public function testAdminUserCanCreateCategoryOnProductWithOrWithoutCategoryExisting(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $id = $product['data']['createProduct']['id'];
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        categories: [{
+                            title: "Coffee"
+                        }]
+                    }){
+                        categories {
+                            id
+                            title
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $response->assertJsonStructure([
+                'data' => [
+                    'createProduct' => [
+                        'categories' => [['id', 'title']]
+                    ]
+                ]
+            ]);
+
+            $json = $response->decodeResponseJson();
+
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        categories: [{
+                            id: ' . $json['data']['createProduct']['categories'][0]['id'] .  '
+                        }]
+                    }){
+                        categories {
+                            id
+                            title
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $response->assertJsonStructure([
+                'data' => [
+                    'createProduct' => [
+                        'categories' => [['id', 'title']]
+                    ]
+                ]
+            ]);
+
+        }
     }
