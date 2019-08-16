@@ -53,6 +53,24 @@
         }
 
         /**
+         * Dimensions scope
+         * $product->dimensions()
+         */
+        public function scopeDimensions( $query )
+        {
+            return $query->where('group', 'dimensions');
+        }
+
+        /**
+         * Weight scope
+         * $product->weight()
+         */
+        public function scopeWeight( $query )
+        {
+            return $query->where('group', 'weight');
+        }
+
+        /**
          * Get the currency of a price
          * $productAttribute->currency
          */

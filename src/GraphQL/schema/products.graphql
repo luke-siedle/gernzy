@@ -28,8 +28,22 @@ type Product {
     attributes: [ProductAttribute!]
     prices: [ProductPrice!]
     sizes: [ProductSize!]
-    variants:[Product!]
+    variants: [Product!]
     categories: [ProductCategory!]
+    dimensions: ProductDimensions
+    weight: ProductWeight
+}
+
+type ProductDimensions {
+    length: Float
+    width: Float
+    height: Float
+    unit: String
+}
+
+type ProductWeight {
+    weight: Float
+    unit: String
 }
 
 type ProductCategory {
@@ -71,6 +85,20 @@ input CreateProductInput {
     prices: [ProductPriceInput!]
     sizes: [ProductSizeInput!]
     categories: [CategoryInput!]
+    dimensions: ProductDimensionsInput
+    weight: ProductWeightInput
+}
+
+input ProductDimensionsInput {
+    length: Float
+    width: Float
+    height: Float
+    unit: String
+}
+
+input ProductWeightInput {
+    weight: Float
+    unit: String
 }
 
 input CategoryInput {

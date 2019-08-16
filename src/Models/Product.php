@@ -93,6 +93,24 @@
         }
 
         /**
+         * Attributes relation
+         *
+         * @var $query
+         */
+        public function productDimensions(){
+            return $this->hasMany(ProductAttribute::class)->dimensions();
+        }
+
+        /**
+         * Attributes relation
+         *
+         * @var $query
+         */
+        public function productWeight(){
+            return $this->hasMany(ProductAttribute::class)->weight();
+        }
+
+        /**
          * Variants relation
          *
          * @var $query
@@ -153,6 +171,34 @@
          */
         public function scopeSearchByKeyword( $query, String $keyword ){
             return $query->where('title', 'like', '%' . $keyword . '%' );
+        }
+
+        /**
+         * Dimensions attribute
+         *
+         * @var Array $data
+         */
+        public function getDimensionsAttribute(){
+            $dimensions = $this->getAttribute('productDimensions');
+            $data = [];
+            foreach( $dimensions as $each ){
+                $data[ $each->key ] = $each->value;
+            }
+            return $data;
+        }
+
+        /**
+         * Weight attribute
+         *
+         * @var Array $data
+         */
+        public function getWeightAttribute(){
+            $weight = $this->getAttribute('productWeight');
+            $data = [];
+            foreach( $weight as $each ){
+                $data[ $each->key ] = $each->value;
+            }
+            return $data;
         }
 
     }

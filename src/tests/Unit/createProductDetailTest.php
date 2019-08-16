@@ -387,4 +387,52 @@
             ]);
 
         }
+
+        /**
+         * @group ProductDimensions
+         */
+        public function testAdminUserCanSetDimensionsAndWeightOfProduct(): void
+        {
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createProduct(input: {
+                        title: "1x Cappuccino",
+                        dimensions: {
+                            length: 20,
+                            width: 10,
+                            height: 5,
+                            unit: "cm"
+                        },
+                        weight: {
+                            weight: 0.25,
+                            unit: "kg"
+                        }
+                    }){
+                        dimensions {
+                            width
+                            length
+                            height
+                        }
+                        weight {
+                            weight
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $response->assertJsonStructure([
+                'data' => [
+                    'createProduct' => [
+                        'dimensions' => ['length', 'width', 'height'],
+                        'weight' => ['weight']
+                    ]
+                ]
+            ]);
+
+            $result = $response->decodeResponseJson();
+
+            $this->assertEquals( $result['data']['createProduct']['dimensions']['width'], 10 );
+
+        }
     }

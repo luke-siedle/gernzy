@@ -27,6 +27,8 @@ class CreateProduct extends ProductManager
         $prices = $args['prices'] ?? [];
         $sizes = $args['sizes'] ?? [];
         $categories = $args['categories'] ?? [];
+        $dimensions = $args['dimensions'] ?? [];
+        $weight = $args['weight'] ?? [];
 
         $createCategories = [];
         foreach( $categories as $category ){
@@ -51,6 +53,16 @@ class CreateProduct extends ProductManager
 
         $attributes = static::mergeSizesWithAttributes(
             $sizes,
+            $attributes
+        );
+
+        $attributes = static::mergeDimensionsWithAttributes(
+            $dimensions,
+            $attributes
+        );
+
+        $attributes = static::mergeWeightWithAttributes(
+            $weight,
             $attributes
         );
 
