@@ -44,6 +44,15 @@
         }
 
         /**
+         * Custom product meta scope
+         * $product->meta()
+         */
+        public function scopeMeta( $query )
+        {
+            return $query->where('group', 'meta');
+        }
+
+        /**
          * Sizes scope
          * $product->sizes()
          */

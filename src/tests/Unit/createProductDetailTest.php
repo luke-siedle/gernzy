@@ -136,7 +136,7 @@
         /**
          * @group ProductAttributes
          */
-        public function testAdminUserCanCreateProductWithArbitraryAttributes(): void
+        public function testAdminUserCanCreateProductWithArbitraryMeta(): void
         {
             $response = $this->graphQLWithSession('
                 mutation {
@@ -144,16 +144,13 @@
                         title: "1x Cappuccino",
                         price_cents: 200,
                         price_currency: "EUR",
-                        attributes: [{
-                            group: "beans",
+                        meta: [{
                             key: "bean",
                             value: "Light roast"
                         },{
-                            group: "beans",
                             key: "bean",
                             value: "Medium roast"
                         },{
-                            group: "beans",
                             key: "bean",
                             value: "Dark roast"
                         }]
@@ -161,8 +158,7 @@
                         id
                         price_cents
                         price_currency
-                        attributes {
-                            group
+                        meta {
                             key
                             value
                         }
@@ -173,13 +169,13 @@
             $response->assertDontSee('errors');
             $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['createProduct']['attributes'][0]['value'], "Light roast" );
+            $this->assertEquals( $result['data']['createProduct']['meta'][0]['value'], "Light roast" );
         }
 
         /**
-         * @group ProductAttributes
+         * @group ProductMeta
          */
-        public function testAdminUserCanUpdateProductWithArbitraryAttributes(): void
+        public function testAdminUserCanUpdateProductWithArbitraryMeta(): void
         {
             $product = $this->createProduct()->decodeResponseJson();
             $id = $product['data']['createProduct']['id'];
@@ -187,14 +183,12 @@
             $mutation = '
                 mutation {
                     updateProduct(id: ' . $id . ', input: {
-                        attributes: [{
-                            group: "beans",
+                        meta: [{
                             key: "bean",
                             value: "Medium roast"
                         }]
                     }){
-                        attributes {
-                            group
+                        meta {
                             key
                             value
                         }
@@ -202,19 +196,19 @@
                 }
             ';
 
-            // Run this twice, so we can be sure the attributes are removed
+            // Run this twice, so we can be sure the meta is removed
             $this->graphQLWithSession( $mutation );
             $response = $this->graphQLWithSession( $mutation );
 
             $response->assertDontSee('errors');
             $result = $response->decodeResponseJson();
 
-            $this->assertCount(1, $result['data']['updateProduct']['attributes']);
-            $this->assertEquals( $result['data']['updateProduct']['attributes'][0]['value'], "Medium roast" );
+            $this->assertCount(1, $result['data']['updateProduct']['meta']);
+            $this->assertEquals( $result['data']['updateProduct']['meta'][0]['value'], "Medium roast" );
         }
 
         /**
-         * @group ProductAttributes
+         * @group ProductMeta
          */
         public function testAdminUserCanCreateProductWithDetailedPricing(): void
         {
@@ -433,6 +427,56 @@
             $result = $response->decodeResponseJson();
 
             $this->assertEquals( $result['data']['createProduct']['dimensions']['width'], 10 );
+
+        }
+
+        /**
+         * @group ProductDimensions
+         */
+        public function testAdminUserCanUpdateDimensionsAndWeightOfProduct(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $id = $product['data']['createProduct']['id'];
+            $response = $this->graphQLWithSession('
+                mutation {
+                    updateProduct(id: ' . $id . ', input: {
+                        title: "1x Cappuccino",
+                        dimensions: {
+                            length: 25,
+                            width: 12,
+                            height: 5,
+                            unit: "cm"
+                        },
+                        weight: {
+                            weight: 0.33,
+                            unit: "kg"
+                        }
+                    }){
+                        dimensions {
+                            width
+                            length
+                            height
+                        }
+                        weight {
+                            weight
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $response->assertJsonStructure([
+                'data' => [
+                    'updateProduct' => [
+                        'dimensions' => ['length', 'width', 'height'],
+                        'weight' => ['weight']
+                    ]
+                ]
+            ]);
+
+            $result = $response->decodeResponseJson();
+
+            $this->assertEquals( $result['data']['updateProduct']['dimensions']['width'], 12 );
 
         }
     }

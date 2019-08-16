@@ -93,6 +93,15 @@
         }
 
         /**
+         * Meta relation
+         *
+         * @var $query
+         */
+        public function productMeta(){
+            return $this->hasMany(ProductAttribute::class)->meta();
+        }
+
+        /**
          * Attributes relation
          *
          * @var $query
@@ -199,6 +208,16 @@
                 $data[ $each->key ] = $each->value;
             }
             return $data;
+        }
+
+        /**
+         * Meta attribute
+         *
+         * @var Array $data
+         */
+        public function getMetaAttribute(){
+            $meta = $this->getAttribute('productMeta');
+            return $meta;
         }
 
     }

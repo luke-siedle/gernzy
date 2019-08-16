@@ -4,10 +4,10 @@ namespace Lab19\Cart\Actions;
 
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Models\ProductAttribute;
-use Lab19\Cart\Actions\Managers\ProductManager;
+use Lab19\Cart\Actions\Helpers\Attributes;
 use Lab19\Cart\Models\Category;
 
-class CreateProduct extends ProductManager
+class CreateProduct
 {
     public static function handle( $args ): Product
     {
@@ -23,12 +23,7 @@ class CreateProduct extends ProductManager
 
         $product->save();
 
-        $attributes = $args['attributes'] ?? [];
-        $prices = $args['prices'] ?? [];
-        $sizes = $args['sizes'] ?? [];
         $categories = $args['categories'] ?? [];
-        $dimensions = $args['dimensions'] ?? [];
-        $weight = $args['weight'] ?? [];
 
         $createCategories = [];
         foreach( $categories as $category ){
@@ -46,28 +41,16 @@ class CreateProduct extends ProductManager
 
         $product->categories()->createMany($createCategories);
 
-        $attributes = static::mergePricesWithAttributes(
-            $prices,
-            $attributes
-        );
-
-        $attributes = static::mergeSizesWithAttributes(
-            $sizes,
-            $attributes
-        );
-
-        $attributes = static::mergeDimensionsWithAttributes(
-            $dimensions,
-            $attributes
-        );
-
-        $attributes = static::mergeWeightWithAttributes(
-            $weight,
-            $attributes
-        );
+        $attributes = new Attributes();
+        $attributes
+            ->meta( $args['meta'] ?? [] )
+            ->sizes( $args['sizes'] ?? [] )
+            ->dimensions( $args['dimensions'] ?? [])
+            ->weight( $args['weight'] ?? [] )
+            ->prices( $args['prices'] ?? [] );
 
         $product->attributes()->createMany(
-            $attributes
+            $attributes->toArray()
         );
 
         return $product;

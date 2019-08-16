@@ -3,9 +3,9 @@
 namespace Lab19\Cart\Actions;
 
 use Lab19\Cart\Models\Product;
-use Lab19\Cart\Actions\Managers\ProductManager;
+use Lab19\Cart\Actions\Helpers\Attributes;
 
-class UpdateProduct extends ProductManager
+class UpdateProduct
 {
     public static function handle( Int $id, Array $args ): Product
     {
@@ -13,28 +13,19 @@ class UpdateProduct extends ProductManager
         $product->fill( $args );
         $product->save();
 
-        $attributes = $args['attributes'] ?? [];
-        $prices = $args['prices'] ?? [];
-        $sizes = $args['sizes'] ?? [];
+        $categories = $args['categories'] ?? [];
 
-        // Update pricing
-        $attributes = static::mergePricesWithAttributes(
-            $prices,
-            $attributes
-        );
+        $attributes = new Attributes( $product );
+        $attributes
+            ->meta( $args['meta'] ?? [] )
+            ->sizes( $args['sizes'] ?? [] )
+            ->dimensions( $args['dimensions'] ?? [])
+            ->weight( $args['weight'] ?? [] )
+            ->prices( $args['prices'] ?? [] );
 
-        // Update sizing
-        $attributes = static::mergeSizesWithAttributes(
-            $sizes,
-            $attributes
-        );
-
-        // Clear existing attributes
-        $product->attributes()->delete();
-
-        // Create new attributes
+        // Update the attributes
         $product->attributes()->createMany(
-            $attributes
+            $attributes->toArray()
         );
 
         return $product;

@@ -25,7 +25,7 @@ type Product {
     long_description: String
     created_at: DateTime!
     updated_at: DateTime!
-    attributes: [ProductAttribute!]
+    meta: [ProductAttribute!]
     prices: [ProductPrice!]
     sizes: [ProductSize!]
     variants: [Product!]
@@ -81,7 +81,7 @@ input CreateProductInput {
     price_currency: String
     short_description: String
     long_description: String
-    attributes: [ProductAttributeInput!]
+    meta: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
     sizes: [ProductSizeInput!]
     categories: [CategoryInput!]
@@ -112,12 +112,15 @@ input UpdateProductInput {
     price_currency: String
     short_description: String
     long_description: String
-    attributes: [ProductAttributeInput!]
+    meta: [ProductAttributeInput!]
     prices: [ProductPriceInput!]
+    sizes: [ProductSizeInput!]
+    categories: [CategoryInput!]
+    dimensions: ProductDimensionsInput
+    weight: ProductWeightInput
 }
 
 input ProductAttributeInput {
-    group: String!
     key: String!
     value: String!
 }
