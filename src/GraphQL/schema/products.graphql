@@ -32,6 +32,7 @@ type Product {
     categories: [ProductCategory!]
     dimensions: ProductDimensions
     weight: ProductWeight
+    images: [Image!]
 }
 
 type ProductDimensions {
@@ -164,4 +165,35 @@ extend type Mutation {
             model: "Lab19\\Cart\\Models\\Product",
             policy: "Lab19\\Cart\\Policies\\ProductPolicy"
         )
+    addImage(input: AddProductImage!): Image
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Image@create")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
+    addProductImages(product_id: ID!, images: [ID!]): AddProductImagesPayload!
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@attachImages")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
+}
+
+input AddProductImage {
+    file: Upload!
+    gallery: ID
+}
+
+type Image {
+    id: ID!
+    url: String!
+    type: String!
+    name: String!
+}
+
+type AddProductImagesPayload {
+    product: Product!
+    images: [Image!]
 }

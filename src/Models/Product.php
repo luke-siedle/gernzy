@@ -5,6 +5,7 @@
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\HasOne;
     use Illuminate\Database\Eloquent\Relations\HasMany;
+    use Illuminate\Database\Eloquent\Relations\HasManyThrough;
     use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
     use Lab19\Cart\Models\Category;
@@ -117,6 +118,24 @@
          */
         public function productWeight(){
             return $this->hasMany(ProductAttribute::class)->weight();
+        }
+
+        /**
+         * Images relation
+         *
+         * @var $query
+         */
+        public function productImages(){
+            return $this->hasMany(ProductAttribute::class)->images();
+        }
+
+        /**
+         * Images relation
+         *
+         * @var $query
+         */
+        public function images(){
+            return $this->morphToMany(Image::class, 'cart_image_attachable');
         }
 
         /**

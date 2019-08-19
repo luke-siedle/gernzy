@@ -91,6 +91,21 @@ class Attributes
         return $this;
     }
 
+    public function images( Array $images ): Attributes
+    {
+        if( $this->product && count($images) > 0 ){
+            $this->product->productImages()->delete();
+        }
+        foreach( $images as $id ){
+            $this->attributes[] = [
+                'group' => 'images',
+                'key' => 'image',
+                'value' => $id
+            ];
+        }
+        return $this;
+    }
+
     public function toArray(){
         return $this->attributes;
     }

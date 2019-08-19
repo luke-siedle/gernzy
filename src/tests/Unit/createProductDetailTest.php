@@ -1,5 +1,6 @@
 <?php
     use Lab19\Cart\Testing\TestCase;
+    use Illuminate\Http\UploadedFile;
 
     /**
      * @group Products
@@ -477,6 +478,83 @@
             $result = $response->decodeResponseJson();
 
             $this->assertEquals( $result['data']['updateProduct']['dimensions']['width'], 12 );
+
+        }
+
+        /**
+         * @group ProductImage
+         */
+        public function testAdminUserCanCreateImagesOnProduct(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $productId = $product['data']['createProduct']['id'];
+
+            $json = [
+                "query" => '
+                    mutation($file: Upload!){
+                        addImage(input: { file: $file }){
+                            id
+                            url
+                            name
+                            type
+                        }
+                    }
+                ',
+                "variables" => [
+                    "file" => null
+                ]
+            ];
+
+            $operations = json_encode( $json );
+
+            $response = $this->multipartGraphQLWithSession(
+                [
+                    "operations" => $operations,
+                    "map" => '{ "0": ["variables.file"] }'
+                ],
+                [
+                    '0' => UploadedFile::fake()->create('image.jpg', 500),
+                ]
+            );
+
+            $response->assertDontSee('errors');
+
+            $json = $response->decodeResponseJson();
+            $imageId = $json['data']['addImage']['id'];
+
+            $response->assertJsonStructure([
+                'data' => [
+                    'addImage' => [
+                        'url',
+                        'type',
+                        'name'
+                    ]
+                ]
+            ]);
+
+            $response = $this->graphQLWithSession('
+                mutation {
+                    addProductImages(product_id: ' . $productId . ', images: ['. $imageId .']){
+                        product {
+                            id
+                            images {
+                                id
+                                url
+                            }
+                        }
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+
+            $response->assertJsonStructure([
+                'data' => ['addProductImages' => [
+                    'product' => ['id', 'images' => [
+                        ['id', 'url']
+                    ]]
+                ]]
+            ]);
 
         }
     }

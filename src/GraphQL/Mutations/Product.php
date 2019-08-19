@@ -9,6 +9,7 @@ use Lab19\Cart\Actions\CreateProduct;
 use Lab19\Cart\Actions\CreateProductVariant;
 use Lab19\Cart\Actions\UpdateProduct;
 use Lab19\Cart\Actions\DeleteProduct;
+use Lab19\Cart\Actions\ProductAttachImages;
 use Lab19\Cart\Services\SessionService;
 use \App;
 
@@ -50,5 +51,14 @@ class Product
         $deleteProduct = App::make(DeleteProduct::class);
         $result = $deleteProduct->handle( $args['id'] );
         return ['success' => $result];
+    }
+
+    public function attachImages($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $attachImage = App::make(ProductAttachImages::class);
+        $result = $attachImage->handle( $args['product_id'], $args['images'] );
+        return [
+            'product' => $result
+        ];
     }
 }

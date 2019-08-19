@@ -44,6 +44,15 @@
         }
 
         /**
+         * Images relation
+         *
+         * @var $query
+         */
+        public function scopeImages( $query ){
+            return $query->where('group', 'images');
+        }
+
+        /**
          * Custom product meta scope
          * $product->meta()
          */

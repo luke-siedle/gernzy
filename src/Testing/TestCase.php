@@ -7,6 +7,7 @@
     use Illuminate\Foundation\Testing\DatabaseMigrations;
     use Illuminate\Foundation\Testing\RefreshDatabase;
     use Lab19\Cart\Testing\Seeds\UsersSeeder;
+    use Illuminate\Foundation\Testing\TestResponse;
 
     abstract class TestCase extends BaseTestCase
     {
@@ -88,6 +89,31 @@
             ]);
 
             return $response;
+        }
+
+        /**
+         * Send a multipart form request to GraphQL.
+         *
+         * This is used for file uploads conforming to the specification:
+         * https://github.com/jaydenseric/graphql-multipart-request-spec
+         *
+         * @param  mixed[]  $parameters
+         * @param  mixed[]  $files
+         * @return \Illuminate\Foundation\Testing\TestResponse
+         */
+        protected function multipartGraphQLWithSession(array $parameters, array $files): TestResponse
+        {
+            return $this->call(
+                'POST',
+                $this->graphQLEndpointUrl(),
+                $parameters,
+                [],
+                $files,
+                $this->transformHeadersToServerVars([
+                    'Content-Type' => 'multipart/form-data',
+                    'Authorization' => 'Bearer ' . $this->sessionToken
+                ])
+            );
         }
     }
 
