@@ -6,11 +6,25 @@ extend type Query {
             scopes: ["published", "inStock"],
             builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@search"
         )
+
     product(id: ID @eq): Product @find(model: "Lab19\\Cart\\Models\\Product")
+
+    productsByCategories(input:ProductsCategoriesInput): [Product!]!
+        @paginate(
+            type: "paginator",
+            model: "Lab19\\Cart\\Models\\Product",
+            scopes: ["published", "inStock"],
+            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@byCategory"
+        )
 }
 
 input ProductsQueryInput {
     keyword: String
+}
+
+input ProductsCategoriesInput {
+    ids: [Int!],
+    titles: [String!]
 }
 
 type Product {

@@ -19,4 +19,19 @@ class ProductsBuilder
 
         return $query;
     }
+
+    public function byCategory($root, array $args, $context, ResolveInfo $resolveInfo)
+    {
+        if(isset($args['input'])){
+            if( isset($args['input']['ids'])){
+                $query = Product::byCategoryIds($args['input']['ids']);
+            } else if(isset($args['input']['titles'])) {
+                $query = Product::byCategoryTitles($args['input']['titles']);
+            }
+        } else {
+            $query = Product::query();
+        }
+
+        return $query;
+    }
 }
