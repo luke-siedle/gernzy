@@ -7,6 +7,7 @@
     use Illuminate\Database\Eloquent\Relations\HasMany;
     use Illuminate\Database\Eloquent\Relations\HasManyThrough;
     use Illuminate\Database\Eloquent\Relations\MorphToMany;
+    use Illuminate\Database\Eloquent\Builder;
 
     use Lab19\Cart\Models\Category;
 
@@ -199,6 +200,31 @@
          */
         public function scopeSearchByKeyword( $query, String $keyword ){
             return $query->where('title', 'like', '%' . $keyword . '%' );
+        }
+
+        /**
+         * Scope by category(s) ids
+         *
+         * @var $query
+         */
+        public function scopeByCategoryIds( $query, Array $ids ){
+            $result = $query->whereHas('categories', function (Builder $q) use ($ids){
+                $q->whereIn('category_id', $ids);
+            });
+            return $result;
+        }
+
+        /**
+         * Scope by category(s) titles
+         *
+         * @var $query
+         */
+        public function scopeByCategoryTitles( $query, Array $titles ){
+            return $query->whereHas('categories', function (Builder $q) use ($titles){
+                foreach( $titles as $title ){
+                    $q->orWhere('title', 'LIKE', '%' . strtolower($title) . '%');
+                }
+            });
         }
 
         /**
