@@ -47,6 +47,7 @@ type Product {
     dimensions: ProductDimensions
     weight: ProductWeight
     images: [Image!]
+    featured_image: Image
 }
 
 type ProductDimensions {
@@ -193,6 +194,13 @@ extend type Mutation {
             model: "Lab19\\Cart\\Models\\Product",
             policy: "Lab19\\Cart\\Policies\\ProductPolicy"
         )
+    setProductFeaturedImage(product_id: ID!, image_id: ID!): SetProductFeaturedImagePayload!
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@setFeaturedImage")
+        @can(
+            ability: "create",
+            model: "Lab19\\Cart\\Models\\Product",
+            policy: "Lab19\\Cart\\Policies\\ProductPolicy"
+        )
 }
 
 input AddProductImage {
@@ -210,4 +218,8 @@ type Image {
 type AddProductImagesPayload {
     product: Product!
     images: [Image!]
+}
+
+type SetProductFeaturedImagePayload {
+    product: Product!
 }

@@ -10,6 +10,7 @@
     use Illuminate\Database\Eloquent\Builder;
 
     use Lab19\Cart\Models\Category;
+    use Lab19\Cart\Models\Image;
 
     class Product extends Model {
 
@@ -128,6 +129,15 @@
          */
         public function productImages(){
             return $this->hasMany(ProductAttribute::class)->images();
+        }
+
+        /**
+         * Featured image relation
+         *
+         * @var $query
+         */
+        public function productFeaturedImage(){
+            return $this->hasMany(ProductAttribute::class)->featuredImage();
         }
 
         /**
@@ -253,6 +263,19 @@
                 $data[ $each->key ] = $each->value;
             }
             return $data;
+        }
+
+        /**
+         * FeaturedImage attribute
+         *
+         * @var Array $data
+         */
+        public function getFeaturedImageAttribute(){
+            $attributeArray = $this->getAttribute('productFeaturedImage');
+            foreach( $attributeArray as $each ){
+                $image = Image::find($each->value);
+                return $image;
+            }
         }
 
         /**

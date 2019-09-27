@@ -557,4 +557,65 @@
             ]);
 
         }
+
+        /**
+         * @group ProductImage
+         */
+        public function testAdminUserCanSetFeaturedImageOnProduct(): void
+        {
+            $product = $this->createProduct()->decodeResponseJson();
+            $productId = $product['data']['createProduct']['id'];
+
+            $json = [
+                "query" => '
+                    mutation($file: Upload!){
+                        addImage(input: { file: $file }){
+                            id
+                        }
+                    }
+                ',
+                "variables" => [
+                    "file" => null
+                ]
+            ];
+
+            $response = $this->multipartGraphQLWithSession(
+                [
+                    "operations" => json_encode( $json ),
+                    "map" => '{ "0": ["variables.file"] }'
+                ],
+                [
+                    '0' => UploadedFile::fake()->create('image.jpg', 500),
+                ]
+            );
+
+            $json = $response->decodeResponseJson();
+            $imageId = $json['data']['addImage']['id'];
+
+            for($i=0; $i<5; $i++){
+                $response = $this->graphQLWithSession('
+                    mutation {
+                        setProductFeaturedImage(product_id: ' . $productId . ', image_id: ' . $imageId .'){
+                            product {
+                                id
+                                featured_image {
+                                    id
+                                    url
+                                }
+                            }
+                        }
+                    }
+                ');
+            }
+
+            $response->assertDontSee('errors');
+
+            $response->assertJsonStructure([
+                'data' => [
+                    'setProductFeaturedImage' => [
+                        'product' => ['id', 'featured_image' => ['id', 'url'] ]
+                    ]
+                ]
+            ]);
+        }
     }

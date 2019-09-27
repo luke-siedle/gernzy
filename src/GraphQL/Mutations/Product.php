@@ -10,6 +10,7 @@ use Lab19\Cart\Actions\CreateProductVariant;
 use Lab19\Cart\Actions\UpdateProduct;
 use Lab19\Cart\Actions\DeleteProduct;
 use Lab19\Cart\Actions\ProductAttachImages;
+use Lab19\Cart\Actions\ProductSetFeaturedImage;
 use Lab19\Cart\Services\SessionService;
 use \App;
 
@@ -57,6 +58,15 @@ class Product
     {
         $attachImage = App::make(ProductAttachImages::class);
         $result = $attachImage->handle( $args['product_id'], $args['images'] );
+        return [
+            'product' => $result
+        ];
+    }
+
+    public function setFeaturedImage($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $setFeaturedImage = App::make(ProductSetFeaturedImage::class);
+        $result = $setFeaturedImage->handle( $args['product_id'], $args['image_id'] );
         return [
             'product' => $result
         ];

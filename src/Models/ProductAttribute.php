@@ -53,6 +53,15 @@
         }
 
         /**
+         * Featured image relation
+         *
+         * @var $query
+         */
+        public function scopeFeaturedImage( $query ){
+            return $query->where('group', 'featured_image');
+        }
+
+        /**
          * Custom product meta scope
          * $product->meta()
          */

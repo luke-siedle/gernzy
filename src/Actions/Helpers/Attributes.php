@@ -2,6 +2,7 @@
 namespace Lab19\Cart\Actions\Helpers;
 
 use Lab19\Cart\Models\Product;
+use Lab19\Cart\Models\Image;
 use Lab19\Cart\Models\ProductAttribute;
 
 class Attributes
@@ -103,6 +104,21 @@ class Attributes
                 'value' => $id
             ];
         }
+        return $this;
+    }
+
+    public function featuredImage( $image ): Attributes
+    {
+        if( $this->product && $image instanceof Image ){
+            $this->product->productFeaturedImage()->delete();
+        }
+
+        $this->attributes[] = [
+            'group' => 'featured_image',
+            'key' => 'featured_image',
+            'value' => $image->id
+        ];
+
         return $this;
     }
 
