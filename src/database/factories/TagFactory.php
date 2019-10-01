@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use Lab19\Cart\Models\Product;
+use Lab19\Cart\Models\Tag;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
@@ -16,12 +16,9 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Product::class, function (Faker $faker) {
+$factory->define(Tag::class, function (Faker $faker) {
     $rand = rand(0,10);
     return [
-        'title' => $faker->word(),
-        'short_description' => $faker->sentence(),
-        'status' => $rand > 5 ? 'IN_STOCK' : 'OUT_OF_STOCK',
-        'published' => $rand > 5 ? 1 : 0
+        'name' => $faker->word()
     ];
 });

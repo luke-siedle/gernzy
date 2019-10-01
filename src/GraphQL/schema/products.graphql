@@ -1,4 +1,5 @@
 extend type Query {
+
     products(input:ProductsQueryInput): [Product!]!
         @paginate(
             type: "paginator",
@@ -16,6 +17,21 @@ extend type Query {
             scopes: ["published", "inStock"],
             builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@byCategory"
         )
+
+    productsByTag(tag: Int!): [Product!]!
+        @paginate(
+            type: "paginator",
+            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@productsbytag"
+        )
+
+    productsByTags(tags: [Int!]): [Product!]!
+        @paginate(
+            type: "paginator",
+            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@productsByTags"
+        )
+
+    product(id: ID @eq): Product @find(model: "Lab19\\Cart\\Models\\Product")
+
 }
 
 input ProductsQueryInput {
@@ -48,6 +64,7 @@ type Product {
     weight: ProductWeight
     images: [Image!]
     featured_image: Image
+    tags: [Tag!] @hasMany
 }
 
 type ProductDimensions {

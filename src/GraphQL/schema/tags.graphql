@@ -1,0 +1,10 @@
+extend type Query {
+    tags: [Tag!]! @all(model: "Lab19\\Cart\\Models\\Tag")
+    tag(id: Int! @eq): Tag @find(model: "Lab19\\Cart\\Models\\Tag")
+}
+
+type Tag {
+    id: ID!
+    name: String
+    products: [Product!]! @hasMany(type: "paginator")
+}

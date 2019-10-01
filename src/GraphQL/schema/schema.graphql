@@ -108,3 +108,4 @@ input UpdateCartInput {
 #import user.graphql
 #import products.graphql
 #import orders.graphql
+#import tags.graphql
