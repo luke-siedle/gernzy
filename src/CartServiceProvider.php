@@ -10,8 +10,6 @@ use Lab19\Cart\Services\SessionService;
 use Lab19\Cart\Services\UserService;
 use Lab19\Cart\Services\OrderService;
 use Lab19\Cart\Services\CartService;
-use Lab19\Cart\AuthServiceProvider;
-
 
 class CartServiceProvider extends ServiceProvider
 {
@@ -34,7 +32,7 @@ class CartServiceProvider extends ServiceProvider
         // This needs to happen before the Lighthouse provider registration
         // or there's a rather cryptic "Server error" returned.
         // This happens because it won't be able to find a "schema.graphql" file.
-        $this->app['config']->set('lighthouse.namespaces', [] );
+        $this->app['config']->set('lighthouse.namespaces', []);
         $this->app['config']->set('lighthouse.schema.register', __DIR__ . '/GraphQL/schema/schema.graphql');
 
         $middleware = $this->app['config']->get('lighthouse.route.middleware') ?? [];
@@ -45,20 +43,20 @@ class CartServiceProvider extends ServiceProvider
             \Barryvdh\Cors\HandleCors::class,
 
             // Add cart middleware
-            \Lab19\Cart\Middleware\CartMiddleware::class
+            \Lab19\Cart\Middleware\CartMiddleware::class,
         ]));
 
         // Bind services
-        $this->app->bind('Lab19\SessionService', SessionService::class );
-        $this->app->bind('Lab19\UserService', UserService::class );
-        $this->app->bind('Lab19\OrderService', OrderService::class );
-        $this->app->bind('Lab19\CartService', CartService::class );
+        $this->app->bind('Lab19\SessionService', SessionService::class);
+        $this->app->bind('Lab19\UserService', UserService::class);
+        $this->app->bind('Lab19\OrderService', OrderService::class);
+        $this->app->bind('Lab19\CartService', CartService::class);
 
         $directives = [
-            'Lab19\\Cart\\GraphQL\\Directives'
+            'Lab19\\Cart\\GraphQL\\Directives',
         ];
 
-        $this->app['config']->set('lighthouse.namespaces.directives', $directives );
+        $this->app['config']->set('lighthouse.namespaces.directives', $directives);
     }
 
     /**
@@ -68,6 +66,6 @@ class CartServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 }

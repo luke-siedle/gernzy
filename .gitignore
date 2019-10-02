@@ -1,2 +1,4 @@
 vendor
 *.csv
+node_modules
+.php_cs.cache

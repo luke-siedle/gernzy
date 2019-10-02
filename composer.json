@@ -17,7 +17,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.5",
-        "orchestra/testbench-browser-kit": "^3.5"
+        "orchestra/testbench-browser-kit": "^3.5",
+        "friendsofphp/php-cs-fixer": "^2.15"
     },
     "scripts": {
         "test": [

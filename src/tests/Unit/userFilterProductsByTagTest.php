@@ -1,15 +1,14 @@
 <?php
 
-use Lab19\Cart\Testing\TestCase;
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Models\Tag;
+use Lab19\Cart\Testing\TestCase;
 
 /**
  * @group Products
  */
 class TestFilterProducts extends TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();
@@ -37,7 +36,6 @@ class TestFilterProducts extends TestCase
 
     public function testProductsByTag(): void
     {
-
         factory(Product::class, 4)->create()->each(function ($product) {
             $product->addTag(1);
             $product->save();
@@ -71,7 +69,7 @@ class TestFilterProducts extends TestCase
             'data' => [
                 'productsByTag' => [
                     'data' => [
-                        ['id','title','short_description','status']
+                        ['id', 'title', 'short_description', 'status']
                     ]
                 ]
             ]
@@ -80,9 +78,8 @@ class TestFilterProducts extends TestCase
 
     public function testProductsByMultipleTags(): void
     {
-
         factory(Product::class, 5)->create()->each(function ($product) {
-            $product->addTag(rand(1,5));
+            $product->addTag(rand(1, 5));
             $product->save();
         });
 
@@ -114,7 +111,7 @@ class TestFilterProducts extends TestCase
             'data' => [
                 'productsByTags' => [
                     'data' => [
-                        ['id','title','short_description','status']
+                        ['id', 'title', 'short_description', 'status']
                     ]
                 ]
             ]
@@ -123,7 +120,6 @@ class TestFilterProducts extends TestCase
 
     public function testQueryTagAndRetrieveProducts(): void
     {
-
         factory(Product::class, 100)->create()->each(function ($product) {
             $product->addTag(1);
             $product->save();
@@ -169,7 +165,6 @@ class TestFilterProducts extends TestCase
 
     public function testQueryProductAndRetrieveTags(): void
     {
-
         $product = Product::find(1);
 
         $tag1 = Tag::find(1);
@@ -236,7 +231,6 @@ class TestFilterProducts extends TestCase
 
     public function testQueryProductsEloguent(): void
     {
-
         factory(Product::class, 100)->create()->each(function ($product) {
             $product->addTag(1);
             $product->save();
@@ -254,7 +248,6 @@ class TestFilterProducts extends TestCase
 
     public function testQueryTagsEloguent(): void
     {
-
         factory(Product::class, 100)->create()->each(function ($product) {
             $product->addTag(1);
             $product->save();

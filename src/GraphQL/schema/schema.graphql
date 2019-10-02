@@ -8,35 +8,26 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 type Query {
-
     users: [User!]!
-        @paginate(type: "paginator" model: "Lab19\\Cart\\Models\\User")
-        @can(
-            ability: "view",
-            model: "Lab19\\Cart\\Models\\User",
-            policy: "Lab19\\Cart\\Policies\\UserPolicy"
-        )
+        @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\User")
+        @can(ability: "view", model: "Lab19\\Cart\\Models\\User", policy: "Lab19\\Cart\\Policies\\UserPolicy")
 
-    user(id: ID @eq): User @find(model: "Lab19\\Cart\\Models\\User")
-        @can(
-            ability: "view",
-            model: "Lab19\\Cart\\Models\\User",
-            policy: "Lab19\\Cart\\Policies\\UserPolicy"
-        )
+    user(id: ID @eq): User
+        @find(model: "Lab19\\Cart\\Models\\User")
+        @can(ability: "view", model: "Lab19\\Cart\\Models\\User", policy: "Lab19\\Cart\\Policies\\UserPolicy")
 
-    orders: [Order!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Models\\Order")
+    orders: [Order!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\Order")
 
-    order_items: [OrderItem!]! @paginate(type: "paginator" model: "Lab19\\Cart\\Models\\OrderItem")
+    order_items: [OrderItem!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\OrderItem")
     order_item(id: ID @eq): OrderItem @find(model: "Lab19\\Cart\\Models\\OrderItem")
-
 }
 
 type User {
     id: ID!
     name: String!
     email: String!
-    cart: Cart,
-    session: Session,
+    cart: Cart
+    session: Session
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -68,16 +59,17 @@ type CartItem {
     quantity: Int!
 }
 
-
 type OrderItem {
     id: ID!
     order_id: ID!
 }
 
 type Mutation {
-    createSession : Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
-    setSession(input: SetSessionInput!) : SetSessionPayload @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
-    createAccount(input: CreateAccountInput! @spread): CreateAccountPayload @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
+    createSession: Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
+    setSession(input: SetSessionInput!): SetSessionPayload
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
+    createAccount(input: CreateAccountInput! @spread): CreateAccountPayload
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
 }
 
 type Session {
@@ -91,7 +83,7 @@ input CreateOrderInput {
 }
 
 input CreateCartRelation {
-    connect: ID,
+    connect: ID
     create: CreateCartInput
     update: UpdateCartInput
 }
@@ -101,7 +93,7 @@ input CreateCartInput {
 }
 
 input UpdateCartInput {
-    id: ID,
+    id: ID
     item_count: Int
 }
 
