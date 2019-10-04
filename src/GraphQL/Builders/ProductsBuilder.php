@@ -2,30 +2,31 @@
 
 namespace Lab19\Cart\GraphQL\Builders;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Query\Builder;
 use GraphQL\Type\Definition\ResolveInfo;
 use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Tag;
 
 class ProductsBuilder
 {
     public function search($root, array $args, $context, ResolveInfo $resolveInfo)
     {
+        $query = Product::query();
         if (isset($args['input'])) {
-            $query = Product::searchByKeyword($args['input']['keyword']);
-        } else {
-            $query = Product::query();
+            if (isset($args['input']['keyword'])) {
+                $query = $query->searchByKeyword($args['input']['keyword']);
+            }
+            if (isset($args['input']['attributes'])) {
+                $query = $query->searchByAttributes($args['input']['attributes']);
+            }
         }
         return $query;
     }
 
     public function byCategory($root, array $args, $context, ResolveInfo $resolveInfo)
     {
-        if(isset($args['input'])){
-            if( isset($args['input']['ids'])){
+        if (isset($args['input'])) {
+            if (isset($args['input']['ids'])) {
                 $query = Product::byCategoryIds($args['input']['ids']);
-            } else if(isset($args['input']['titles'])) {
+            } elseif (isset($args['input']['titles'])) {
                 $query = Product::byCategoryTitles($args['input']['titles']);
             }
             return $query;
@@ -53,5 +54,4 @@ class ProductsBuilder
         }
         return $query;
     }
-
 }
