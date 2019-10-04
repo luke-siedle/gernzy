@@ -28,6 +28,12 @@ extend type Query {
 
 input ProductsQueryInput {
     keyword: String
+    attributes: [ProductsQueryInputAttributes!]
+}
+
+input ProductsQueryInputAttributes {
+    name: String
+    value: String
 }
 
 input ProductsCategoriesInput {

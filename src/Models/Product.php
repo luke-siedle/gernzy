@@ -2,16 +2,9 @@
 
 namespace Lab19\Cart\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
-use Lab19\Cart\Models\Category;
-use Lab19\Cart\Models\Image;
-use Lab19\Cart\Models\Tag;
 
 class Product extends Model
 {
@@ -50,7 +43,8 @@ class Product extends Model
      *
      * @var $query
      */
-    public function productFeaturedImage(){
+    public function productFeaturedImage()
+    {
         return $this->hasMany(ProductAttribute::class)->featuredImage();
     }
 
@@ -59,7 +53,8 @@ class Product extends Model
      *
      * @var $query
      */
-    public function images(){
+    public function images()
+    {
         return $this->morphToMany(Image::class, 'cart_image_attachable');
     }
 
@@ -128,8 +123,9 @@ class Product extends Model
      *
      * @var $query
      */
-    public function scopeByCategoryIds( $query, Array $ids ){
-        $result = $query->whereHas('categories', function (Builder $q) use ($ids){
+    public function scopeByCategoryIds($query, array $ids)
+    {
+        $result = $query->whereHas('categories', function (Builder $q) use ($ids) {
             $q->whereIn('category_id', $ids);
         });
         return $result;
@@ -140,9 +136,10 @@ class Product extends Model
      *
      * @var $query
      */
-    public function scopeByCategoryTitles( $query, Array $titles ){
-        return $query->whereHas('categories', function (Builder $q) use ($titles){
-            foreach( $titles as $title ){
+    public function scopeByCategoryTitles($query, array $titles)
+    {
+        return $query->whereHas('categories', function (Builder $q) use ($titles) {
+            foreach ($titles as $title) {
                 $q->orWhere('title', 'LIKE', '%' . strtolower($title) . '%');
             }
         });
@@ -153,10 +150,11 @@ class Product extends Model
      *
      * @var Array $data
      */
-    public function getDimensionsAttribute(){
+    public function getDimensionsAttribute()
+    {
         $dimensions = $this->getAttribute('productDimensions');
         $data = [];
-        foreach( $dimensions as $each ){
+        foreach ($dimensions as $each) {
             $data[ $each->key ] = $each->value;
         }
         return $data;
@@ -285,13 +283,39 @@ class Product extends Model
     }
 
     /**
+     * Scope by attributes
+     *
+     * @var $query
+     */
+    public function scopeSearchByAttributes($query, array $attributes)
+    {
+        $query = $query->whereHas('attributes', function (Builder $q) use ($attributes) {
+            foreach ($attributes as $i => $attr) {
+                $name = $attr['name'];
+                $value = $attr['value'];
+                if ($i === 0) {
+                    $q->where(function ($qq) use ($name, $value) {
+                        $qq->where('key', '=', $name)->where('value', '=', $value);
+                    });
+                } else {
+                    $q->orWhere(function ($qq) use ($name, $value) {
+                        $qq->where('key', '=', $name)->where('value', '=', $value);
+                    });
+                }
+            }
+        });
+        return $query;
+    }
+
+    /**
      * FeaturedImage attribute
      *
      * @var Array $data
      */
-    public function getFeaturedImageAttribute(){
+    public function getFeaturedImageAttribute()
+    {
         $attributeArray = $this->getAttribute('productFeaturedImage');
-        foreach( $attributeArray as $each ){
+        foreach ($attributeArray as $each) {
             $image = Image::find($each->value);
             return $image;
         }
@@ -302,7 +326,8 @@ class Product extends Model
      *
      * @var Array $data
      */
-    public function getMetaAttribute(){
+    public function getMetaAttribute()
+    {
         $meta = $this->getAttribute('productMeta');
         return $meta;
     }
