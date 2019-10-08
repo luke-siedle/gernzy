@@ -3,14 +3,10 @@
     namespace Lab19\Cart\Models;
 
     use Illuminate\Database\Eloquent\Model;
-    use Illuminate\Database\Eloquent\Relations\HasOne;
-    use Illuminate\Database\Eloquent\Relations\HasMany;
-    use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-    use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-    use Lab19\Cart\Models\Product;
 
-    class Tag extends Model {
+    class Tag extends Model
+    {
 
 
         /**
@@ -26,7 +22,8 @@
          * @var array
          */
         protected $fillable = [
-            'tag'
+            'tag',
+            'name'
         ];
 
         /**
@@ -51,8 +48,8 @@
          *
          * @var $query
          */
-        public function products(){
-            return $this->morphedByMany(Product::class, 'taggable','cart_taggables')->withTimestamps();
+        public function products()
+        {
+            return $this->morphedByMany(Product::class, 'taggable', 'cart_taggables')->withTimestamps();
         }
-
     }

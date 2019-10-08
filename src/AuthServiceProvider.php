@@ -3,16 +3,17 @@
 namespace Lab19\Cart;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-use Lab19\Cart\Models\User;
 use Lab19\Cart\Models\Order;
 use Lab19\Cart\Models\Product;
+use Lab19\Cart\Models\Tag;
+use Lab19\Cart\Models\User;
 
-use Lab19\Cart\Policies\UserPolicy;
 use Lab19\Cart\Policies\OrderPolicy;
 use Lab19\Cart\Policies\ProductPolicy;
+use Lab19\Cart\Policies\TagPolicy;
+use Lab19\Cart\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Order::class => OrderPolicy::class,
-        Product::class => ProductPolicy::class
+        Product::class => ProductPolicy::class,
+        Tag::class => TagPolicy::class
     ];
 
     /**
@@ -61,7 +63,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('add-to-cart', function( $user ){
+        Gate::define('add-to-cart', function ($user) {
             return $user;
         });
     }

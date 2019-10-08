@@ -1,14 +1,15 @@
 <?php
-    use Lab19\Cart\Testing\TestCase;
-    use Illuminate\Http\UploadedFile;
 
-    /**
-     * @group Products
-     */
-    class TestCreateProductDetailTest extends TestCase
-    {
+use Faker\Factory as Faker;
+use Illuminate\Http\UploadedFile;
+use Lab19\Cart\Testing\TestCase;
 
-        protected $createProductDetailedMutation = '
+/**
+ * @group Products
+ */
+class TestCreateProductDetailTest extends TestCase
+{
+    protected $createProductDetailedMutation = '
             mutation {
                 createProduct(input: {
                     title: "1x Cappuccino",
@@ -22,10 +23,10 @@
         ';
 
 
-        public function setUp(): void
-        {
-            parent::setUp();
-            $response = $this->graphQL('
+    public function setUp(): void
+    {
+        parent::setUp();
+        $response = $this->graphQL('
                 mutation {
                     logIn(input:{
                         email:"admin@example.com",
@@ -35,39 +36,67 @@
                     }
                 }
             ');
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            // Set the global session token to use for the test
-            $this->sessionToken = $result['data']['logIn']['token'];
-        }
+        // Set the global session token to use for the test
+        $this->sessionToken = $result['data']['logIn']['token'];
+    }
 
-        public function createProduct()
-        {
-            return $this->graphQLWithSession('
+    public function logoutUser($token = null)
+    {
+        $response = $this->postGraphQL(['query' => '
+                mutation {
+                    logOut {
+                        success
+                    }
+                }
+            '], [
+            'HTTP_Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response->assertDontSee('errors');
+
+        $logOut = $response->decodeResponseJson();
+
+        $this->assertTrue($logOut['data']['logOut']['success']);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'logOut' => ['success']
+            ]
+        ]);
+
+        return $response;
+    }
+
+    public function createProduct()
+    {
+        return $this->graphQLWithSession('
                 mutation {
                     createProduct(input:{
                         title: "1x Cappuccino"
                         }) {
                         id
+                        title
                     }
                 }
             ');
-        }
+    }
 
-        public function testAdminUserCanCreateProductWithDetailedFields(): void
-        {
-            $response = $this->graphQLWithSession($this->createProductDetailedMutation);
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-            $this->assertStringStartsWith( "A Cappuccino", $result['data']['createProduct']['short_description']);
-            $this->assertStringStartsWith( "A Cappuccino", $result['data']['createProduct']['long_description']);
-        }
+    public function testAdminUserCanCreateProductWithDetailedFields(): void
+    {
+        $response = $this->graphQLWithSession($this->createProductDetailedMutation);
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
+        $this->assertStringStartsWith("A Cappuccino", $result['data']['createProduct']['short_description']);
+        $this->assertStringStartsWith("A Cappuccino", $result['data']['createProduct']['long_description']);
+    }
 
-        public function testAdminUserCanUpdateProductWithDetailedFields(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $id = $product['data']['createProduct']['id'];
-            $response = $this->graphQLWithSession('
+    public function testAdminUserCanUpdateProductWithDetailedFields(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $id = $product['data']['createProduct']['id'];
+        $response = $this->graphQLWithSession('
                 mutation {
                     updateProduct(id: ' . $id . ', input: {
                         short_description: "A Cappuccino is a espresso-based coffee drink originating from Italy.",
@@ -79,15 +108,15 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-            $this->assertStringStartsWith( "A Cappuccino", $result['data']['updateProduct']['short_description']);
-            $this->assertStringStartsWith( "A Cappuccino", $result['data']['updateProduct']['long_description']);
-        }
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
+        $this->assertStringStartsWith("A Cappuccino", $result['data']['updateProduct']['short_description']);
+        $this->assertStringStartsWith("A Cappuccino", $result['data']['updateProduct']['long_description']);
+    }
 
-        public function testAdminUserCanCreateProductWithADefaultPrice(): void
-        {
-            $response = $this->graphQLWithSession('
+    public function testAdminUserCanCreateProductWithADefaultPrice(): void
+    {
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -101,20 +130,20 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['createProduct']['price_cents'], 200 );
-            $this->assertEquals( $result['data']['createProduct']['price_currency'], "EUR" );
-        }
+        $this->assertEquals($result['data']['createProduct']['price_cents'], 200);
+        $this->assertEquals($result['data']['createProduct']['price_currency'], "EUR");
+    }
 
-        public function testAdminUserCanUpdateProductWithADefaultPrice(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $response = $this->graphQLWithSession('
+    public function testAdminUserCanUpdateProductWithADefaultPrice(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $response = $this->graphQLWithSession('
                 mutation {
-                    updateProduct(id: '. $product['data']['createProduct']['id'] . 'input: {
+                    updateProduct(id: ' . $product['data']['createProduct']['id'] . 'input: {
                         title: "1x Cappuccino",
                         price_cents: 200,
                         price_currency: "EUR"
@@ -126,20 +155,20 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['updateProduct']['price_cents'], 200 );
-            $this->assertEquals( $result['data']['updateProduct']['price_currency'], "EUR" );
-        }
+        $this->assertEquals($result['data']['updateProduct']['price_cents'], 200);
+        $this->assertEquals($result['data']['updateProduct']['price_currency'], "EUR");
+    }
 
-        /**
-         * @group ProductAttributes
-         */
-        public function testAdminUserCanCreateProductWithArbitraryMeta(): void
-        {
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductAttributes
+     */
+    public function testAdminUserCanCreateProductWithArbitraryMeta(): void
+    {
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -167,21 +196,21 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['createProduct']['meta'][0]['value'], "Light roast" );
-        }
+        $this->assertEquals($result['data']['createProduct']['meta'][0]['value'], "Light roast");
+    }
 
-        /**
-         * @group ProductMeta
-         */
-        public function testAdminUserCanUpdateProductWithArbitraryMeta(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $id = $product['data']['createProduct']['id'];
+    /**
+     * @group ProductMeta
+     */
+    public function testAdminUserCanUpdateProductWithArbitraryMeta(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $id = $product['data']['createProduct']['id'];
 
-            $mutation = '
+        $mutation = '
                 mutation {
                     updateProduct(id: ' . $id . ', input: {
                         meta: [{
@@ -197,23 +226,23 @@
                 }
             ';
 
-            // Run this twice, so we can be sure the meta is removed
-            $this->graphQLWithSession( $mutation );
-            $response = $this->graphQLWithSession( $mutation );
+        // Run this twice, so we can be sure the meta is removed
+        $this->graphQLWithSession($mutation);
+        $response = $this->graphQLWithSession($mutation);
 
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount(1, $result['data']['updateProduct']['meta']);
-            $this->assertEquals( $result['data']['updateProduct']['meta'][0]['value'], "Medium roast" );
-        }
+        $this->assertCount(1, $result['data']['updateProduct']['meta']);
+        $this->assertEquals($result['data']['updateProduct']['meta'][0]['value'], "Medium roast");
+    }
 
-        /**
-         * @group ProductMeta
-         */
-        public function testAdminUserCanCreateProductWithDetailedPricing(): void
-        {
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductMeta
+     */
+    public function testAdminUserCanCreateProductWithDetailedPricing(): void
+    {
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -235,19 +264,19 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount( 2, $result['data']['createProduct']['prices'] );
-            $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
-        }
+        $this->assertCount(2, $result['data']['createProduct']['prices']);
+        $this->assertEquals($result['data']['createProduct']['prices'][0]['currency'], "GBP");
+    }
 
-        /**
-         * @group ProductAttributes
-         */
-        public function testAdminUserCanUpdateProductWithDetailedPricing(): void
-        {
-            $mutation = '
+    /**
+     * @group ProductAttributes
+     */
+    public function testAdminUserCanUpdateProductWithDetailedPricing(): void
+    {
+        $mutation = '
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -266,25 +295,25 @@
                 }
             ';
 
-            // Run this twice, so we can be sure that price data isn't being merged
-            $this->graphQLWithSession( $mutation );
-            $response = $this->graphQLWithSession( $mutation );
+        // Run this twice, so we can be sure that price data isn't being merged
+        $this->graphQLWithSession($mutation);
+        $response = $this->graphQLWithSession($mutation);
 
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount( 1, $result['data']['createProduct']['prices'] );
-            $this->assertEquals( $result['data']['createProduct']['prices'][0]['currency'], "GBP" );
-        }
+        $this->assertCount(1, $result['data']['createProduct']['prices']);
+        $this->assertEquals($result['data']['createProduct']['prices'][0]['currency'], "GBP");
+    }
 
-        /**
-         * @group ProductVariants
-         */
-        public function testAdminUserCanCreateProductVariant(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $id = $product['data']['createProduct']['id'];
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductVariants
+     */
+    public function testAdminUserCanCreateProductVariant(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $id = $product['data']['createProduct']['id'];
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProductVariant( id: ' . $id . ', input: {
                         title: "1x Cappuccino (Small)",
@@ -303,8 +332,8 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $response = $this->graphQLWithSession('
+        $response->assertDontSee('errors');
+        $response = $this->graphQLWithSession('
                 {
                     product(id:' . $id . '){
                         variants {
@@ -317,19 +346,19 @@
                 }
             ');
 
-            $result = $response->decodeResponseJson();
-            $response->assertDontSee('errors');
-            $this->assertEquals($result['data']['product']['variants'][0]['sizes'][0]['size'], "Small");
-        }
+        $result = $response->decodeResponseJson();
+        $response->assertDontSee('errors');
+        $this->assertEquals($result['data']['product']['variants'][0]['sizes'][0]['size'], "Small");
+    }
 
-        /**
-         * @group ProductCategory
-         */
-        public function testAdminUserCanCreateCategoryOnProductWithOrWithoutCategoryExisting(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $id = $product['data']['createProduct']['id'];
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductCategory
+     */
+    public function testAdminUserCanCreateCategoryOnProductWithOrWithoutCategoryExisting(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $id = $product['data']['createProduct']['id'];
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -345,18 +374,18 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $response->assertJsonStructure([
-                'data' => [
-                    'createProduct' => [
-                        'categories' => [['id', 'title']]
-                    ]
+        $response->assertDontSee('errors');
+        $response->assertJsonStructure([
+            'data' => [
+                'createProduct' => [
+                    'categories' => [['id', 'title']]
                 ]
-            ]);
+            ]
+        ]);
 
-            $json = $response->decodeResponseJson();
+        $json = $response->decodeResponseJson();
 
-            $response = $this->graphQLWithSession('
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -372,23 +401,22 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $response->assertJsonStructure([
-                'data' => [
-                    'createProduct' => [
-                        'categories' => [['id', 'title']]
-                    ]
+        $response->assertDontSee('errors');
+        $response->assertJsonStructure([
+            'data' => [
+                'createProduct' => [
+                    'categories' => [['id', 'title']]
                 ]
-            ]);
+            ]
+        ]);
+    }
 
-        }
-
-        /**
-         * @group ProductDimensions
-         */
-        public function testAdminUserCanSetDimensionsAndWeightOfProduct(): void
-        {
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductDimensions
+     */
+    public function testAdminUserCanSetDimensionsAndWeightOfProduct(): void
+    {
+        $response = $this->graphQLWithSession('
                 mutation {
                     createProduct(input: {
                         title: "1x Cappuccino",
@@ -415,30 +443,29 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $response->assertJsonStructure([
-                'data' => [
-                    'createProduct' => [
-                        'dimensions' => ['length', 'width', 'height'],
-                        'weight' => ['weight']
-                    ]
+        $response->assertDontSee('errors');
+        $response->assertJsonStructure([
+            'data' => [
+                'createProduct' => [
+                    'dimensions' => ['length', 'width', 'height'],
+                    'weight' => ['weight']
                 ]
-            ]);
+            ]
+        ]);
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['createProduct']['dimensions']['width'], 10 );
+        $this->assertEquals($result['data']['createProduct']['dimensions']['width'], 10);
+    }
 
-        }
-
-        /**
-         * @group ProductDimensions
-         */
-        public function testAdminUserCanUpdateDimensionsAndWeightOfProduct(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $id = $product['data']['createProduct']['id'];
-            $response = $this->graphQLWithSession('
+    /**
+     * @group ProductDimensions
+     */
+    public function testAdminUserCanUpdateDimensionsAndWeightOfProduct(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $id = $product['data']['createProduct']['id'];
+        $response = $this->graphQLWithSession('
                 mutation {
                     updateProduct(id: ' . $id . ', input: {
                         title: "1x Cappuccino",
@@ -465,32 +492,31 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
-            $response->assertJsonStructure([
-                'data' => [
-                    'updateProduct' => [
-                        'dimensions' => ['length', 'width', 'height'],
-                        'weight' => ['weight']
-                    ]
+        $response->assertDontSee('errors');
+        $response->assertJsonStructure([
+            'data' => [
+                'updateProduct' => [
+                    'dimensions' => ['length', 'width', 'height'],
+                    'weight' => ['weight']
                 ]
-            ]);
+            ]
+        ]);
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertEquals( $result['data']['updateProduct']['dimensions']['width'], 12 );
+        $this->assertEquals($result['data']['updateProduct']['dimensions']['width'], 12);
+    }
 
-        }
+    /**
+     * @group ProductImage
+     */
+    public function testAdminUserCanCreateImagesOnProduct(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $productId = $product['data']['createProduct']['id'];
 
-        /**
-         * @group ProductImage
-         */
-        public function testAdminUserCanCreateImagesOnProduct(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $productId = $product['data']['createProduct']['id'];
-
-            $json = [
-                "query" => '
+        $json = [
+            "query" => '
                     mutation($file: Upload!){
                         addImage(input: { file: $file }){
                             id
@@ -500,41 +526,41 @@
                         }
                     }
                 ',
-                "variables" => [
-                    "file" => null
+            "variables" => [
+                "file" => null
+            ]
+        ];
+
+        $operations = json_encode($json);
+
+        $response = $this->multipartGraphQLWithSession(
+            [
+                "operations" => $operations,
+                "map" => '{ "0": ["variables.file"] }'
+            ],
+            [
+                '0' => UploadedFile::fake()->create('image.jpg', 500),
+            ]
+        );
+
+        $response->assertDontSee('errors');
+
+        $json = $response->decodeResponseJson();
+        $imageId = $json['data']['addImage']['id'];
+
+        $response->assertJsonStructure([
+            'data' => [
+                'addImage' => [
+                    'url',
+                    'type',
+                    'name'
                 ]
-            ];
+            ]
+        ]);
 
-            $operations = json_encode( $json );
-
-            $response = $this->multipartGraphQLWithSession(
-                [
-                    "operations" => $operations,
-                    "map" => '{ "0": ["variables.file"] }'
-                ],
-                [
-                    '0' => UploadedFile::fake()->create('image.jpg', 500),
-                ]
-            );
-
-            $response->assertDontSee('errors');
-
-            $json = $response->decodeResponseJson();
-            $imageId = $json['data']['addImage']['id'];
-
-            $response->assertJsonStructure([
-                'data' => [
-                    'addImage' => [
-                        'url',
-                        'type',
-                        'name'
-                    ]
-                ]
-            ]);
-
-            $response = $this->graphQLWithSession('
+        $response = $this->graphQLWithSession('
                 mutation {
-                    addProductImages(product_id: ' . $productId . ', images: ['. $imageId .']){
+                    addProductImages(product_id: ' . $productId . ', images: [' . $imageId . ']){
                         product {
                             id
                             images {
@@ -546,56 +572,245 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $response->assertJsonStructure([
-                'data' => ['addProductImages' => [
-                    'product' => ['id', 'images' => [
-                        ['id', 'url']
-                    ]]
+        $response->assertJsonStructure([
+            'data' => ['addProductImages' => [
+                'product' => ['id', 'images' => [
+                    ['id', 'url']
                 ]]
-            ]);
+            ]]
+        ]);
+    }
 
+    /**
+     * @group ProductTag
+     */
+    public function testAdminUserCanCreateTagOnProduct(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        
+        $this->assertDatabaseHas('cart_products', [
+            'title' => $product['data']['createProduct']['title'],
+        ]);
+
+        $productId = $product['data']['createProduct']['id'];
+
+        $response = $this->graphQLWithSession('
+                mutation {
+                    createTag(input: {
+                        name:"' . Faker::create()->word() . '"
+                        }) {
+                        id
+                        name
+                    }
+                }
+            ');
+
+        $response->assertDontSee('errors');
+        $json = $response->decodeResponseJson();
+        $tagId = $json['data']['createTag']['id'];
+
+
+        $response->assertJsonStructure([
+            'data' => [
+                'createTag' => [
+                    'id', 'name'
+                ]
+            ]
+        ]);
+
+        $response = $this->graphQLWithSession('
+                mutation {
+                    addProductTags(product_id: ' . $productId . ', tags: [' . $tagId . ']){
+                        product {
+                            id
+                            tags {
+                                id
+                                name
+                            }
+                        }
+                    }
+                }
+            ');
+
+        $response->assertDontSee('errors');
+
+        $response->assertJsonStructure([
+            'data' => ['addProductTags' => [
+                'product' => ['id', 'tags' => [
+                    ['id', 'name']
+                ]]
+            ]]
+        ]);
+    }
+
+    /**
+     * @group ProductTags
+     */
+    public function testAdminUserCanCreateManyTagsOnProduct(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+
+        $this->assertDatabaseHas('cart_products', [
+            'title' => $product['data']['createProduct']['title'],
+        ]);
+
+        $productId = $product['data']['createProduct']['id'];
+        $tags = [];
+
+        for ($i = 0; $i < 20; $i++) {
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createTag(input:{
+                        name:"' . Faker::create()->word() . '"
+                        }) {
+                        id
+                        name
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $json = $response->decodeResponseJson();
+            $tagId = $json['data']['createTag']['id'];
+            array_push($tags, $tagId);
         }
 
-        /**
-         * @group ProductImage
-         */
-        public function testAdminUserCanSetFeaturedImageOnProduct(): void
-        {
-            $product = $this->createProduct()->decodeResponseJson();
-            $productId = $product['data']['createProduct']['id'];
 
-            $json = [
-                "query" => '
+        $response->assertJsonStructure([
+            'data' => [
+                'createTag' => [
+                    'id', 'name'
+                ]
+            ]
+        ]);
+
+        $response = $this->graphQLWithSession('
+                mutation {
+                    addProductTags(product_id: ' . $productId . ', tags: [' . implode(", ", $tags) . ']){
+                        product {
+                            id
+                            tags {
+                                id
+                                name
+                            }
+                        }
+                    }
+                }
+            ');
+
+        $response->assertDontSee('errors');
+
+        $response->assertJsonStructure([
+            'data' => ['addProductTags' => [
+                'product' => ['id', 'tags' => [
+                    ['id', 'name']
+                ]]
+            ]]
+        ]);
+    }
+
+    /**
+     * @group ProductTags
+     */
+    public function testAdminUserCanNotCreateManyTagsOnProductIfGuest(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+
+        $productId = $product['data']['createProduct']['id'];
+        $tags = [];
+
+        for ($i = 0; $i < 20; $i++) {
+            $response = $this->graphQLWithSession('
+                mutation {
+                    createTag(input:{
+                        name:"' . Faker::create()->word() . '"
+                        }) {
+                        id
+                        name
+                    }
+                }
+            ');
+
+            $response->assertDontSee('errors');
+            $json = $response->decodeResponseJson();
+            $tagId = $json['data']['createTag']['id'];
+            array_push($tags, $tagId);
+        }
+
+
+        $response->assertJsonStructure([
+            'data' => [
+                'createTag' => [
+                    'id', 'name'
+                ]
+            ]
+        ]);
+
+        // Make sure the user now becomes a guest by loggin them out
+        $this->logoutUser($this->sessionToken);
+
+        $response = $this->graphQLWithSession('
+                mutation {
+                    addProductTags(product_id: ' . $productId . ', tags: [' . implode(", ", $tags) . ']){
+                        product {
+                            id
+                            tags {
+                                id
+                                name
+                            }
+                        }
+                    }
+                }
+            ');
+
+        $start = $response->decodeResponseJson();
+        
+        // TODO: Access the response code somehow to compare
+        $errors = $start['errors'][0]['message'];
+    
+        $this->assertEquals($errors, 'You are not authorized to access addProductTags');
+    }
+
+    /**
+     * @group ProductImage
+     */
+    public function testAdminUserCanSetFeaturedImageOnProduct(): void
+    {
+        $product = $this->createProduct()->decodeResponseJson();
+        $productId = $product['data']['createProduct']['id'];
+
+        $json = [
+            "query" => '
                     mutation($file: Upload!){
                         addImage(input: { file: $file }){
                             id
                         }
                     }
                 ',
-                "variables" => [
-                    "file" => null
-                ]
-            ];
+            "variables" => [
+                "file" => null
+            ]
+        ];
 
-            $response = $this->multipartGraphQLWithSession(
-                [
-                    "operations" => json_encode( $json ),
-                    "map" => '{ "0": ["variables.file"] }'
-                ],
-                [
-                    '0' => UploadedFile::fake()->create('image.jpg', 500),
-                ]
-            );
+        $response = $this->multipartGraphQLWithSession(
+            [
+                "operations" => json_encode($json),
+                "map" => '{ "0": ["variables.file"] }'
+            ],
+            [
+                '0' => UploadedFile::fake()->create('image.jpg', 500),
+            ]
+        );
 
-            $json = $response->decodeResponseJson();
-            $imageId = $json['data']['addImage']['id'];
+        $json = $response->decodeResponseJson();
+        $imageId = $json['data']['addImage']['id'];
 
-            for($i=0; $i<5; $i++){
-                $response = $this->graphQLWithSession('
+        for ($i = 0; $i < 5; $i++) {
+            $response = $this->graphQLWithSession('
                     mutation {
-                        setProductFeaturedImage(product_id: ' . $productId . ', image_id: ' . $imageId .'){
+                        setProductFeaturedImage(product_id: ' . $productId . ', image_id: ' . $imageId . '){
                             product {
                                 id
                                 featured_image {
@@ -606,16 +821,16 @@
                         }
                     }
                 ');
-            }
-
-            $response->assertDontSee('errors');
-
-            $response->assertJsonStructure([
-                'data' => [
-                    'setProductFeaturedImage' => [
-                        'product' => ['id', 'featured_image' => ['id', 'url'] ]
-                    ]
-                ]
-            ]);
         }
+
+        $response->assertDontSee('errors');
+
+        $response->assertJsonStructure([
+            'data' => [
+                'setProductFeaturedImage' => [
+                    'product' => ['id', 'featured_image' => ['id', 'url']]
+                ]
+            ]
+        ]);
     }
+}
