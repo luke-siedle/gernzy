@@ -4,8 +4,6 @@
 
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
-    use Lab19\Cart\Models\Order;
-    use Lab19\Cart\Models\Session;
 
     class Cart extends Model
     {
@@ -46,6 +44,19 @@
             'items' => 'array'
         ];
 
+        public static function boot()
+        {
+            parent::boot();
+
+            // If a cart is being created, force the items
+            // array to exist and be empty if it's null
+            self::creating(function ($model) {
+                if (is_null($model->items)) {
+                    $model->items = [];
+                }
+            });
+        }
+
         public function order(): BelongsTo
         {
             return $this->belongsTo(Order::class);
@@ -56,38 +67,42 @@
             return $this->belongsTo(Session::class);
         }
 
-        public function addItem( Array $item ){
+        public function addItem(array $item)
+        {
             $items = $this->getAllItems();
             $items[ $item['product_id'] ] = $item;
-            $this->setAttribute('items', $items );
+            $this->setAttribute('items', $items);
         }
 
-        public function removeItem( Int $productId ){
+        public function removeItem(Int $productId)
+        {
             $items = $this->getAllItems();
             $item = $items[ $productId ];
-            if( $item ){
+            if ($item) {
                 unset($items[$item['product_id']]);
-                $this->setAttribute('items', $items );
+                $this->setAttribute('items', $items);
                 return true;
             }
 
             return false;
         }
 
-        public function updateItemQuantity( Int $productId, Int $quantity ){
+        public function updateItemQuantity(Int $productId, Int $quantity)
+        {
             $items = $this->getAllItems();
             $item = $items[ $productId ];
-            if( $item ){
+            if ($item) {
                 $item['quantity'] = $quantity;
                 $items[$item['product_id']] = $item;
-                $this->setAttribute('items', $items );
+                $this->setAttribute('items', $items);
                 return true;
             }
 
             return false;
         }
 
-        private function getAllItems(){
+        private function getAllItems()
+        {
             return $this->getAttribute('items') ?? [];
         }
     }
