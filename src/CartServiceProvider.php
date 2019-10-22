@@ -2,14 +2,14 @@
 
 namespace Lab19\Cart;
 
-use Illuminate\Support\ServiceProvider;
-use Nuwave\Lighthouse\LighthouseServiceProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Lab19\Cart\Services\CartService;
 
+use Lab19\Cart\Services\OrderService;
 use Lab19\Cart\Services\SessionService;
 use Lab19\Cart\Services\UserService;
-use Lab19\Cart\Services\OrderService;
-use Lab19\Cart\Services\CartService;
+use Nuwave\Lighthouse\LighthouseServiceProvider;
 
 class CartServiceProvider extends ServiceProvider
 {
@@ -67,5 +67,12 @@ class CartServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        
+        // Allow developers to override mail config
+        $this->publishes([
+            __DIR__.'/config/mail.php' => config_path('mail.php'),
+        ]);
+
+        $this->loadRoutesFrom(__DIR__.'/Http/routes/web.php');
     }
 }

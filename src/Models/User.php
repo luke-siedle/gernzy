@@ -2,13 +2,8 @@
 
 namespace Lab19\Cart\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-use Lab19\Cart\Models\Cart;
-use Lab19\Cart\Models\Order;
-use Lab19\Cart\Models\Session;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -54,7 +49,8 @@ class User extends Authenticatable
      *
      * @returns boolean
      */
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->is_admin === 1;
     }
 
@@ -72,7 +68,8 @@ class User extends Authenticatable
      *
      * @returns boolean
      */
-    public function cart(){
+    public function cart()
+    {
         return $this->hasOneThrough(Cart::class, Session::class);
     }
 
@@ -81,7 +78,8 @@ class User extends Authenticatable
      *
      * @returns boolean
      */
-    public function orders(){
+    public function orders()
+    {
         return $this->hasMany(Order::class);
     }
 }
