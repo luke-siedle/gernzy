@@ -4,3 +4,4 @@ node_modules
 .php_cs.cache
 .phpunit.result.cache
 .phpunit.result.cache
+.env

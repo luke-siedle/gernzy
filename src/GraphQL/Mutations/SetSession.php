@@ -3,8 +3,8 @@
 namespace Lab19\Cart\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\Cache;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Illuminate\Support\Str;
 use \App;
 
 class SetSession
@@ -22,7 +22,21 @@ class SetSession
     {
         $session = App::make('Lab19\SessionService');
 
-        $session->update( $args['input'] );
+        $session->update($args['input']);
+
+        return $session->get();
+    }
+
+    public function setCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $session = App::make('Lab19\SessionService');
+
+        $currency = $args['input']['currency'];
+
+        $session->update(['currency' => $currency]);
+
+        // Clear the previous rate for the user as a new currency has been chosen
+        Cache::forget($session->getToken());
 
         return $session->get();
     }

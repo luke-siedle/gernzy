@@ -1,5 +1,6 @@
 extend type Query {
     products(input: ProductsQueryInput): [Product!]!
+        @gernzyConvertCurrency
         @paginate(
             type: "paginator"
             model: "Lab19\\Cart\\Models\\Product"

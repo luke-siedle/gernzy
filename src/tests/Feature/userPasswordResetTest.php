@@ -12,7 +12,7 @@ use Lab19\Cart\Notifications\GernzyResetPassword;
 use Lab19\Cart\Testing\TestCase;
 use Notification;
 
-class PasswordResetTest extends TestCase
+class PasswordResetFeatureTest extends TestCase
 {
     use WithFaker;
     const USER_ORIGINAL_PASSWORD = 'secret';

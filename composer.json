@@ -13,7 +13,8 @@
     },
     "require": {
         "nuwave/lighthouse": "^3.7",
-        "barryvdh/laravel-cors": "^0.11.3"
+        "barryvdh/laravel-cors": "^0.11.3",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "orchestra/testbench": "^3.5",
