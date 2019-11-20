@@ -20,24 +20,24 @@ class SetSession
      */
     public function set($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $session = App::make('Lab19\SessionService');
+        $sessionService = App::make('Lab19\SessionService');
 
-        $session->update($args['input']);
+        $sessionService->update($args['input']);
 
-        return $session->get();
+        return $sessionService->get();
     }
 
     public function setCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $session = App::make('Lab19\SessionService');
+        $sessionService = App::make('Lab19\SessionService');
 
         $currency = $args['input']['currency'];
 
-        $session->update(['currency' => $currency]);
+        $sessionService->update(['currency' => $currency]);
 
         // Clear the previous rate for the user as a new currency has been chosen
-        Cache::forget($session->getToken());
+        Cache::forget($sessionService->getToken());
 
-        return $session->get();
+        return $sessionService->get();
     }
 }

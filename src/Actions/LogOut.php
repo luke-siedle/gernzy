@@ -3,35 +3,36 @@
 namespace Lab19\Cart\Actions;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Lab19\Cart\Models\User;
 use Lab19\Cart\Services\SessionService;
 
 class LogOut
 {
-    public function __construct( SessionService $session, Request $request ){
-        $this->session = $session;
+    public function __construct(SessionService $sessionService, Request $request)
+    {
+        $this->sessionService = $sessionService;
         $this->request = $request;
     }
 
-    public function handle(){
+    public function handle()
+    {
 
         $token = $this->request->bearerToken();
 
-        if( $token ){
+        if ($token) {
             $user = User::where('session_token', '=', $token)->first();
-            if( $user ){
+            if ($user) {
                 // Disaccociate the session
                 // and delete it
                 $user->session_token = null;
                 $user->save();
-                return $this->session->close();
+                return $this->sessionService->close();
             }
 
             // Where it's a user-less session
             // and the session exists
-            if( $this->session->exists() && $token === $this->session->getToken() ){
-                return $this->session->close();
+            if ($this->sessionService->exists() && $token === $this->sessionService->getToken()) {
+                return $this->sessionService->close();
             }
         }
 

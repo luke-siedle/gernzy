@@ -1,19 +1,21 @@
 <?php
-    use Lab19\Cart\Testing\TestCase;
+use Lab19\Cart\Testing\TestCase;
 
-    /**
-     *
-     * @group Account
-    */
-    class TestUserAccount extends TestCase
+/**
+ *
+ * @group Account
+ */
+class TestUserAccount extends TestCase
+{
+    public function testUserCanCreateAccount(): void
     {
-        public function testUserCanCreateAccount(): void
-        {
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL('
+        $email = 'test@test.com';
+
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
                 mutation {
                     createAccount(input: {
-                            email:"test@test.com",
+                            email:"' . $email . '",
                             password: "tester", name: "Luke"
                         }) {
                         token
@@ -26,22 +28,29 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'createAccount' => [
-                        'token',
-                        'user' => ['id']
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'createAccount' => [
+                    'token',
+                    'user' => ['id'],
+                ],
+            ],
+        ]);
 
-        public function testUserCannotCreateAccountWithBadEmail(): void
-        {
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL('
+        $data = $response->decodeResponseJson();
+        $token = $data['data']['createAccount']['token'];
+
+        $this->assertDatabaseHas('cart_sessions', [
+            'token' => $token,
+        ]);
+    }
+
+    public function testUserCannotCreateAccountWithBadEmail(): void
+    {
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
                 mutation {
                     createAccount(input:{
                         email:"funkyemail@", password: "password", name: "Luke"
@@ -56,12 +65,12 @@
                 }
             ');
 
-            $response->assertSee('The input.email must be a valid email address');
-        }
+        $response->assertSee('The input.email must be a valid email address');
+    }
 
-        public function testUserCannotCreateAccountWithExistingEmail(): void
-        {
-            $query = '
+    public function testUserCannotCreateAccountWithExistingEmail(): void
+    {
+        $query = '
                 mutation {
                     createAccount(input:{
                         email:"test@test.com", password: "password", name: "Luke"
@@ -76,17 +85,17 @@
                 }
             ';
 
-            // Run this twice so the user already exists
-            $response = $this->graphQL($query);
-            $response = $this->graphQL($query);
+        // Run this twice so the user already exists
+        $response = $this->graphQL($query);
+        $response = $this->graphQL($query);
 
-            $response->assertSee('The input.email has already been taken');
-        }
+        $response->assertSee('The input.email has already been taken');
+    }
 
-        public function testUserCanLogInToAccount(): void
-        {
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL('
+    public function testUserCanLogInToAccount(): void
+    {
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
                 mutation {
                     logIn(input:{
                             email:"user@example.com",
@@ -98,26 +107,26 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'logIn' => [
-                        'token',
-                        'user' => ['id']
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'logIn' => [
+                    'token',
+                    'user' => ['id'],
+                ],
+            ],
+        ]);
+    }
 
-        /**
-         *
-         * @group Login
-         */
-        public function testUserCanFailToLoginAndSeeError(): void
-        {
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL('
+    /**
+     *
+     * @group Login
+     */
+    public function testUserCanFailToLoginAndSeeError(): void
+    {
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
                 mutation {
                     logIn(input:{
                             email:"user@example.com",
@@ -129,13 +138,13 @@
                 }
             ');
 
-            $response->assertSee('Invalid credentials');
-        }
+        $response->assertSee('Invalid credentials');
+    }
 
-        public function testAdminUserCanLogInToAccount(): void
-        {
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL('
+    public function testAdminUserCanLogInToAccount(): void
+    {
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
                 mutation {
                     logIn(input:{
                             email:"admin@example.com",
@@ -147,21 +156,21 @@
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'logIn' => [
-                        'token',
-                        'user' => ['id']
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'logIn' => [
+                    'token',
+                    'user' => ['id'],
+                ],
+            ],
+        ]);
+    }
 
-        public function testNormalUserCanReadItself(): void
-        {
-            $normalUserLoginResponse = $this->graphQL('
+    public function testNormalUserCanReadItself(): void
+    {
+        $normalUserLoginResponse = $this->graphQL('
                 mutation {
                     logIn(input: {
                             email:"user@example.com",
@@ -173,13 +182,13 @@
                 }
             ');
 
-            $data = $normalUserLoginResponse->decodeResponseJson();
-            $token = $data['data']['logIn']['token'];
-            $id = $data['data']['logIn']['user']['id'];
+        $data = $normalUserLoginResponse->decodeResponseJson();
+        $token = $data['data']['logIn']['token'];
+        $id = $data['data']['logIn']['user']['id'];
 
-            $this->assertNotNull( $token );
+        $this->assertNotNull($token);
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
                     user(id:' . $id . ') {
                         id
@@ -188,25 +197,25 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertDontSee('You are not authorized');
+        $response->assertDontSee('You are not authorized');
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'user' => [
-                        'id',
-                        'name',
-                        'email'
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'user' => [
+                    'id',
+                    'name',
+                    'email',
+                ],
+            ],
+        ]);
+    }
 
-        public function testNormalUserCannotReadUsers(): void
-        {
-            $normalUserLoginResponse = $this->graphQL('
+    public function testNormalUserCannotReadUsers(): void
+    {
+        $normalUserLoginResponse = $this->graphQL('
                 mutation {
                     logIn(input: {
                             email:"user@example.com",
@@ -218,26 +227,26 @@
                 }
             ');
 
-            $data = $normalUserLoginResponse->decodeResponseJson();
-            $token = $data['data']['logIn']['token'];
+        $data = $normalUserLoginResponse->decodeResponseJson();
+        $token = $data['data']['logIn']['token'];
 
-            $this->assertNotNull( $token );
+        $this->assertNotNull($token);
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
-                    users(count:10) {
+                    users(first:10) {
                         data {
                             id
                         }
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertSee('You are not authorized to access users');
+        $response->assertSee('You are not authorized to access users');
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
                     user(id:1) {
                         id
@@ -246,31 +255,31 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertSee('You are not authorized to access user');
-        }
+        $response->assertSee('You are not authorized to access user');
+    }
 
-        public function testGuestUserCannotReadUsers(): void
-        {
-            $token = 'invalid-token';
+    public function testGuestUserCannotReadUsers(): void
+    {
+        $token = 'invalid-token';
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
-                    users(count:10) {
+                    users(first:10) {
                         data {
                             id
                         }
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertSee('You are not authorized to access users');
+        $response->assertSee('You are not authorized to access users');
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
                     user(id:1) {
                         id
@@ -279,15 +288,15 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertSee('You are not authorized to access user');
-        }
+        $response->assertSee('You are not authorized to access user');
+    }
 
-        public function testAdminUserCanReadUsers(): void
-        {
-            $adminUserLoginResponse = $this->graphQL('
+    public function testAdminUserCanReadUsers(): void
+    {
+        $adminUserLoginResponse = $this->graphQL('
                 mutation {
                     logIn(input:{
                             email:"admin@example.com",
@@ -299,12 +308,12 @@
                 }
             ');
 
-            $data = $adminUserLoginResponse->decodeResponseJson();
-            $token = $data['data']['logIn']['token'];
+        $data = $adminUserLoginResponse->decodeResponseJson();
+        $token = $data['data']['logIn']['token'];
 
-            $this->assertNotNull( $token );
+        $this->assertNotNull($token);
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
                     users(count:10) {
                         data {
@@ -313,12 +322,12 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertDontSee('You are not authorized to access users');
+        $response->assertDontSee('You are not authorized to access users');
 
-            $response = $this->postGraphQL(['query' => '
+        $response = $this->postGraphQL(['query' => '
                 {
                     user(id:2) {
                         id
@@ -327,10 +336,10 @@
                     }
                 }
             '], [
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ]);
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
 
-            $response->assertDontSee('You are not authorized to access users');
-        }
-
+        $response->assertDontSee('You are not authorized to access users');
     }
+
+}

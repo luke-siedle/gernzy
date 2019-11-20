@@ -7,7 +7,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
 use Lab19\Cart\Factories\OpenExchangeRatesFactory;
 use Lab19\Cart\Services\ExhangeRatesManager;
-use Lab19\Cart\Services\SessionService;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\Directive;
 use Nuwave\Lighthouse\Support\Contracts\FieldMiddleware;
@@ -15,10 +14,6 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class GernzyConvertCurrencyDirective implements Directive, FieldMiddleware
 {
-    public function __construct(SessionService $session)
-    {
-        $this->session = $session;
-    }
     /**
      * Name of the directive as used in the schema.
      *

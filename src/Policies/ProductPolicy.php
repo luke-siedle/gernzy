@@ -27,7 +27,7 @@ class ProductPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function update(User $me, Product $product)
+    public function update(User $me)
     {
         return $me->isAdmin();
     }
@@ -39,7 +39,7 @@ class ProductPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function view(User $me, ?User $user = null ): bool
+    public function view(User $me, ?User $user = null): bool
     {
         return true;
     }
@@ -51,7 +51,7 @@ class ProductPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function delete(User $me, Product $product): bool
+    public function delete(User $me): bool
     {
         return $me->isAdmin();
     }

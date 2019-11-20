@@ -2,10 +2,10 @@
 
 namespace Lab19\Cart\GraphQL\Mutations;
 
-use \App;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use \App;
 
 class CreateSession
 {
@@ -20,21 +20,21 @@ class CreateSession
      */
     public function create($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $session = App::make('Lab19\SessionService');
+        $sessionService = App::make('Lab19\SessionService');
 
-        if (!$session->get('cart_uuid')) {
+        if (!$sessionService->get('cart_uuid')) {
             // Creates a uuid that will be associated with the cart
-            $session->update([
-                'cart_uuid' => Str::uuid()
+            $sessionService->update([
+                'cart_uuid' => Str::uuid(),
             ]);
         }
 
         $result = [
-            'token' => $session->getToken(),
-            'cart_uuid' => $session->get('cart_uuid')
+            'token' => $sessionService->getToken(),
+            'cart_uuid' => $sessionService->get('cart_uuid'),
         ];
 
-        $session->save();
+        $sessionService->save();
 
         return $result;
     }

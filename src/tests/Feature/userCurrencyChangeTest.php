@@ -106,7 +106,7 @@ class CurrencyConversionTest extends TestCase
                         currency
                     }
                 }
-            '], [
+            ', ], [
             'HTTP_Authorization' => 'Bearer ' . $token,
         ]);
 
@@ -177,7 +177,7 @@ class CurrencyConversionTest extends TestCase
                         currency
                     }
                 }
-            ', ], [
+            '], [
             'HTTP_Authorization' => 'Bearer ' . $token,
         ]);
 
@@ -199,7 +199,7 @@ class CurrencyConversionTest extends TestCase
 
         $query = '
                 query {
-                    products(count:10) {
+                    products(first:10) {
                         data {
                             id
                             title
@@ -245,7 +245,7 @@ class CurrencyConversionTest extends TestCase
 
         $query = '
                 query {
-                    products(count:10) {
+                    products(first:10) {
                         data {
                             id
                             title

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Lab19\Cart\Models\PasswordResets;
 use Lab19\Cart\Models\User;
 use Lab19\Cart\Notifications\GernzyResetPassword;
@@ -22,7 +23,6 @@ class PasswordResetFeatureTest extends TestCase
         parent::setUp();
         Notification::fake();
     }
-
 
     /**
      * A basic feature test example.
@@ -43,12 +43,10 @@ class PasswordResetFeatureTest extends TestCase
             'created_at' => Carbon::now(),
         ]);
 
-
         $this->assertDatabaseHas('cart_password_resets', [
             'email' => $user->email,
             'token' => $tokenHash,
         ]);
-
 
         $user->notify(new GernzyResetPassword($token));
 
@@ -63,7 +61,6 @@ class PasswordResetFeatureTest extends TestCase
             }
         );
     }
-
 
     /**
      * A basic feature test example.
@@ -100,9 +97,9 @@ class PasswordResetFeatureTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 'resetUserPasswordLink' => [
-                    'success'
-                ]
-            ]
+                    'success',
+                ],
+            ],
         ]);
 
         $result = $response->decodeResponseJson();
@@ -112,7 +109,7 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertNotEquals(PasswordResets::where('email', '=', $user->email)->first()->token, $testResetRecord->token);
 
         $this->assertDatabaseHas('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         Notification::assertSentTo(
@@ -121,7 +118,7 @@ class PasswordResetFeatureTest extends TestCase
         );
 
         $this->assertDatabaseMissing('cart_password_resets', [
-            'token' => $testResetRecord->token
+            'token' => $testResetRecord->token,
         ]);
     }
 
@@ -134,7 +131,6 @@ class PasswordResetFeatureTest extends TestCase
     {
         //The endpoint is made not to return a reponse whether the submitted email actaully exists in the DB
 
-
         // Create user
         $user = factory(User::class)->create();
         $token = Password::broker()->createToken($user);
@@ -142,7 +138,7 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetUserPasswordLink(email: "' . str_random() . '") {
+            resetUserPasswordLink(email: "' . Str::random(12) . '") {
                 success
             }
         }
@@ -153,7 +149,7 @@ class PasswordResetFeatureTest extends TestCase
         $response->assertSee('errors');
 
         $this->assertDatabaseMissing('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         Notification::assertNotSentTo(
@@ -161,7 +157,6 @@ class PasswordResetFeatureTest extends TestCase
             GernzyResetPassword::class
         );
     }
-
 
     /**
      * A basic feature test example.
@@ -173,7 +168,7 @@ class PasswordResetFeatureTest extends TestCase
         // Create user
         $user = factory(User::class)->create();
         $token = Password::broker()->createToken($user);
-        $password = str_random();
+        $password = Str::random(12);
 
         PasswordResets::create([
             'email' => $user->email,
@@ -184,7 +179,7 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetPassword(input:{ 
+            resetPassword(input:{
                 email: "' . $user->email . '",
                 token: "' . $token . '",
                 password: "' . $password . '"
@@ -202,9 +197,9 @@ class PasswordResetFeatureTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 'resetPassword' => [
-                    'success'
-                ]
-            ]
+                    'success',
+                ],
+            ],
         ]);
 
         $result = $response->decodeResponseJson();
@@ -221,7 +216,7 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertTrue(Hash::check($password, $user->password));
 
         $this->assertDatabaseMissing('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
     }
 
@@ -238,7 +233,7 @@ class PasswordResetFeatureTest extends TestCase
         ]);
 
         $token = Password::broker()->createToken($user);
-        $password = str_random();
+        $password = Str::random(12);
 
         PasswordResets::create([
             'email' => $user->email,
@@ -249,8 +244,8 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetPassword(input:{ 
-                email: "' . str_random() . '",
+            resetPassword(input:{
+                email: "' . Str::random(12) . '",
                 token: "' . $token . '",
                 password: "' . $password . '"
                 password_confirmation: "' . $password . '"
@@ -273,10 +268,9 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertTrue(Hash::check(self::USER_ORIGINAL_PASSWORD, $user->password));
 
         $this->assertDatabaseHas('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
     }
-
 
     /**
      * A basic feature test example.
@@ -288,7 +282,7 @@ class PasswordResetFeatureTest extends TestCase
         // Create user
         $user = factory(User::class)->create();
         $token = Password::broker()->createToken($user);
-        $password = str_random();
+        $password = Str::random(12);
 
         PasswordResets::create([
             'email' => $user->email,
@@ -299,7 +293,7 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetPassword(input:{ 
+            resetPassword(input:{
                 email: "' . $user->email . '",
                 token: "' . $token . '",
                 password: "' . $password . '"
@@ -321,7 +315,7 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertFalse(Hash::check($password, $user->password));
 
         $this->assertDatabaseMissing('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
     }
 
@@ -339,8 +333,8 @@ class PasswordResetFeatureTest extends TestCase
 
         $token = Password::broker()->createToken($user);
 
-        $password = str_random();
-        $password_confirmation = str_random();
+        $password = Str::random(12);
+        $password_confirmation = Str::random(12);
 
         PasswordResets::create([
             'email' => $user->email,
@@ -351,7 +345,7 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetPassword(input:{ 
+            resetPassword(input:{
                 email: "' . $user->email . '",
                 token: "' . $token . '",
                 password: "' . $password . '"
@@ -373,10 +367,9 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertFalse(Hash::check($password, $user->password));
 
         $this->assertDatabaseHas('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
     }
-
 
     /**
      * A basic feature test example.
@@ -392,7 +385,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $token = Password::broker()->createToken($user);
 
-        $password = str_random(random_int(0, 7));
+        $password = Str::random(6);
         $password_confirmation = $password;
 
         PasswordResets::create([
@@ -404,7 +397,7 @@ class PasswordResetFeatureTest extends TestCase
         /** @var \Illuminate\Foundation\Testing\TestResponse $response */
         $response = $this->graphQLWithSession('
         mutation {
-            resetPassword(input:{ 
+            resetPassword(input:{
                 email: "' . $user->email . '",
                 token: "' . $token . '",
                 password: "' . $password . '"
@@ -426,7 +419,7 @@ class PasswordResetFeatureTest extends TestCase
         $this->assertFalse(Hash::check($password, $user->password));
 
         $this->assertDatabaseHas('cart_password_resets', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
     }
 }

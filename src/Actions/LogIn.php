@@ -9,35 +9,37 @@ use Lab19\Cart\Services\SessionService;
 
 class LogIn
 {
-    public function __construct( SessionService $session, Request $request ){
-        $this->session = $session;
+    public function __construct(SessionService $sessionService, Request $request)
+    {
+        $this->sessionService = $sessionService;
         $this->request = $request;
     }
 
-    public function handle( String $email, String $password ){
+    public function handle(String $email, String $password)
+    {
 
         // If the user already had a session,
         // allow this to merge if possible
-        if( $token = $this->request->bearerToken() ){
-            $this->session->setFromToken( $token );
+        if ($token = $this->request->bearerToken()) {
+            $this->sessionService->setFromToken($token);
         } else {
             // Persist a new session
-            $this->session->save();
+            $this->sessionService->save();
         }
 
-        if( Auth::guard('cart')->attempt([
-                'email' => $email,
-                'password' => $password
-            ])){
+        if (Auth::guard('cart')->attempt([
+            'email' => $email,
+            'password' => $password,
+        ])) {
             $user = Auth::guard('cart')->user();
 
             // Update the user's current token
-            $user->session_token = $this->session->getToken();
+            $user->session_token = $this->sessionService->getToken();
             $user->save();
 
             return [
                 'user' => $user,
-                'token' => $this->session->getToken()
+                'token' => $this->sessionService->getToken(),
             ];
 
         } else {

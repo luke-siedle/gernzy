@@ -1,52 +1,52 @@
 <?php
 
-    namespace Lab19\Cart\Middleware;
+namespace Lab19\Cart\Middleware;
 
-    use Lab19\Cart\Models\User;
-    use Lab19\Cart\Models\Session;
-    use Illuminate\Support\Facades\Auth;
-    use App;
+use App;
+use Illuminate\Support\Facades\Auth;
+use Lab19\Cart\Models\Session;
+use Lab19\Cart\Models\User;
 
-    class CartMiddleware
+class CartMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+     *
+     * @return mixed
+     */
+    public function handle($request, \Closure $next)
     {
-        /**
-         * Handle an incoming request.
-         *
-         * @param  \Illuminate\Http\Request $request
-         * @param  \Closure $next
-         *
-         * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
-         *
-         * @return mixed
-         */
-        public function handle($request, \Closure $next)
-        {
-            $request = $this->addUserToRequest($request);
-            return $next($request);
-        }
+        $request = $this->addUserToRequest($request);
+        return $next($request);
+    }
 
-        private function addUserToRequest(\Illuminate\Http\Request $request): \Illuminate\Http\Request
-        {
-            $token = $request->bearerToken();
+    private function addUserToRequest(\Illuminate\Http\Request $request): \Illuminate\Http\Request
+    {
+        $token = $request->bearerToken();
 
-            if( $token ){
-                $userService = App::make('Lab19\UserService');
-                $user = $userService->getFromToken( $token );
+        if ($token) {
+            $userService = App::make('Lab19\UserService');
+            $user = $userService->getFromToken($token);
 
-                if( $user instanceof User ){
-                    $request->merge(['user' => $user]);
-                    $request->setUserResolver(function () use ($user) {
-                        return $user;
-                    });
-                }
-
-                $sessionService = App::make('Lab19\SessionService');
-                $session = $sessionService->getFromToken( $token );
-                if( $session instanceof Session ){
-                    $request->merge(['session' => $session ]);
-                }
+            if ($user instanceof User) {
+                $request->merge(['user' => $user]);
+                $request->setUserResolver(function () use ($user) {
+                    return $user;
+                });
             }
 
-            return $request;
+            $sessionService = App::make('Lab19\SessionService');
+            $sessionFromToken = $sessionService->getFromToken($token);
+            if ($sessionFromToken instanceof Session) {
+                $request->merge(['session' => $sessionFromToken]);
+            }
         }
+
+        return $request;
     }
+}
