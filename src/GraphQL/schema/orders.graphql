@@ -7,7 +7,12 @@ extend type Mutation {
 extend type Query {
     order(id: ID @eq): Order
         @find(model: "Lab19\\Cart\\Models\\Order")
-        @can(ability: "view", model: "Lab19\\Cart\\Models\\Order", policy: "Lab19\\Cart\\Policies\\OrderPolicy")
+        @can(
+            ability: "view"
+            find: "id"
+            model: "Lab19\\Cart\\Models\\Order"
+            policy: "Lab19\\Cart\\Policies\\OrderPolicy"
+        )
 }
 
 input CheckoutInput {

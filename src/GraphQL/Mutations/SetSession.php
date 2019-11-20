@@ -2,10 +2,10 @@
 
 namespace Lab19\Cart\GraphQL\Mutations;
 
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Illuminate\Support\Str;
 use \App;
+use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\Cache;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class SetSession
 {
@@ -20,10 +20,24 @@ class SetSession
      */
     public function set($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $session = App::make('Lab19\SessionService');
+        $sessionService = App::make('Lab19\SessionService');
 
-        $session->update( $args['input'] );
+        $sessionService->update($args['input']);
 
-        return $session->get();
+        return $sessionService->get();
+    }
+
+    public function setCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $sessionService = App::make('Lab19\SessionService');
+
+        $currency = $args['input']['currency'];
+
+        $sessionService->update(['currency' => $currency]);
+
+        // Clear the previous rate for the user as a new currency has been chosen
+        Cache::forget($sessionService->getToken());
+
+        return $sessionService->get();
     }
 }

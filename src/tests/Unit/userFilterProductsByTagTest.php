@@ -44,7 +44,7 @@ class TestFilterProducts extends TestCase
 
         $response = $this->graphQL('
         query {
-            productsByTag(count:10, page:1, tag: 1) {
+            productsByTag(first:10, page:1, tag: 1) {
                 data {
                     id
                     title
@@ -86,7 +86,7 @@ class TestFilterProducts extends TestCase
 
         $response = $this->graphQL('
         query {
-            productsByTags(count:10, page:1, tags: [1,2,3,4,5]) {
+            productsByTags(first:10, page:1, tags: [1,2,3,4,5]) {
                 data {
                     id
                     title
@@ -129,7 +129,7 @@ class TestFilterProducts extends TestCase
         $response = $this->graphQL('
                 query {
                     tag(id: 1) {
-                        products(count: 10, page: 1) {
+                        products(first: 10, page: 1) {
                             data {
                                 id
                                 title

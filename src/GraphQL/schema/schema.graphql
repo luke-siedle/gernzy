@@ -14,7 +14,12 @@ type Query {
 
     user(id: ID @eq): User
         @find(model: "Lab19\\Cart\\Models\\User")
-        @can(ability: "view", model: "Lab19\\Cart\\Models\\User", policy: "Lab19\\Cart\\Policies\\UserPolicy")
+        @can(
+            ability: "view"
+            find: "id"
+            model: "Lab19\\Cart\\Models\\User"
+            policy: "Lab19\\Cart\\Policies\\UserPolicy"
+        )
 
     orders: [Order!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\Order")
 
@@ -68,6 +73,8 @@ type Mutation {
     createSession: Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
     setSession(input: SetSessionInput!): SetSessionPayload
         @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
+    setSessionCurrency(input: SetSessionCurrency!): SetSessionCurrencyPayload
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@setCurrency")
     createAccount(input: CreateAccountInput! @spread): CreateAccountPayload
         @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
 }

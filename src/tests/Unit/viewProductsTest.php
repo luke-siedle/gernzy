@@ -1,35 +1,35 @@
 <?php
-    use Lab19\Cart\Models\Product;
+use Lab19\Cart\Models\Product;
 use Lab19\Cart\Testing\TestCase;
 
 /**
-     * @group Products
-     */
-    class TestViewProducts extends TestCase
+ * @group Products
+ */
+class TestViewProducts extends TestCase
+{
+    public function setUp(): void
     {
-        public function setUp(): void
-        {
-            parent::setUp();
-            $this->availableCount = 11;
+        parent::setUp();
+        $this->availableCount = 11;
 
-            factory(Product::class, $this->availableCount)->create()->each(function ($product) {
-                $product->status = 'IN_STOCK';
-                $product->title = 'Coffee pod';
-                $product->published = 1;
-                $product->save();
-            });
+        factory(Product::class, $this->availableCount)->create()->each(function ($product) {
+            $product->status = 'IN_STOCK';
+            $product->title = 'Coffee pod';
+            $product->published = 1;
+            $product->save();
+        });
 
-            factory(Product::class, $this->availableCount + 10)->create()->each(function ($product) {
-                $product->status = 'OUT_OF_STOCK';
-                $product->save();
-            });
-        }
+        factory(Product::class, $this->availableCount + 10)->create()->each(function ($product) {
+            $product->status = 'OUT_OF_STOCK';
+            $product->save();
+        });
+    }
 
-        public function testGuestUserCanViewInStockProducts(): void
-        {
-            $response = $this->graphQL('
+    public function testGuestUserCanViewInStockProducts(): void
+    {
+        $response = $this->graphQL('
                 query {
-                    products(count:100) {
+                    products(first:100) {
                         data {
                             id
                             title
@@ -38,28 +38,28 @@ use Lab19\Cart\Testing\TestCase;
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount($this->availableCount, $result['data']['products']['data']);
+        $this->assertCount($this->availableCount, $result['data']['products']['data']);
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'products' => [
-                        'data' => [
-                            ['id', 'title'],
-                        ]
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'products' => [
+                    'data' => [
+                        ['id', 'title'],
+                    ],
+                ],
+            ],
+        ]);
+    }
 
-        public function testGuestUserCannotViewOutOfStockProducts(): void
-        {
-            $response = $this->graphQL('
+    public function testGuestUserCannotViewOutOfStockProducts(): void
+    {
+        $response = $this->graphQL('
                 query {
-                    products(count:100) {
+                    products(first:100) {
                         data {
                             id
                             title
@@ -75,31 +75,31 @@ use Lab19\Cart\Testing\TestCase;
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount($this->availableCount, $result['data']['products']['data']);
+        $this->assertCount($this->availableCount, $result['data']['products']['data']);
 
-            $response->assertDontSee('"published":0');
-            $response->assertDontSee('"status":"OUT_OF_STOCK"');
+        $response->assertDontSee('"published":0');
+        $response->assertDontSee('"status":"OUT_OF_STOCK"');
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'products' => [
-                        'data' => [
-                            ['id', 'title', 'status', 'published' ],
-                        ]
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'products' => [
+                    'data' => [
+                        ['id', 'title', 'status', 'published'],
+                    ],
+                ],
+            ],
+        ]);
+    }
 
-        public function testGuestUserCanSearchProductsByKeywordAndPaginateThem(): void
-        {
-            $response = $this->graphQL('
+    public function testGuestUserCanSearchProductsByKeywordAndPaginateThem(): void
+    {
+        $response = $this->graphQL('
                 query {
-                    products(count:7, page:2, input: {keyword : "pod"} ) {
+                    products(first:7, page:2, input: {keyword : "pod"} ) {
                         data {
                             id
                             title
@@ -112,20 +112,20 @@ use Lab19\Cart\Testing\TestCase;
                 }
             ');
 
-            $response->assertDontSee('errors');
+        $response->assertDontSee('errors');
 
-            $result = $response->decodeResponseJson();
+        $result = $response->decodeResponseJson();
 
-            $this->assertCount(4, $result['data']['products']['data']);
+        $this->assertCount(4, $result['data']['products']['data']);
 
-            $response->assertJsonStructure([
-                'data' => [
-                    'products' => [
-                        'data' => [
-                            ['id', 'title'],
-                        ]
-                    ]
-                ]
-            ]);
-        }
+        $response->assertJsonStructure([
+            'data' => [
+                'products' => [
+                    'data' => [
+                        ['id', 'title'],
+                    ],
+                ],
+            ],
+        ]);
     }
+}
