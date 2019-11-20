@@ -75,3 +75,22 @@ input SetOrderItemsInput {
     product_id: ID!
     quantity: Int!
 }
+
+extend type Mutation {
+    createPayment(input: PaymentInput!): Payment @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Payment@create")
+}
+
+input PaymentInput {
+    cents_amount: Int!
+    provider: String!
+    order_id: ID!
+}
+
+type Payment {
+    id: ID!
+    cents_amount: Int!
+    provider: String!
+    order_id: ID!
+    is_paid: Boolean!
+    status: String
+}

@@ -7,7 +7,6 @@
      */
     class TestCheckoutTest extends TestCase
     {
-
         protected $checkoutMutation = '
             mutation {
                 checkout(input: {
@@ -121,7 +120,6 @@
             $result = $response->decodeResponseJson();
 
             $this->assertCount(0, $result['data']['me']['cart']['items']);
-
         }
 
         /**
@@ -154,6 +152,32 @@
             $response->assertDontSee('errors');
 
             $this->assertCount(2, $result['data']['myOrders']);
+        }
 
+        /**
+         * @group Payment
+         */
+        public function testGuestUserCreatePaymentOnCheckout(): void
+        {
+            $this->graphQLWithSession($this->addToCartMutation);
+            $response = $this->graphQLWithSession($this->checkoutMutation);
+
+            $result = $response->decodeResponseJson();
+
+            $response = $this->graphQLWithSession(
+                '
+                mutation {
+                    createPayment(input: {
+                        provider: "EFT",
+                        cents_amount: 1000,
+                        order_id: ' . $result['data']['checkout']['order']['id'] . '
+                    }){
+                        id
+                        is_paid
+                    }
+                }'
+            );
+
+            $response->assertDontSee('errors');
         }
     }
