@@ -2,14 +2,16 @@
 
 namespace Lab19\Cart\GraphQL\Mutations;
 
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Lab19\Cart\Actions\CreateUser;
-use Lab19\Cart\Actions\UpdateUser;
-use Lab19\Cart\Actions\DeleteUser;
-use Lab19\Cart\Actions\ElevateUser;
-use Lab19\Cart\Actions\DemoteUser;
 use \App;
+use GraphQL\Type\Definition\ResolveInfo;
+use Lab19\Cart\Actions\CreateUser;
+use Lab19\Cart\Actions\DeleteUser;
+use Lab19\Cart\Actions\DemoteUser;
+use Lab19\Cart\Actions\ElevateUser;
+use Lab19\Cart\Actions\ResetPassword;
+use Lab19\Cart\Actions\SendPasswordReset;
+use Lab19\Cart\Actions\UpdateUser;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class User
 {
@@ -25,21 +27,21 @@ class User
     public function create($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $createUser = App::make(CreateUser::class);
-        $result = $createUser->handle( $args['input'] );
+        $result = $createUser->handle($args['input']);
         return $result;
     }
 
     public function update($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $updateUser = App::make(UpdateUser::class);
-        $result = $updateUser->handle( $args['id'], $args['input'] );
+        $result = $updateUser->handle($args['id'], $args['input']);
         return $result;
     }
 
     public function delete($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $deleteUser = App::make(DeleteUser::class);
-        $result = $deleteUser->handle( $args['id'] );
+        $result = $deleteUser->handle($args['id']);
         return [
             'success' => $result
         ];
@@ -48,14 +50,28 @@ class User
     public function elevate($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $elevateUser = App::make(ElevateUser::class);
-        $result = $elevateUser->handle( $args['id'] );
+        $result = $elevateUser->handle($args['id']);
         return $result;
     }
 
     public function demote($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $demoteUser = App::make(DemoteUser::class);
-        $result = $demoteUser->handle( $args['id'] );
+        $result = $demoteUser->handle($args['id']);
         return $result;
+    }
+
+    public function resetPasswordLink($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $sendPasswordReset = App::make(SendPasswordReset::class);
+        $result = $sendPasswordReset->handle($args['email']);
+        return ['success' => $result];
+    }
+
+    public function resetPassword($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $passwordReset = App::make(ResetPassword::class);
+        $result = $passwordReset->handle($args['input']);
+        return ['success' => $result];
     }
 }

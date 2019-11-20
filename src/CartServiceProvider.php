@@ -2,14 +2,14 @@
 
 namespace Lab19\Cart;
 
-use Illuminate\Support\ServiceProvider;
-use Nuwave\Lighthouse\LighthouseServiceProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
-
+use GuzzleHttp\Client;
+use Illuminate\Support\ServiceProvider;
+use Lab19\Cart\Services\CartService;
+use Lab19\Cart\Services\OrderService;
 use Lab19\Cart\Services\SessionService;
 use Lab19\Cart\Services\UserService;
-use Lab19\Cart\Services\OrderService;
-use Lab19\Cart\Services\CartService;
+use Nuwave\Lighthouse\LighthouseServiceProvider;
 
 class CartServiceProvider extends ServiceProvider
 {
@@ -52,11 +52,30 @@ class CartServiceProvider extends ServiceProvider
         $this->app->bind('Lab19\OrderService', OrderService::class);
         $this->app->bind('Lab19\CartService', CartService::class);
 
+        // Implement our default binding of the currency converion interface
+        $this->app->bind(
+            'Lab19\Services\CurrencyConversionInterface',
+            'Lab19\Services\OpenExchangeRates'
+        );
+
+        $this->app->bind('GuzzleHttp\Client', function ($app) {
+            return new Client([
+                'base_uri' => 'https://openexchangerates.org/api/',
+                'timeout' => 2.0,
+            ]);
+        });
+
         $directives = [
             'Lab19\\Cart\\GraphQL\\Directives',
         ];
 
         $this->app['config']->set('lighthouse.namespaces.directives', $directives);
+
+        // Make mail config publishment optional by merging the config from the package.
+        $this->mergeConfigFrom(__DIR__ . '/config/mail.php', 'mail');
+
+        // Make cache config publishment optional by merging the config from the package.
+        $this->mergeConfigFrom(__DIR__ . '/config/cache.php', 'cache');
     }
 
     /**
@@ -67,5 +86,17 @@ class CartServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
+        // Allow developers to override mail config
+        $this->publishes([
+            __DIR__ . '/config/mail.php' => config_path('mail.php'),
+        ]);
+
+        // Allow developers to override cache config
+        $this->publishes([
+            __DIR__ . '/config/cache.php' => config_path('cache.php'),
+        ]);
+
+        $this->loadRoutesFrom(__DIR__ . '/Http/routes/web.php');
     }
 }

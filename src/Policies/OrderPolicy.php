@@ -2,8 +2,8 @@
 
 namespace Lab19\Cart\Policies;
 
-use Lab19\Cart\Models\User;
 use Lab19\Cart\Models\Order;
+use Lab19\Cart\Models\User;
 
 class OrderPolicy
 {
@@ -27,7 +27,7 @@ class OrderPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function update(User $me, Order $order)
+    public function update(User $me)
     {
         return $me->isAdmin();
     }
@@ -39,13 +39,13 @@ class OrderPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function view(User $me, ?Order $order = null ): bool
+    public function view(User $me, ?Order $order = null): bool
     {
         // If a model is available, we can check, but this isn't always the case
         // for example, when fetching a list of users
         // Discussed in some detail here
         // https://github.com/nuwave/lighthouse/issues/244
-        if( $order ){
+        if ($order) {
             return $me->isAdmin() || $me->id === $order->user_id;
         }
 

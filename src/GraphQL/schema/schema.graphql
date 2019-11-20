@@ -68,6 +68,8 @@ type Mutation {
     createSession: Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
     setSession(input: SetSessionInput!): SetSessionPayload
         @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
+    setSessionCurrency(input: SetSessionCurrency!): SetSessionCurrencyPayload
+        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@setCurrency")
     createAccount(input: CreateAccountInput! @spread): CreateAccountPayload
         @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
 }
