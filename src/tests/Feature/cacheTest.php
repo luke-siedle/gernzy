@@ -22,7 +22,6 @@ class GernzyPasswordResetTest extends TestCase
      */
     public function testCache()
     {
-
         $expected = "abcd";
 
         Cache::put('some key', $expected, 30);

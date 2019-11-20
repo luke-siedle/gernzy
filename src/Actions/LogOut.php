@@ -16,7 +16,6 @@ class LogOut
 
     public function handle()
     {
-
         $token = $this->request->bearerToken();
 
         if ($token) {

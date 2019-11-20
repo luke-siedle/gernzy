@@ -41,7 +41,6 @@ class LogIn
                 'user' => $user,
                 'token' => $this->sessionService->getToken(),
             ];
-
         } else {
             return false;
         }

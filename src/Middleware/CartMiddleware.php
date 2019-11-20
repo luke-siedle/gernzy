@@ -3,7 +3,6 @@
 namespace Lab19\Cart\Middleware;
 
 use App;
-use Illuminate\Support\Facades\Auth;
 use Lab19\Cart\Models\Session;
 use Lab19\Cart\Models\User;
 

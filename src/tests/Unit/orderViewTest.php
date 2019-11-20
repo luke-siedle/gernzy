@@ -7,7 +7,6 @@ use Lab19\Cart\Testing\TestCase;
  */
 class TestOrderViewTest extends TestCase
 {
-
     protected $checkoutMutation = '
             mutation {
                 checkout(input: {
@@ -121,7 +120,6 @@ class TestOrderViewTest extends TestCase
         $result = $response->decodeResponseJson();
 
         $this->assertCount(0, $result['data']['me']['cart']['items']);
-
     }
 
     /**
@@ -159,6 +157,5 @@ class TestOrderViewTest extends TestCase
                 ],
             ],
         ]);
-
     }
 }

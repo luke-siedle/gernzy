@@ -8,7 +8,6 @@ use Lab19\Cart\Testing\TestCase;
  */
 class TestViewCategorisedProducts extends TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();

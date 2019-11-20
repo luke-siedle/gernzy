@@ -341,5 +341,4 @@ class TestUserAccount extends TestCase
 
         $response->assertDontSee('You are not authorized to access users');
     }
-
 }

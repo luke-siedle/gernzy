@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\WithFaker;
 use Lab19\Cart\Factories\OpenExchangeRatesFactory;
@@ -51,7 +51,6 @@ class CurrencyConversionTest extends TestCase
         $this->productPricesArray = factory(Product::class, $this->availableCount)->create();
 
         $this->app->bind('GuzzleHttp\Client', function ($app) {
-
             $json = [
                 "disclaimer" => "https://openexchangerates.org/terms/",
                 "license" => "https://openexchangerates.org/license/",
@@ -194,7 +193,6 @@ class CurrencyConversionTest extends TestCase
 
     public function testGuestUserCanViewInStockProductsWithChosenCurrency(): void
     {
-
         $token = $this->setupCurrencySession();
 
         $query = '

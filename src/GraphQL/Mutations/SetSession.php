@@ -2,10 +2,10 @@
 
 namespace Lab19\Cart\GraphQL\Mutations;
 
+use \App;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use \App;
 
 class SetSession
 {

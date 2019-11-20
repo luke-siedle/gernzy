@@ -7,7 +7,6 @@ use Lab19\Cart\Models\User;
 
 class UserService
 {
-
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -17,5 +16,4 @@ class UserService
     {
         return User::where('session_token', '=', $token)->first();
     }
-
 }

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ExhangeRatesManager
 {
-
     protected $result; //products array
     protected $sessionCurrency;
     protected $token;
@@ -111,7 +110,6 @@ class ExhangeRatesManager
 
             // At this point there is no cache and a new api call will be made, this should only be hit once in the loop
             $result[$key]['price_cents'] = $this->getApiRateAndConvertPrice($productCurrency, $productPriceCents);
-
         }
 
         return $result;

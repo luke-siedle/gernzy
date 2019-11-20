@@ -14,7 +14,12 @@ type Query {
 
     user(id: ID @eq): User
         @find(model: "Lab19\\Cart\\Models\\User")
-        @can(ability: "view", model: "Lab19\\Cart\\Models\\User", policy: "Lab19\\Cart\\Policies\\UserPolicy")
+        @can(
+            ability: "view"
+            find: "id"
+            model: "Lab19\\Cart\\Models\\User"
+            policy: "Lab19\\Cart\\Policies\\UserPolicy"
+        )
 
     orders: [Order!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\Order")
 

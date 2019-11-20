@@ -16,7 +16,6 @@ class CreateCheckout
 
     public function handle($args)
     {
-
         if ($args['use_shipping_for_billing']) {
             $billing = $args['shipping_address'];
         } else {

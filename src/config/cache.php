@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
     //Default Cache Driver
     'driver' => 'database',
 
@@ -13,10 +13,10 @@ return array(
     'table' => 'cart_cache',
 
     //Memcached Servers
-    'memcached' => array(
-        array('host' => '127.0.0.1', 'port' => 11211, 'weight' => 100),
-    ),
+    'memcached' => [
+        ['host' => '127.0.0.1', 'port' => 11211, 'weight' => 100],
+    ],
 
     //Cache Key Prefix
     'prefix' => 'laravel',
-);
+];
