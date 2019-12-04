@@ -7,7 +7,6 @@ use Lab19\Cart\Testing\TestCase;
  */
 class TestAdminCreateOrdersTest extends TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();
@@ -32,7 +31,8 @@ class TestAdminCreateOrdersTest extends TestCase
         $this->sessionToken = $result['data']['logIn']['token'];
     }
 
-    public function createOrder(){
+    public function createOrder()
+    {
         return $this->graphQLWithSession('
             mutation {
                 createOrder(input:{
@@ -55,7 +55,9 @@ class TestAdminCreateOrdersTest extends TestCase
                         country: "UK"
                     },
                     use_shipping_for_billing: true,
-                    payment_method: "",
+                    payment_method: {
+                        provider: "EFT"
+                    },
                     agree_to_terms: true,
                     notes: ""
                     }) {
@@ -67,7 +69,8 @@ class TestAdminCreateOrdersTest extends TestCase
         ');
     }
 
-    public function testAdminUserCanCreateOrder(){
+    public function testAdminUserCanCreateOrder()
+    {
         $response = $this->createOrder();
         $json = $response->decodeResponseJson();
 
@@ -84,7 +87,8 @@ class TestAdminCreateOrdersTest extends TestCase
         $this->assertEquals($json['data']['createOrder']['email'], "onbehalfof@example.com");
     }
 
-    public function testAdminUserCanUpdateOrder(){
+    public function testAdminUserCanUpdateOrder()
+    {
         $response = $this->createOrder();
         $json = $response->decodeResponseJson();
         $response = $this->graphQLWithSession('
@@ -140,7 +144,8 @@ class TestAdminCreateOrdersTest extends TestCase
         ]);
     }
 
-    public function testAdminUserCanDeleteOrder(){
+    public function testAdminUserCanDeleteOrder()
+    {
         $response = $this->createOrder();
         $json = $response->decodeResponseJson();
         $response = $this->graphQLWithSession('

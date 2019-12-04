@@ -10,14 +10,15 @@ class PaymentService
     public static function createAction(Payment $payment)
     {
         $makeProvider = self::getThirdPartyProvider($payment->provider);
-        $provider = new $makeProvider($payment);
+        $provider = new $makeProvider();
+        $provider->setPayment($payment);
         $action = $provider->createPaymentAction();
         return $action;
     }
 
     public static function getThirdPartyProvider($provider)
     {
-        $config = config('package.gernzy');
+        $config = config('config');
         $providerClass = $config['payment_providers'][ $provider ];
         if ($providerClass && class_exists($providerClass)) {
             return App::make($providerClass);

@@ -2,6 +2,7 @@
 
 namespace Lab19\Cart\Actions;
 
+use \App;
 use Lab19\Cart\Models\Order;
 use Lab19\Cart\Services\CartService;
 use Lab19\Cart\Services\SessionService;
@@ -24,8 +25,7 @@ class CreateCheckout
 
         $sessionServiceRaw = $this->sessionService->raw();
         $user = $this->sessionService->getUser();
-        $cartId = $sessionServiceRaw->cart->id;
-        $userId = $user->id;
+        $cart = $sessionServiceRaw->cart;
 
         $order = new Order([
             "name" => $args["name"],
@@ -45,16 +45,26 @@ class CreateCheckout
             "billing_address_state" => $billing["state"],
             "billing_address_country" => $billing["country"],
 
-            "payment_method" => $args["payment_method"],
             "agree_to_terms" => (int) $args["agree_to_terms"],
             "notes" => $args["notes"],
         ]);
 
+        // Create the payment method
+        if (!isset($args["payment_method"])) {
+            throw new Exception('Payment method was not defined');
+        }
+
+        $createPayment = App::make(CreatePayment::class);
+        $paymentMethod = $createPayment->create($args['payment_method']);
+
         // Associate the order to the user
-        // and cart to the order
-        $order->user_id = $userId;
-        $order->cart_id = $cartId;
+        // and cart to the order, and save
+        // Also save the payment method
+        $order->user()->associate($user);
+        $order->cart()->save($cart);
         $order->save();
+        $paymentMethod->cents_amount = $this->cartService->calculateTotalsCents();
+        $order->payment()->save($paymentMethod);
 
         $this->cartService->setOrder($order);
         $this->cartService->reset();

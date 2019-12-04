@@ -1,4 +1,5 @@
 <?php
+
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Testing\TestCase;
 

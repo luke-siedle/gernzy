@@ -2,27 +2,25 @@
 
     namespace Lab19\Cart\Services;
 
-    use Illuminate\Support\Str;
-    use Lab19\Cart\Models\User;
+    use Illuminate\Http\Request;
     use Lab19\Cart\Models\Cart;
     use Lab19\Cart\Models\Order;
-    use Illuminate\Support\Facades\Auth;
-    use Illuminate\Http\Request;
-    use Lab19\Cart\Services\SessionService;
+    use Lab19\Cart\Models\Product;
 
-    use App;
 
-    class CartService {
-
-        public function __construct( Request $request, SessionService $sessionService ){
+    class CartService
+    {
+        public function __construct(Request $request, SessionService $sessionService)
+        {
             $this->sessionService = $sessionService;
             $this->session = $sessionService->raw();
         }
 
-        public function reset(){
-            if( $this->session ){
+        public function reset()
+        {
+            if ($this->session) {
                 $this->session->load('cart');
-                if( $this->session->cart ){
+                if ($this->session->cart) {
                     // Remove association of previous cart
                     // from current session
                     $previousCartId = $this->session->cart->id;
@@ -49,16 +47,18 @@
             }
         }
 
-        public function setOrder( Order $order ){
+        public function setOrder(Order $order)
+        {
             $cart = $this->getCart();
             $cart->order_id = $order->id;
             $cart->save();
         }
 
-        public function getCart(){
-            if( $this->session ){
+        public function getCart()
+        {
+            if ($this->session) {
                 $this->session->load('cart');
-                if( $this->session->cart ){
+                if ($this->session->cart) {
                     $cart = $this->session->cart;
                     return $cart;
                 }
@@ -66,27 +66,30 @@
             return new Cart();
         }
 
-        public function getItems(){
+        public function getItems()
+        {
             $cart = $this->getCart();
             return $cart->items;
         }
 
-        public function hasItems(){
+        public function hasItems()
+        {
             $cart = $this->getCart();
             return is_array($cart->items) && count($cart->items) > 0;
         }
 
-        public function addItemsToCart( Array $items ){
+        public function addItemsToCart(array $items)
+        {
             $cart = $this->session->cart;
-            if( !$cart ){
+            if (!$cart) {
                 $cart = new Cart([
                     'uuid' => $this->session->get('cart_uuid')
                 ]);
                 $cart->session_id = $this->session->id;
             }
 
-            foreach( $items as $item ){
-                $cart->addItem( $item );
+            foreach ($items as $item) {
+                $cart->addItem($item);
             }
 
             $cart->save();
@@ -95,12 +98,13 @@
             return $cart;
         }
 
-        public function removeItemFromCart( Int $productId ){
+        public function removeItemFromCart(Int $productId)
+        {
             $this->session->load('cart');
             $cart = $this->session->cart;
-            if( $cart ){
-                $removed = $cart->removeItem( $productId );
-                if( $removed ){
+            if ($cart) {
+                $removed = $cart->removeItem($productId);
+                if ($removed) {
                     $cart->save();
                     return $cart;
                 } else {
@@ -111,12 +115,13 @@
             return false;
         }
 
-        public function updateCartItemQuantity( Int $productId, Int $quantity ){
+        public function updateCartItemQuantity(Int $productId, Int $quantity)
+        {
             $this->session->load('cart');
             $cart = $this->session->cart;
-            if( $cart ){
-                $updated = $cart->updateItemQuantity( $productId, $quantity );
-                if( $updated ){
+            if ($cart) {
+                $updated = $cart->updateItemQuantity($productId, $quantity);
+                if ($updated) {
                     $cart->save();
                     return $cart;
                 } else {
@@ -127,4 +132,20 @@
             return false;
         }
 
+        public function calculateTotalsCents()
+        {
+            $this->session->load('cart');
+            $items = $this->getItems();
+            $total = 0;
+            foreach ($items as $item) {
+                $total += $this->calculateLineItemTotal($item['product_id'], $item['quantity']);
+            }
+            return $total;
+        }
+
+        public function calculateLineItemTotal($productId, $quantity)
+        {
+            $product = Product::findOrFail($productId);
+            return $product->cents_amount * $quantity;
+        }
     }

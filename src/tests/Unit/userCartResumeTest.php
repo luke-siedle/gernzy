@@ -1,10 +1,10 @@
 <?php
 
+use Lab19\Cart\Models\Product;
 use Lab19\Cart\Testing\TestCase;
 
 class TestResumeCart extends TestCase
 {
-
     protected $addToProductsMutation = '
         mutation {
             addToCart(input: {
@@ -53,6 +53,14 @@ class TestResumeCart extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        factory(Product::class, 5)->create()->each(function ($product) {
+            $product->status = 'IN_STOCK';
+            $product->title = 'Coffee pod';
+            $product->published = 1;
+            $product->save();
+        });
+
         $response = $this->graphQLWithSession($this->addToProductsMutation);
         $this->graphQLCreateAccountWithSession('new@example.com', 'password');
     }
@@ -66,7 +74,7 @@ class TestResumeCart extends TestCase
         $response = $this->graphQLWithSession($this->getCartQueryAuthenticated);
         $result = $response->decodeResponseJson();
 
-        $this->assertEquals(5, $result['data']['me']['cart']['items'][0]['quantity'] );
+        $this->assertEquals(5, $result['data']['me']['cart']['items'][0]['quantity']);
 
         $response->assertJsonStructure([
             'data' => [
@@ -78,6 +86,4 @@ class TestResumeCart extends TestCase
             ]
         ]);
     }
-
 }
-

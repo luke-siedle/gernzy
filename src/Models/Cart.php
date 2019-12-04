@@ -70,6 +70,7 @@
         public function addItem(array $item)
         {
             $items = $this->getAllItems();
+            Product::findOrFail($item['product_id']);
             $items[ $item['product_id'] ] = $item;
             $this->setAttribute('items', $items);
         }

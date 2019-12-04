@@ -2,10 +2,9 @@
 
 namespace Lab19\Cart\Models;
 
-use Lab19\Cart\Models\Cart;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
 
 class Order extends Model
 {
@@ -37,7 +36,6 @@ class Order extends Model
         'billing_address_postcode',
         'billing_address_state',
         'billing_address_country',
-        'payment_method',
         'agree_to_terms',
         'notes',
         'cart_id'
@@ -70,5 +68,13 @@ class Order extends Model
         return $this->hasOne(Cart::class);
     }
 
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

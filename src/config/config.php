@@ -9,7 +9,7 @@
         |
         */
         'payment_providers' => [
-            'EFT' => \Lab19\Cart\Packages\EFT\EFT::class
+            'EFT' => \Lab19\Cart\Packages\PaymentProviders\EFT::class
         ],
 
         /*

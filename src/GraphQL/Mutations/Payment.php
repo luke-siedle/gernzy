@@ -23,16 +23,12 @@ class Payment
     {
         $order = Order::find($args['input']['order_id']);
         $payment = new PaymentModel([
-            'provider' => $args['input']['provider'],
-            'cents_amount' => $args['input']['cents_amount']
+            'provider' => $args['input']['provider']
         ]);
         $payment->order()->associate($order);
         $payment->is_paid = false;
         $payment->save();
         $paymentAction = PaymentService::createAction($payment);
-        return [
-            'payment' => $payment,
-            'payment_action' => $paymentAction
-        ];
+        return $payment;
     }
 }

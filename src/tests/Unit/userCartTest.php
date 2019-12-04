@@ -1,10 +1,10 @@
 <?php
-    use Lab19\Cart\Testing\TestCase;
+    use Lab19\Cart\Models\Product;
+use Lab19\Cart\Testing\TestCase;
 
-    class TestCart extends TestCase
-    {
-
-        protected $addToProductsMutation = '
+class TestCart extends TestCase
+{
+    protected $addToProductsMutation = '
             mutation {
                 addToCart(input: {
                         items: [
@@ -22,7 +22,7 @@
             }
         ';
 
-        protected $removeFromCartMutation = '
+    protected $removeFromCartMutation = '
             mutation {
                 removeFromCart(input: {
                     product_id: 1,
@@ -38,7 +38,7 @@
             }
         ';
 
-        protected $updateQuantityMutation = '
+    protected $updateQuantityMutation = '
             mutation {
                 updateCartQuantity(input: {
                     product_id: 1,
@@ -54,7 +54,7 @@
             }
         ';
 
-        protected $getCartQuery = '
+    protected $getCartQuery = '
             {
                 me {
                     cart {
@@ -67,7 +67,7 @@
             }
         ';
 
-        protected $getCartQueryAuthenticated = '
+    protected $getCartQueryAuthenticated = '
             {
                 me {
                     id
@@ -81,29 +81,41 @@
             }
         ';
 
-        /**
-         * @group Cart
-         */
-        public function testSessionlessUserCannotAddProductsToCart(): void
-        {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        factory(Product::class, 5)->create()->each(function ($product) {
+            $product->status = 'IN_STOCK';
+            $product->title = 'Coffee pod';
+            $product->published = 1;
+            $product->save();
+        });
+    }
+
+    /**
+     * @group Cart
+     */
+    public function testSessionlessUserCannotAddProductsToCart(): void
+    {
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL($this->addToProductsMutation);
+        $response->assertSee('You need a session token');
+    }
+
+    /**
+     * @group Cart
+     */
+    public function testGuestUserCanAddProductsToCart(): void
+    {
+
             /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQL($this->addToProductsMutation);
-            $response->assertSee('You need a session token');
-        }
+        $response = $this->graphQLWithSession($this->addToProductsMutation);
+        $response->assertDontSee('You are not authorized');
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
 
-        /**
-         * @group Cart
-         */
-        public function testGuestUserCanAddProductsToCart(): void
-        {
-
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQLWithSession($this->addToProductsMutation);
-            $response->assertDontSee('You are not authorized');
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-
-            $response->assertJsonStructure([
+        $response->assertJsonStructure([
                 'data' => [
                     'addToCart' => [
                         'cart' => [
@@ -112,55 +124,54 @@
                     ]
                 ]
             ]);
-        }
-
-        /**
-         * @group Cart
-         */
-        public function testGuestUserCanRemoveProductsFromCart(): void
-        {
-
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQLWithSession($this->addToProductsMutation);
-            $response = $this->graphQLWithSession($this->removeFromCartMutation);
-            $response->assertDontSee('You are not authorized');
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-
-            $this->assertCount(1, $result['data']['removeFromCart']['cart']['items'] );
-        }
-
-        /**
-         * @group Cart
-         */
-        public function testGuestUserCanUpdateQuantityOfProductsInCart(): void
-        {
-
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQLWithSession($this->addToProductsMutation);
-            $response = $this->graphQLWithSession($this->updateQuantityMutation);
-            $response->assertDontSee('You are not authorized');
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-
-            $this->assertEquals(12, $result['data']['updateCartQuantity']['cart']['items'][0]['quantity'] );
-        }
-
-        /**
-         *
-         * @group Cart
-         */
-        public function testGuestUserCanViewProductsAndQuantitiesInCart(): void
-        {
-
-            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
-            $response = $this->graphQLWithSession($this->addToProductsMutation);
-            $response = $this->graphQLWithSession($this->getCartQuery);
-            $response->assertDontSee('You are not authorized');
-            $response->assertDontSee('errors');
-            $result = $response->decodeResponseJson();
-
-            $this->assertEquals(5, $result['data']['me']['cart']['items'][0]['quantity'] );
-        }
-
     }
+
+    /**
+     * @group Cart
+     */
+    public function testGuestUserCanRemoveProductsFromCart(): void
+    {
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQLWithSession($this->addToProductsMutation);
+        $response = $this->graphQLWithSession($this->removeFromCartMutation);
+        $response->assertDontSee('You are not authorized');
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
+
+        $this->assertCount(1, $result['data']['removeFromCart']['cart']['items']);
+    }
+
+    /**
+     * @group Cart
+     */
+    public function testGuestUserCanUpdateQuantityOfProductsInCart(): void
+    {
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQLWithSession($this->addToProductsMutation);
+        $response = $this->graphQLWithSession($this->updateQuantityMutation);
+        $response->assertDontSee('You are not authorized');
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
+
+        $this->assertEquals(12, $result['data']['updateCartQuantity']['cart']['items'][0]['quantity']);
+    }
+
+    /**
+     *
+     * @group Cart
+     */
+    public function testGuestUserCanViewProductsAndQuantitiesInCart(): void
+    {
+
+            /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQLWithSession($this->addToProductsMutation);
+        $response = $this->graphQLWithSession($this->getCartQuery);
+        $response->assertDontSee('You are not authorized');
+        $response->assertDontSee('errors');
+        $result = $response->decodeResponseJson();
+
+        $this->assertEquals(5, $result['data']['me']['cart']['items'][0]['quantity']);
+    }
+}

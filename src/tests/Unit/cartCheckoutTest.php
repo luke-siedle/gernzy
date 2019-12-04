@@ -1,5 +1,6 @@
 <?php
 
+    use Lab19\Cart\Models\Product;
     use Lab19\Cart\Testing\TestCase;
 
     /**
@@ -29,7 +30,9 @@
                         country: "UK"
                     },
                     use_shipping_for_billing: true,
-                    payment_method: "",
+                    payment_method: {
+                        provider: "EFT"
+                    },
                     agree_to_terms: true,
                     notes: ""
                 }){
@@ -61,6 +64,12 @@
         public function setUp(): void
         {
             parent::setUp();
+            factory(Product::class, 10)->create()->each(function ($product) {
+                $product->status = 'IN_STOCK';
+                $product->title = 'Coffee pod';
+                $product->published = 1;
+                $product->save();
+            });
         }
 
         public function testGuestCannotCheckoutWithoutSessionToken(): void
@@ -152,32 +161,5 @@
             $response->assertDontSee('errors');
 
             $this->assertCount(2, $result['data']['myOrders']);
-        }
-
-        /**
-         * @group Payment
-         */
-        public function testGuestUserCreatePaymentOnCheckout(): void
-        {
-            $this->graphQLWithSession($this->addToCartMutation);
-            $response = $this->graphQLWithSession($this->checkoutMutation);
-
-            $result = $response->decodeResponseJson();
-
-            $response = $this->graphQLWithSession(
-                '
-                mutation {
-                    createPayment(input: {
-                        provider: "EFT",
-                        cents_amount: 1000,
-                        order_id: ' . $result['data']['checkout']['order']['id'] . '
-                    }){
-                        id
-                        is_paid
-                    }
-                }'
-            );
-
-            $response->assertDontSee('errors');
         }
     }

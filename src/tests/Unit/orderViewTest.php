@@ -1,5 +1,6 @@
 <?php
 
+use Lab19\Cart\Models\Product;
 use Lab19\Cart\Testing\TestCase;
 
 /**
@@ -29,7 +30,9 @@ class TestOrderViewTest extends TestCase
                         country: "UK"
                     },
                     use_shipping_for_billing: true,
-                    payment_method: "",
+                    payment_method: {
+                        provider: "EFT"
+                    },
                     agree_to_terms: true,
                     notes: ""
                 }){
@@ -61,6 +64,12 @@ class TestOrderViewTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        factory(Product::class, 5)->create()->each(function ($product) {
+            $product->status = 'IN_STOCK';
+            $product->title = 'Coffee pod';
+            $product->published = 1;
+            $product->save();
+        });
     }
 
     public function testGuestCannotCheckoutWithoutSessionToken(): void

@@ -23,7 +23,7 @@ input CheckoutInput {
     billing_address: BillingAddress! @rules(apply: ["required"])
     shipping_address: ShippingAddress! @rules(apply: ["required"])
     use_shipping_for_billing: Boolean!
-    payment_method: String!
+    payment_method: PaymentInput!
     agree_to_terms: Boolean!
     notes: String!
 }
@@ -86,9 +86,8 @@ extend type Mutation {
 }
 
 input PaymentInput {
-    cents_amount: Int!
     provider: String!
-    order_id: ID!
+    order_id: ID
 }
 
 type Payment {
