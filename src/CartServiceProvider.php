@@ -6,7 +6,13 @@ use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 use Lab19\Cart\Services\CartService;
+use Lab19\Cart\Services\CurrencyConversionInterface;
+use Lab19\Cart\Services\GeolocationInterface;
+use Lab19\Cart\Services\GeolocationService;
+use Lab19\Cart\Services\MaxmindGeoIP2;
+use Lab19\Cart\Services\OpenExchangeRates;
 use Lab19\Cart\Services\OrderService;
+
 use Lab19\Cart\Services\SessionService;
 use Lab19\Cart\Services\UserService;
 use Nuwave\Lighthouse\LighthouseServiceProvider;
@@ -46,17 +52,26 @@ class CartServiceProvider extends ServiceProvider
             \Lab19\Cart\Middleware\CartMiddleware::class,
         ]));
 
+
+        // Implement our default binding of the geolocation converion interface
+        // GeolocationService
+        $this->app->bind(
+            GeolocationInterface::class,
+            MaxmindGeoIP2::class
+        );
+
+        // Implement our default binding of the currency converion interface
+        $this->app->bind(
+            CurrencyConversionInterface::class,
+            OpenExchangeRates::class
+        );
+
         // Bind services
         $this->app->bind('Lab19\SessionService', SessionService::class);
         $this->app->bind('Lab19\UserService', UserService::class);
         $this->app->bind('Lab19\OrderService', OrderService::class);
         $this->app->bind('Lab19\CartService', CartService::class);
-
-        // Implement our default binding of the currency converion interface
-        $this->app->bind(
-            'Lab19\Services\CurrencyConversionInterface',
-            'Lab19\Services\OpenExchangeRates'
-        );
+        $this->app->bind('Lab19\GeolocationService', GeolocationService::class);
 
         $this->app->bind('GuzzleHttp\Client', function ($app) {
             return new Client([
@@ -76,6 +91,10 @@ class CartServiceProvider extends ServiceProvider
 
         // Make cache config publishment optional by merging the config from the package.
         $this->mergeConfigFrom(__DIR__ . '/config/cache.php', 'cache');
+
+
+        // Make cache config publishment optional by merging the config from the package.
+        $this->mergeConfigFrom(__DIR__ . '/config/db.php', 'db');
     }
 
     /**
