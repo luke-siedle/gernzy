@@ -105,7 +105,7 @@ class CurrencyConversionTest extends TestCase
                         currency
                     }
                 }
-            ', ], [
+            ',], [
             'HTTP_Authorization' => 'Bearer ' . $token,
         ]);
 
@@ -299,5 +299,41 @@ class CurrencyConversionTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    public function testSetCurrencyFailsWhenNoCurrenciesAreEnabled(): void
+    {
+        $this->withoutExceptionHandling();
+
+        /** @var \Illuminate\Foundation\Testing\TestResponse $response */
+        $response = $this->graphQL('
+                mutation {
+                    createSession {
+                        token
+                    }
+                }
+            ');
+
+        $start = $response->decodeResponseJson();
+
+        $token = $start['data']['createSession']['token'];
+
+        $response = $this->postGraphQL(['query' => '
+                mutation {
+                    setSessionCurrency(input: {
+                        currency: "some random string"
+                    }){
+                        currency
+                    }
+                }
+            '], [
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $response->assertSee('errors');
+
+        $result = $response->decodeResponseJson();
+
+        $this->assertEquals($result['errors'][0]['message'], 'Currency is invalid.');
     }
 }
