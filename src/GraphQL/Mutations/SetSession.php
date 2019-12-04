@@ -35,6 +35,23 @@ class SetSession
 
         $currency = $args['input']['currency'];
 
+        // Throw error when there are missing values
+        if (!$enabledCurrrencies = config('currency.enabled')) {
+            throw new GernzyException(
+                'An error occured.',
+                'An error occured when determining the currency.'
+            );
+        }
+
+        // Check if the selected currency is in the allowed list of currencies. If it is not found then throw an appropriate error
+        if (!in_array($currency, $enabledCurrrencies)) {
+            throw new GernzyException(
+                'Currency is invalid.',
+                'The selected currency is not supported.'
+            );
+        }
+
+        // Add the currency to the session data
         $sessionService->update(['currency' => $currency]);
 
         // Clear the previous rate for the user as a new currency has been chosen

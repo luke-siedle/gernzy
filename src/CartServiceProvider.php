@@ -53,7 +53,7 @@ class CartServiceProvider extends ServiceProvider
         ]));
 
 
-        // Implement our default binding of the geolocation converion interface
+        // Implement our default binding of the geolocation conversion interface
         // GeolocationService
         $this->app->bind(
             GeolocationInterface::class,
@@ -92,9 +92,11 @@ class CartServiceProvider extends ServiceProvider
         // Make cache config publishment optional by merging the config from the package.
         $this->mergeConfigFrom(__DIR__ . '/config/cache.php', 'cache');
 
-
         // Make cache config publishment optional by merging the config from the package.
         $this->mergeConfigFrom(__DIR__ . '/config/db.php', 'db');
+
+        // Make cache config publishment optional by merging the config from the package.
+        $this->mergeConfigFrom(__DIR__ . '/config/currency.php', 'currency');
     }
 
     /**
@@ -114,6 +116,11 @@ class CartServiceProvider extends ServiceProvider
         // Allow developers to override cache config
         $this->publishes([
             __DIR__ . '/config/cache.php' => config_path('cache.php'),
+        ]);
+
+        // Allow developers to override currency config
+        $this->publishes([
+            __DIR__ . '/config/currency.php' => config_path('currency.php'),
         ]);
 
         $this->loadRoutesFrom(__DIR__ . '/Http/routes/web.php');
