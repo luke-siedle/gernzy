@@ -9,7 +9,7 @@ use Lab19\Cart\Models\User;
 
 class SessionService
 {
-    const NAMESPACE = 'cart';
+    const namespace  = 'cart';
 
     public function __construct(Request $request)
     {
@@ -18,9 +18,8 @@ class SessionService
         $this->session = new Session;
         $this->session->token = Str::random(60);
         $this->session->data = [
-            'cart_uuid' => Str::uuid()
+            'cart_uuid' => Str::uuid(),
         ];
-
 
         // If the request provides a bearer token
         // we can potentially get the session from the request
@@ -90,7 +89,6 @@ class SessionService
         $result = $this->session->delete();
         return $result;
     }
-
 
     // Getters
     public function get($key = null)

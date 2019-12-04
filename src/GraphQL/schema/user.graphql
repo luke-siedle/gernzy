@@ -15,7 +15,7 @@ input SetSessionInput {
 }
 
 input SetSessionCurrency {
-    currency: String
+    currency: String!
 }
 
 input CartProductInput {
