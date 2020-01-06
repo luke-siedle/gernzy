@@ -11,7 +11,7 @@ class OpenExchangeRatesFactory
         $currencyObject = new OpenExchangeRates($currency, $base);
         $currencyObject->setCurrency($currency);
         $currencyObject->setBaseCurrency($base);
-        $currencyObject->setResponseFromOpenExchange(); //This function does the api call
+        $currencyObject->makeApiRequest(); //This function does the api call
         $currencyObject->setRate();
         return $currencyObject;
     }

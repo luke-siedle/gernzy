@@ -25,6 +25,8 @@ type Query {
 
     order_items: [OrderItem!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\OrderItem")
     order_item(id: ID @eq): OrderItem @find(model: "Lab19\\Cart\\Models\\OrderItem")
+
+    shopConfig: [String] @field(resolver: "Lab19\\Cart\\GraphQL\\Queries\\ShopConfig@enabledCurrencies")
 }
 
 type User {

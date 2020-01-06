@@ -30,7 +30,7 @@ class OpenExchangeRates implements CurrencyConversionInterface
      *
      * @param string
      */
-    public function setResponseFromOpenExchange()
+    public function makeApiRequest()
     {
         // open exhange api token is set in a .env file so that is doesn't live in the code base
         $token = env('currency_api_token', '');

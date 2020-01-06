@@ -2,14 +2,16 @@
 
 namespace Lab19\Cart\Actions;
 
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\ProductAttribute;
+use \App;
 use Lab19\Cart\Actions\Helpers\Attributes;
 use Lab19\Cart\Models\Category;
+use Lab19\Cart\Models\Product;
+use Lab19\Cart\Models\ProductFixedPrice;
+use Lab19\Cart\Services\ExhangeRatesManager;
 
 class CreateProduct
 {
-    public static function handle( $args ): Product
+    public static function handle($args): Product
     {
         $product = new Product([
             'title' => $args['title'],
@@ -26,13 +28,13 @@ class CreateProduct
         $categories = $args['categories'] ?? [];
 
         $createCategories = [];
-        foreach( $categories as $category ){
-            if( isset($category['id']) ){
+        foreach ($categories as $category) {
+            if (isset($category['id'])) {
                 $cat = Category::find($category['id']);
-                if( $cat ){
-                    $product->categories()->attach( $cat );
+                if ($cat) {
+                    $product->categories()->attach($cat);
                 }
-            } else if(isset($category['title'])) {
+            } elseif (isset($category['title'])) {
                 $createCategories[] = [
                     'title' => $category['title']
                 ];
@@ -43,17 +45,49 @@ class CreateProduct
 
         $attributes = new Attributes();
         $attributes
-            ->meta( $args['meta'] ?? [] )
-            ->sizes( $args['sizes'] ?? [] )
-            ->dimensions( $args['dimensions'] ?? [])
-            ->weight( $args['weight'] ?? [] )
-            ->prices( $args['prices'] ?? [] );
+            ->meta($args['meta'] ?? [])
+            ->sizes($args['sizes'] ?? [])
+            ->dimensions($args['dimensions'] ?? [])
+            ->weight($args['weight'] ?? [])
+            ->prices($args['prices'] ?? []);
 
         $product->attributes()->createMany(
             $attributes->toArray()
         );
 
+        // Product details
+        $productPrice = $args['price_cents'] ?? false;
+        $productBaseCurrency = $args['price_currency'] ?? false;
+        $fixCurrencies = $args['fixprices'] ?? false;
+
+        if (!$fixCurrencies || !$productPrice || !$productBaseCurrency) {
+            return $product;
+        }
+
+        // Map over $fixCurrencies and fix the price for the product in that currency
+        // and pass the resultant array to the save many function
+        $convertedFixedPrices = array_map(function ($pricingInput) use ($productPrice, $productBaseCurrency) {
+            $productManualOverridePrice = $pricingInput['price_cents'] ?? false;
+            $targetCurrency = $pricingInput['currency'];
+
+            if (!$productManualOverridePrice) {
+
+                // Use the Exhange Rate manager object to convert the prices, only if no manual override is present
+                $converter = (App::make(ExhangeRatesManager::class))
+                    ->setPrices([0 => ['price_currency' =>  $productBaseCurrency, 'price_cents' => $productPrice]])
+                    ->setTargetCurrency($targetCurrency)
+                    ->convertPrices();
+
+                // return a new instance of the ProductFixedPrice model and run the function that fixes the price
+                return (new ProductFixedPrice(['country_code' => $targetCurrency, 'price' => $converter[0]['price_cents']]))->fixPrice();
+            }
+
+            return (new ProductFixedPrice(['country_code' => $targetCurrency, 'price' => $productManualOverridePrice]));
+        }, $fixCurrencies);
+
+        // Create latavel relationship for the products fixed prices in the specified currencies
+        $product->fixedPrices()->saveMany($convertedFixedPrices);
+
         return $product;
     }
-
 }

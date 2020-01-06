@@ -2,10 +2,10 @@
 
 namespace Lab19\Cart\GraphQL\Directives;
 
+use \App;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
-use Lab19\Cart\Factories\OpenExchangeRatesFactory;
 use Lab19\Cart\Services\ExhangeRatesManager;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\Directive;
@@ -57,10 +57,9 @@ class GernzyConvertCurrencyDirective implements Directive, FieldMiddleware
             // sessionCurrency is set through graphql session mutator field
             $sessionCurrency = $session['data']['currency'];
 
-            return (new ExhangeRatesManager())
-                ->setConverter(new OpenExchangeRatesFactory())
-                ->setResult($result)
-                ->setSessionCurrency($sessionCurrency)
+            return (App::make(ExhangeRatesManager::class))
+                ->setPrices($result)
+                ->setTargetCurrency($sessionCurrency)
                 ->setToken($token)
                 ->setCachedRate(Cache::get($token, null))
                 ->setRpository((new Cache()))

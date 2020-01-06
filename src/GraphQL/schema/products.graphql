@@ -64,6 +64,13 @@ type Product {
     images: [Image!]
     featured_image: Image
     tags: [Tag!] @hasMany
+    fixedPrices: [ProductFixedPrice!] @hasMany
+}
+
+type ProductFixedPrice {
+    id: ID!
+    country_code: String
+    price: Float
 }
 
 type ProductDimensions {
@@ -107,6 +114,12 @@ input CreateProductInput {
     categories: [CategoryInput!]
     dimensions: ProductDimensionsInput
     weight: ProductWeightInput
+    fixprices: [PricingInput]
+}
+
+input PricingInput {
+    currency: String!
+    price_cents: Float
 }
 
 input ProductDimensionsInput {

@@ -4,7 +4,7 @@ namespace Lab19\Cart\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -93,6 +93,16 @@ class Product extends Model
      *
      * @var $query
      */
+    public function fixedPrices(): HasMany
+    {
+        return $this->hasMany(ProductFixedPrice::class);
+    }
+
+    /**
+     * Attributes relation
+     *
+     * @var $query
+     */
     public function sizes()
     {
         return $this->hasMany(ProductAttribute::class)->sizes();
@@ -155,7 +165,7 @@ class Product extends Model
         $dimensions = $this->getAttribute('productDimensions');
         $data = [];
         foreach ($dimensions as $each) {
-            $data[ $each->key ] = $each->value;
+            $data[$each->key] = $each->value;
         }
         return $data;
     }

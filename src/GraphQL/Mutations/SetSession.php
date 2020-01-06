@@ -35,7 +35,8 @@ class SetSession
 
         $currency = $args['input']['currency'];
 
-        // Throw error when there are missing values
+        // Throw error when there is no config containing the enbabled currencies
+        // that is set by developers
         if (!$enabledCurrrencies = config('currency.enabled')) {
             throw new GernzyException(
                 'An error occured.',
@@ -43,7 +44,8 @@ class SetSession
             );
         }
 
-        // Check if the selected currency is in the allowed list of currencies. If it is not found then throw an appropriate error
+        // Check if the selected currency is in the list of enabled currencies.
+        // If it is not found then throw an appropriate error
         if (!in_array($currency, $enabledCurrrencies)) {
             throw new GernzyException(
                 'Currency is invalid.',

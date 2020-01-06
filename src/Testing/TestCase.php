@@ -2,6 +2,10 @@
 
 namespace Lab19\Cart\Testing;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -49,6 +53,39 @@ abstract class TestCase extends BaseTestCase
         $this->withFactories(dirname(__DIR__) . '/database/factories');
         $this->seed(UsersSeeder::class);
         $this->withoutExceptionHandling();
+
+
+        // Mocking the api request to openexchange rates through the guzzle mock handler
+        $this->app->bind('GuzzleHttp\Client', function ($app) {
+            $json = [
+                "disclaimer" => "https://openexchangerates.org/terms/",
+                "license" => "https://openexchangerates.org/license/",
+                "timestamp" => "1449877801",
+                "base" => "USD",
+                "rates" => [
+                    "AED" => "3.672538",
+                    "AFN" => "66.809999",
+                    "EUR" => "125.716501",
+                    "GBP" => "130.716501",
+                    "ZAR" => "12.716501",
+                    "AUD" => "15.716501",
+                ],
+            ];
+
+            $json = json_encode($json);
+
+            $mock = new MockHandler([
+                new Response(200, [], $json),
+            ]);
+
+            $handler = HandlerStack::create($mock);
+
+            return new Client([
+                'handler' => $handler,
+                'base_uri' => 'https://openexchangerates.org/api/',
+                'timeout' => 2.0,
+            ]);
+        });
     }
 
     public function graphQLWithSession(String $query)
@@ -91,7 +128,7 @@ abstract class TestCase extends BaseTestCase
                         }
                     }
                 }
-            ', ], [
+            ',], [
             'HTTP_Authorization' => 'Bearer ' . ($token ?? $this->sessionToken),
         ]);
 

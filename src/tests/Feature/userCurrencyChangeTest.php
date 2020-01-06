@@ -2,10 +2,6 @@
 
 namespace Tests\Feature;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\WithFaker;
 use Lab19\Cart\Factories\OpenExchangeRatesFactory;
 use Lab19\Cart\Models\Product;
@@ -49,34 +45,6 @@ class CurrencyConversionTest extends TestCase
         $this->availableCount = 11;
 
         $this->productPricesArray = factory(Product::class, $this->availableCount)->create();
-
-        $this->app->bind('GuzzleHttp\Client', function ($app) {
-            $json = [
-                "disclaimer" => "https://openexchangerates.org/terms/",
-                "license" => "https://openexchangerates.org/license/",
-                "timestamp" => "1449877801",
-                "base" => "USD",
-                "rates" => [
-                    "AED" => "3.672538",
-                    "AFN" => "66.809999",
-                    "EUR" => "125.716501",
-                ],
-            ];
-
-            $json = json_encode($json);
-
-            $mock = new MockHandler([
-                new Response(200, [], $json),
-            ]);
-
-            $handler = HandlerStack::create($mock);
-
-            return new Client([
-                'handler' => $handler,
-                'base_uri' => 'https://openexchangerates.org/api/',
-                'timeout' => 2.0,
-            ]);
-        });
     }
 
     // Helpers

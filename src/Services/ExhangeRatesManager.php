@@ -7,11 +7,16 @@ use Illuminate\Support\Facades\Cache;
 class ExhangeRatesManager
 {
     protected $result; //products array
-    protected $sessionCurrency;
+    protected $targetCurrency;
     protected $token;
     protected $currencyConverter;
     protected $cachedRate;
     protected $repository;
+
+    public function __construct(CurrencyConversionInterface $currencyConverter)
+    {
+        $this->currencyConverter = $currencyConverter;
+    }
 
     /*------------------Setters------------------*/
     /**
@@ -19,7 +24,7 @@ class ExhangeRatesManager
      *
      * @param string
      */
-    public function setResult($result)
+    public function setPrices($result)
     {
         $this->result = $result;
 
@@ -38,13 +43,13 @@ class ExhangeRatesManager
     }
 
     /**
-     * Set's the object sessionCurrency
+     * Set's the object targetCurrency
      *
      * @param string
      */
-    public function setSessionCurrency($sessionCurrency)
+    public function setTargetCurrency($targetCurrency)
     {
-        $this->sessionCurrency = $sessionCurrency;
+        $this->targetCurrency = $targetCurrency;
         return $this;
     }
 
@@ -134,7 +139,7 @@ class ExhangeRatesManager
     {
         // At this point there is no cached rate, and all variables are set so new up a currency object and convert price.
         // note that this makes the api call, thus caching the result afterwards reduces api usage
-        $currencyConverter = $this->currencyConverter::create($this->sessionCurrency, $productCurrency);
+        $currencyConverter = $this->create($this->targetCurrency, $productCurrency); //($currencyCode, $productBaseCurrency);
 
         // Set the cache with the rate for the user
         if (isset($this->token)) {
@@ -153,5 +158,14 @@ class ExhangeRatesManager
     public function saveToRepository($token, $rate, $time)
     {
         $this->repository::put($token, $rate, $time);
+    }
+
+    public function create($currency, $base)
+    {
+        $this->currencyConverter->setCurrency($currency);
+        $this->currencyConverter->setBaseCurrency($base);
+        $this->currencyConverter->makeApiRequest(); //This function does the api call
+        $this->currencyConverter->setRate();
+        return $this->currencyConverter;
     }
 }
