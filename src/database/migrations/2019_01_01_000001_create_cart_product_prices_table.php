@@ -15,10 +15,10 @@ class CreateCartProductPricesTable extends Migration
     {
         Schema::create('cart_product_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('product_id')->unsigned();
+            $table->bigInteger('product_id')->unsigned();
             $table->string('country_code');
             $table->string('price');
-            $table->foreign('product_id')->references('id')->on('cart_product')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('cart_products')->onDelete('cascade');
             $table->timestamps();
         });
     }
