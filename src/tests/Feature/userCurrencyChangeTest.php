@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Lab19\Cart\Factories\OpenExchangeRatesFactory;
 use Lab19\Cart\Models\Product;
 use Lab19\Cart\Services\CurrencyConversionInterface;
 use Lab19\Cart\Testing\TestCase;
@@ -88,35 +87,6 @@ class CurrencyConversionTest extends TestCase
         ]);
 
         return $token;
-    }
-
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testContractImplementationThroughController()
-    {
-        // Construct and pass the type of implementation.
-        // In a controller it should be type hinted automatically throught the laravel service container
-        // as it is bound in the register method of the cart service provider
-        // I'm using a factory pattern to create the object
-        $currency = new ExampleObjectOrController(OpenExchangeRatesFactory::create('EUR', 'USD'));
-
-        $this->assertTrue(null !== $currency->index());
-        $this->assertTrue(!empty($currency->index()));
-    }
-
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testContractImplementation()
-    {
-        $currency = OpenExchangeRatesFactory::create('EUR', 'USD');
-
-        $this->assertTrue(null !== $currency->convertCurrency(10) && !empty($currency->convertCurrency(10)));
     }
 
     public function testSetCartCurrencySession(): void

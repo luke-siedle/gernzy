@@ -17,3 +17,16 @@ Route::get(
     'Lab19\Cart\Http\controllers\ResetPasswordController@index'
 )
     ->name('password.reset.token');
+
+
+Route::get('shop', function () {
+    return view('lab19\cart::home');
+});
+
+Route::get('cart', function () {
+    return view('lab19\cart::cart');
+});
+
+Route::get('checkout', function () {
+    return view('lab19\cart::checkout');
+});

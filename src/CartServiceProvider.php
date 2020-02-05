@@ -124,5 +124,7 @@ class CartServiceProvider extends ServiceProvider
         ]);
 
         $this->loadRoutesFrom(__DIR__ . '/Http/routes/web.php');
+
+        $this->loadViewsFrom(__DIR__ . '/resources/views', 'lab19\cart');
     }
 }

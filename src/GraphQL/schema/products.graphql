@@ -23,8 +23,6 @@ extend type Query {
 
     productsByTags(tags: [Int!]): [Product!]!
         @paginate(type: "paginator", builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@productsByTags")
-
-    product(id: ID @eq): Product @find(model: "Lab19\\Cart\\Models\\Product")
 }
 
 input ProductsQueryInput {

@@ -46,7 +46,13 @@ class GernzyConvertCurrencyDirective implements Directive, FieldMiddleware
             if (!isset($context->request->session)) {
                 return $result;
             }
+
+
             $session = $context->request->session;
+
+            if (!isset($session['data']['currency'])) {
+                return $result;
+            }
 
             if (!isset($session->token)) {
                 $token = null;

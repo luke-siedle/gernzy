@@ -2,12 +2,10 @@
 
 namespace Lab19\Cart\GraphQL\Queries;
 
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Nuwave\Lighthouse\Exceptions\AuthenticationException;
-use Illuminate\Support\Str;
-use Lab19\Cart\Services\OrderService;
 use \App;
+use GraphQL\Type\Definition\ResolveInfo;
+use Lab19\Cart\Services\OrderService;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Account
 {
@@ -24,7 +22,7 @@ class Account
     {
         $sessionService = App::make('Lab19\SessionService');
         $me = $sessionService->getUser();
-        if( !$me->id ) {
+        if (!$me->id) {
             $cartService = App::make('Lab19\CartService');
             $me = [
                 'cart' => $cartService->getCart(),
@@ -41,5 +39,4 @@ class Account
         $orders = $orderService->myOrders();
         return $orders;
     }
-
 }
