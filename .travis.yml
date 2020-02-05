@@ -11,9 +11,8 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-before_script: cd server
-
 before_install:
+  - cd server
   - composer self-update
   - composer install --no-interaction
 
