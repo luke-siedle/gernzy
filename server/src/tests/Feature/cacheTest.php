@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
 use Lab19\Cart\Testing\TestCase;
 
-class GernzyPasswordResetTest extends TestCase
+class GernzyCacheTest extends TestCase
 {
     use WithFaker;
 
