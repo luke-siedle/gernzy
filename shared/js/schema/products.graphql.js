@@ -1,4 +1,5 @@
-export default ` extend type Query {
+export default `
+extend type Query {
     products(input: ProductsQueryInput): [Product!]!
         @gernzyConvertCurrency
         @paginate(
@@ -229,4 +230,5 @@ type AddProductTagsPayload {
 
 type SetProductFeaturedImagePayload {
     product: Product!
-} ` 
+} 
+`

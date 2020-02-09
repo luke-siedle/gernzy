@@ -1,4 +1,5 @@
-export default ` input CreateAccountInput {
+export default `
+input CreateAccountInput {
     name: String!
     email: String @rules(apply: ["required", "email", "unique:cart_users,email"])
     password: String!
@@ -156,4 +157,5 @@ type SendResult {
 
 type UpdatePasswordResult {
     success: Boolean!
-} ` 
+} 
+`

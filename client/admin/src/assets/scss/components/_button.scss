@@ -1,0 +1,10 @@
+.gzy-button {
+  border:0;
+  border-radius: 2px;
+  padding: .5rem 1rem;
+  margin:1rem 0;
+  &--primary {
+    background-color: lightgreen;
+    color: darkgoldenrod;
+  }
+}
