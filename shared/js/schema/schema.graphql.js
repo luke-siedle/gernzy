@@ -1,11 +1,12 @@
-export default ` "A datetime string with format Y-m-d H:i:s, e.g. 2018-01-01 13:00:00."
-scalar DateTime @scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\DateTime")
+export default `
+"A datetime string with format Y-m-d H:i:s, e.g. 2018-01-01 13:00:00."
+scalar DateTime #@scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\DateTime")
 
 "A date string with format Y-m-d, e.g. 2011-05-23."
-scalar Date @scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\Date")
+scalar Date #@scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\Date")
 
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
-scalar Upload @scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\Upload")
+scalar Upload #@scalar(class: "Nuwave\Lighthouse\Schema\Types\Scalars\Upload")
 
 type Query {
     users: [User!]!
@@ -112,4 +113,5 @@ input UpdateCartInput {
 #import user.graphql
 #import products.graphql
 #import orders.graphql
-#import tags.graphql ` 
+#import tags.graphql 
+`

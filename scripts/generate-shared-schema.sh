@@ -7,5 +7,8 @@ for f in $SCHEMA_DIR/*.graphql; do
 	CONTENTS=$(cat $f)
 	CONTENTS=${CONTENTS//\\\\/\\}
 	CONTENTS=${CONTENTS//\`/}
-  	echo "export default \` $CONTENTS \` " > "$OUTPUT_DIR/${f##*/}.js"
+	CONTENTS=${CONTENTS//\@scalar/#@scalar}
+  	echo "export default \`
+$CONTENTS 
+\`" > "$OUTPUT_DIR/${f##*/}.js"
 done

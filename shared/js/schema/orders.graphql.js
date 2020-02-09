@@ -1,4 +1,5 @@
-export default ` extend type Mutation {
+export default `
+extend type Mutation {
     checkout(input: CheckoutInput!): CheckoutPayload
         @field(resolver: "Lab19\Cart\GraphQL\Mutations\Checkout@checkout")
         @gate(ability: "can-checkout", sessionOnly: true)
@@ -79,4 +80,5 @@ input UpdateOrderInput {
 input SetOrderItemsInput {
     product_id: ID!
     quantity: Int!
-} ` 
+} 
+`

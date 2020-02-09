@@ -1,4 +1,5 @@
-export default ` extend type Query {
+export default `
+extend type Query {
     tags: [Tag!]! @all(model: "Lab19\Cart\Models\Tag")
     tag(id: Int! @eq): Tag @find(model: "Lab19\Cart\Models\Tag")
 }
@@ -27,4 +28,5 @@ input CreateTagInput {
 
 input UpdateTagInput {
     name: String!
-} ` 
+} 
+`
