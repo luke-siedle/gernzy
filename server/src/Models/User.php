@@ -14,7 +14,7 @@ class User extends Authenticatable
      *
      * @var string
      */
-    protected $table = 'cart_users';
+    protected $table = 'gernzy_users';
 
     /**
      * The attributes that are mass assignable.

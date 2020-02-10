@@ -42,7 +42,7 @@ class TestUserAccount extends TestCase
         $data = $response->decodeResponseJson();
         $token = $data['data']['createAccount']['token'];
 
-        $this->assertDatabaseHas('cart_sessions', [
+        $this->assertDatabaseHas('gernzy_sessions', [
             'token' => $token,
         ]);
     }

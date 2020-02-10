@@ -1,7 +1,7 @@
 export default `
 input CreateAccountInput {
     name: String!
-    email: String @rules(apply: ["required", "email", "unique:cart_users,email"])
+    email: String @rules(apply: ["required", "email", "unique:gernzy_users,email"])
     password: String!
     token: String
 }
@@ -40,7 +40,8 @@ type CartProduct {
 }
 
 extend type Mutation {
-    logIn(input: LoginInput! @spread): LogInPayload @field(resolver: "Gernzy\Server\GraphQL\Mutations\Account@logIn")
+    logIn(input: LoginInput! @spread): LogInPayload
+        @field(resolver: "Gernzy\Server\GraphQL\Mutations\Account@logIn")
 
     logOut: LogOutPayload @field(resolver: "Gernzy\Server\GraphQL\Mutations\Account@logOut")
 
@@ -134,13 +135,13 @@ extend type Query {
 
 input CreateUserInput {
     name: String!
-    email: String! @rules(apply: ["required", "email", "unique:cart_users,email"])
+    email: String! @rules(apply: ["required", "email", "unique:gernzy_users,email"])
     password: String!
 }
 
 input UpdateUserInput {
     name: String
-    email: String @rules(apply: ["email", "unique:cart_users,email"])
+    email: String @rules(apply: ["email", "unique:gernzy_users,email"])
     password: String
 }
 

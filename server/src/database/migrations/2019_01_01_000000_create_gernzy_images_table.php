@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateCartImagesTable extends Migration
+class CreateGernzyImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCartImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_images', function (Blueprint $table) {
+        Schema::create('gernzy_images', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('url');
             $table->string('name');
@@ -29,6 +29,6 @@ class CreateCartImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_images');
+        Schema::dropIfExists('gernzy_images');
     }
 }

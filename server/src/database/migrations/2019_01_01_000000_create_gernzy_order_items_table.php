@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartPasswordResetsTable extends Migration
+class CreateGernzyOrderItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateCartPasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_password_resets', function (Blueprint $table) {
+        Schema::create('gernzy_order_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->bigInteger('order_id');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +27,6 @@ class CreateCartPasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('gernzy_order_items');
     }
 }

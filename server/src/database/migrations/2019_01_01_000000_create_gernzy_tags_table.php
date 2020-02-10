@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartCacheTable extends Migration
+class CreateGernzyTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +13,10 @@ class CreateCartCacheTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_cache', function ($table) {
-            $table->string('key')->unique();
-            $table->text('value');
-            $table->integer('expiration');
+        Schema::create('gernzy_tags', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +27,6 @@ class CreateCartCacheTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_cache');
+        Schema::dropIfExists('gernzy_tags');
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 use Faker\Factory as Faker;
-use Illuminate\Http\UploadedFile;
 use Gernzy\Server\Testing\TestCase;
+use Illuminate\Http\UploadedFile;
 
 /**
  * @group Products
@@ -590,7 +590,7 @@ class TestCreateProductDetailTest extends TestCase
     {
         $product = $this->createProduct()->decodeResponseJson();
         
-        $this->assertDatabaseHas('cart_products', [
+        $this->assertDatabaseHas('gernzy_products', [
             'title' => $product['data']['createProduct']['title'],
         ]);
 
@@ -652,7 +652,7 @@ class TestCreateProductDetailTest extends TestCase
     {
         $product = $this->createProduct()->decodeResponseJson();
 
-        $this->assertDatabaseHas('cart_products', [
+        $this->assertDatabaseHas('gernzy_products', [
             'title' => $product['data']['createProduct']['title'],
         ]);
 

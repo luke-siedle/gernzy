@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
+use Gernzy\Server\Models\PasswordResets;
+use Gernzy\Server\Models\User;
+use Gernzy\Server\Notifications\GernzyResetPassword;
+use Gernzy\Server\Testing\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Gernzy\Server\Models\PasswordResets;
-use Gernzy\Server\Models\User;
-use Gernzy\Server\Notifications\GernzyResetPassword;
-use Gernzy\Server\Testing\TestCase;
 use Notification;
 
 class PasswordResetFeatureTest extends TestCase
@@ -43,7 +43,7 @@ class PasswordResetFeatureTest extends TestCase
             'created_at' => Carbon::now(),
         ]);
 
-        $this->assertDatabaseHas('cart_password_resets', [
+        $this->assertDatabaseHas('gernzy_password_resets', [
             'email' => $user->email,
             'token' => $tokenHash,
         ]);
@@ -108,7 +108,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertNotEquals(PasswordResets::where('email', '=', $user->email)->first()->token, $testResetRecord->token);
 
-        $this->assertDatabaseHas('cart_password_resets', [
+        $this->assertDatabaseHas('gernzy_password_resets', [
             'email' => $user->email,
         ]);
 
@@ -117,7 +117,7 @@ class PasswordResetFeatureTest extends TestCase
             GernzyResetPassword::class
         );
 
-        $this->assertDatabaseMissing('cart_password_resets', [
+        $this->assertDatabaseMissing('gernzy_password_resets', [
             'token' => $testResetRecord->token,
         ]);
     }
@@ -148,7 +148,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $response->assertSee('errors');
 
-        $this->assertDatabaseMissing('cart_password_resets', [
+        $this->assertDatabaseMissing('gernzy_password_resets', [
             'email' => $user->email,
         ]);
 
@@ -215,7 +215,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertTrue(Hash::check($password, $user->password));
 
-        $this->assertDatabaseMissing('cart_password_resets', [
+        $this->assertDatabaseMissing('gernzy_password_resets', [
             'email' => $user->email,
         ]);
     }
@@ -267,7 +267,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertTrue(Hash::check(self::USER_ORIGINAL_PASSWORD, $user->password));
 
-        $this->assertDatabaseHas('cart_password_resets', [
+        $this->assertDatabaseHas('gernzy_password_resets', [
             'email' => $user->email,
         ]);
     }
@@ -314,7 +314,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertFalse(Hash::check($password, $user->password));
 
-        $this->assertDatabaseMissing('cart_password_resets', [
+        $this->assertDatabaseMissing('gernzy_password_resets', [
             'email' => $user->email,
         ]);
     }
@@ -366,7 +366,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertFalse(Hash::check($password, $user->password));
 
-        $this->assertDatabaseHas('cart_password_resets', [
+        $this->assertDatabaseHas('gernzy_password_resets', [
             'email' => $user->email,
         ]);
     }
@@ -418,7 +418,7 @@ class PasswordResetFeatureTest extends TestCase
 
         $this->assertFalse(Hash::check($password, $user->password));
 
-        $this->assertDatabaseHas('cart_password_resets', [
+        $this->assertDatabaseHas('gernzy_password_resets', [
             'email' => $user->email,
         ]);
     }

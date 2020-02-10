@@ -182,7 +182,7 @@ class TestCreateProductTest extends TestCase
         $this->assertNotEmpty($product->title);
 
         // Check the database contains the info for the fixed prices
-        $this->assertDatabaseHas('cart_product_prices', [
+        $this->assertDatabaseHas('gernzy_product_prices', [
             'id' => $productFixedPrice->id,
             'product_id' => $product->id
         ]);

@@ -13,7 +13,7 @@
          *
          * @var string
          */
-        protected $table = 'cart_password_resets';
+        protected $table = 'gernzy_password_resets';
 
         /**
          * The attributes that are mass assignable.
