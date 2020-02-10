@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Models;
+namespace Gernzy\Server\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Lab19\Cart\Models\Cart;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\Cart;
+use Gernzy\Server\Models\User;
 
 class Session extends Model
 {

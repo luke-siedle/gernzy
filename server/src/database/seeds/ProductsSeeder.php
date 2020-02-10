@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Database\Seeds;
+namespace Gernzy\Server\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

@@ -1,7 +1,7 @@
 <?php
 
-namespace Lab19\Cart\Actions;
-use Lab19\Cart\Models\Order;
+namespace Gernzy\Server\Actions;
+use Gernzy\Server\Models\Order;
 
 class CreateOrder
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Directives;
+namespace Gernzy\Server\GraphQL\Directives;
 
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;

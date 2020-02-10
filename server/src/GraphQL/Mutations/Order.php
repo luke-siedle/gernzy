@@ -1,13 +1,13 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Lab19\Cart\Actions\CreateOrder;
-use Lab19\Cart\Actions\UpdateOrder;
-use Lab19\Cart\Actions\DeleteOrder;
-use Lab19\Cart\Actions\SetOrderItems;
+use Gernzy\Server\Actions\CreateOrder;
+use Gernzy\Server\Actions\UpdateOrder;
+use Gernzy\Server\Actions\DeleteOrder;
+use Gernzy\Server\Actions\SetOrderItems;
 use \App;
 
 class Order

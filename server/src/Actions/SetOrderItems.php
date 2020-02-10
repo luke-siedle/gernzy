@@ -1,8 +1,8 @@
 <?php
 
-namespace Lab19\Cart\Actions;
-use Lab19\Cart\Models\Order;
-use Lab19\Cart\Models\Cart;
+namespace Gernzy\Server\Actions;
+use Gernzy\Server\Models\Order;
+use Gernzy\Server\Models\Cart;
 
 class SetOrderItems
 {

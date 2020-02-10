@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
-use Lab19\Cart\Models\Order;
-use Lab19\Cart\Services\CartService;
-use Lab19\Cart\Services\SessionService;
+use Gernzy\Server\Models\Order;
+use Gernzy\Server\Services\CartService;
+use Gernzy\Server\Services\SessionService;
 
 class CreateCheckout
 {

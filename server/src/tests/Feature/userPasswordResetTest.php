@@ -7,10 +7,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Lab19\Cart\Models\PasswordResets;
-use Lab19\Cart\Models\User;
-use Lab19\Cart\Notifications\GernzyResetPassword;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Models\PasswordResets;
+use Gernzy\Server\Models\User;
+use Gernzy\Server\Notifications\GernzyResetPassword;
+use Gernzy\Server\Testing\TestCase;
 use Notification;
 
 class PasswordResetFeatureTest extends TestCase

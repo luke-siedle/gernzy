@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Queries;
+namespace Gernzy\Server\GraphQL\Queries;
 
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Exceptions\GernzyException;
+use Gernzy\Server\Exceptions\GernzyException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class ShopConfig

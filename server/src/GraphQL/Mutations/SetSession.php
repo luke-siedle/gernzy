@@ -1,12 +1,12 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GeoIp2\Database\Reader;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
-use Lab19\Cart\Exceptions\GernzyException;
+use Gernzy\Server\Exceptions\GernzyException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class SetSession
@@ -22,7 +22,7 @@ class SetSession
      */
     public function set($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $sessionService = App::make('Lab19\SessionService');
+        $sessionService = App::make('Gernzy\SessionService');
 
         $sessionService->update($args['input']);
 
@@ -31,7 +31,7 @@ class SetSession
 
     public function setCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $sessionService = App::make('Lab19\SessionService');
+        $sessionService = App::make('Gernzy\SessionService');
 
         $currency = $args['input']['currency'];
 
@@ -86,8 +86,8 @@ class SetSession
         }
 
         // Resolve the services
-        $sessionService = App::make('Lab19\SessionService');
-        $geolocationService = App::make('Lab19\GeolocationService');
+        $sessionService = App::make('Gernzy\SessionService');
+        $geolocationService = App::make('Gernzy\GeolocationService');
 
         // Setup geolocation dependencies
         $geolocationService

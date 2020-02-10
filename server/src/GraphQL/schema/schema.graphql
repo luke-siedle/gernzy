@@ -9,24 +9,24 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 
 type Query {
     users: [User!]!
-        @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\User")
-        @can(ability: "view", model: "Lab19\\Cart\\Models\\User", policy: "Lab19\\Cart\\Policies\\UserPolicy")
+        @paginate(type: "paginator", model: "Gernzy\\Server\\Models\\User")
+        @can(ability: "view", model: "Gernzy\\Server\\Models\\User", policy: "Gernzy\\Server\\Policies\\UserPolicy")
 
     user(id: ID @eq): User
-        @find(model: "Lab19\\Cart\\Models\\User")
+        @find(model: "Gernzy\\Server\\Models\\User")
         @can(
             ability: "view"
             find: "id"
-            model: "Lab19\\Cart\\Models\\User"
-            policy: "Lab19\\Cart\\Policies\\UserPolicy"
+            model: "Gernzy\\Server\\Models\\User"
+            policy: "Gernzy\\Server\\Policies\\UserPolicy"
         )
 
-    orders: [Order!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\Order")
+    orders: [Order!]! @paginate(type: "paginator", model: "Gernzy\\Server\\Models\\Order")
 
-    order_items: [OrderItem!]! @paginate(type: "paginator", model: "Lab19\\Cart\\Models\\OrderItem")
-    order_item(id: ID @eq): OrderItem @find(model: "Lab19\\Cart\\Models\\OrderItem")
+    order_items: [OrderItem!]! @paginate(type: "paginator", model: "Gernzy\\Server\\Models\\OrderItem")
+    order_item(id: ID @eq): OrderItem @find(model: "Gernzy\\Server\\Models\\OrderItem")
 
-    shopConfig: [String] @field(resolver: "Lab19\\Cart\\GraphQL\\Queries\\ShopConfig@enabledCurrencies")
+    shopConfig: [String] @field(resolver: "Gernzy\\Server\\GraphQL\\Queries\\ShopConfig@enabledCurrencies")
 }
 
 type User {
@@ -69,15 +69,15 @@ type OrderItem {
 }
 
 type Mutation {
-    createSession: Session @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateSession@create")
+    createSession: Session @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\CreateSession@create")
     setSession(input: SetSessionInput!): SetSessionPayload
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@set")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\SetSession@set")
     setSessionCurrency(input: SetSessionCurrency!): SetSessionCurrencyPayload
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@setCurrency")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\SetSession@setCurrency")
     setSessionGeoLocation: setSessionGeoLocationPayload
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\SetSession@setGeoLocation")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\SetSession@setGeoLocation")
     createAccount(input: CreateAccountInput! @spread): CreateAccountPayload
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\CreateAccount@create")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\CreateAccount@create")
 }
 
 type setSessionGeoLocationPayload {

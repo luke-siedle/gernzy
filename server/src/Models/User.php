@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Models;
+namespace Gernzy\Server\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

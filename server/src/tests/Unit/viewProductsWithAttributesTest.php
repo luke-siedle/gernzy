@@ -1,7 +1,7 @@
 <?php
-use Lab19\Cart\Actions\Helpers\Attributes;
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Actions\Helpers\Attributes;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Testing\TestCase;
 
 /**
  * @group ProductAttributes

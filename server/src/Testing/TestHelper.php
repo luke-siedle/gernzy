@@ -1,6 +1,6 @@
 <?php
 
-    namespace Lab19\Cart\Testing;
+    namespace Gernzy\Server\Testing;
 
     class TestHelper {
 

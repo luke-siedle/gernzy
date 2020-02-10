@@ -3,7 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Faker\Generator as Faker;
-use Lab19\Cart\Models\Product;
+use Gernzy\Server\Models\Product;
 
 /*
 |--------------------------------------------------------------------------

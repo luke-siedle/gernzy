@@ -1,16 +1,16 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Actions\CreateProduct;
-use Lab19\Cart\Actions\CreateProductVariant;
-use Lab19\Cart\Actions\DeleteProduct;
-use Lab19\Cart\Actions\ProductAttachImages;
-use Lab19\Cart\Actions\ProductAttachTags;
-use Lab19\Cart\Actions\ProductSetFeaturedImage;
-use Lab19\Cart\Actions\UpdateProduct;
+use Gernzy\Server\Actions\CreateProduct;
+use Gernzy\Server\Actions\CreateProductVariant;
+use Gernzy\Server\Actions\DeleteProduct;
+use Gernzy\Server\Actions\ProductAttachImages;
+use Gernzy\Server\Actions\ProductAttachTags;
+use Gernzy\Server\Actions\ProductSetFeaturedImage;
+use Gernzy\Server\Actions\UpdateProduct;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Product

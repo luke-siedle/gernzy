@@ -1,11 +1,11 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Lab19\Cart\Actions\CreateAccount as CreateAccountAction;
-use Lab19\Cart\Services\SessionService;
+use Gernzy\Server\Actions\CreateAccount as CreateAccountAction;
+use Gernzy\Server\Services\SessionService;
 use \App;
 
 class CreateAccount

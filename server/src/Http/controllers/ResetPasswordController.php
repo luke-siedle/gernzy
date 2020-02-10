@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Http\controllers;
+namespace Gernzy\Server\Http\controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 

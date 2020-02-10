@@ -1,13 +1,13 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
 use \App;
-use Lab19\Cart\Actions\Helpers\Attributes;
-use Lab19\Cart\Models\Category;
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\ProductFixedPrice;
-use Lab19\Cart\Services\ExhangeRatesManager;
+use Gernzy\Server\Actions\Helpers\Attributes;
+use Gernzy\Server\Models\Category;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\ProductFixedPrice;
+use Gernzy\Server\Services\ExhangeRatesManager;
 
 class CreateProduct
 {

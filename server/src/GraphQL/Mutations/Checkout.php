@@ -1,13 +1,13 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Exceptions\GenericException;
-use Lab19\Cart\Services\CartService;
-use Lab19\Cart\Services\SessionService;
-use Lab19\Cart\Actions\CreateCheckout;
+use Gernzy\Server\Services\CartService;
+use Gernzy\Server\Services\SessionService;
+use Gernzy\Server\Actions\CreateCheckout;
 use \App;
 
 class Checkout

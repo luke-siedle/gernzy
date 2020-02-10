@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\Policies;
+namespace Gernzy\Server\Policies;
 
-use Lab19\Cart\Models\Order;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\Order;
+use Gernzy\Server\Models\User;
 
 class OrderPolicy
 {

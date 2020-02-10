@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Middleware;
+namespace Gernzy\Server\Middleware;
 
 use App;
-use Lab19\Cart\Models\Session;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\Session;
+use Gernzy\Server\Models\User;
 
 class CartMiddleware
 {
@@ -29,7 +29,7 @@ class CartMiddleware
         $token = $request->bearerToken();
 
         if ($token) {
-            $userService = App::make('Lab19\UserService');
+            $userService = App::make('Gernzy\UserService');
             $user = $userService->getFromToken($token);
 
             if ($user instanceof User) {
@@ -39,7 +39,7 @@ class CartMiddleware
                 });
             }
 
-            $sessionService = App::make('Lab19\SessionService');
+            $sessionService = App::make('Gernzy\SessionService');
             $sessionFromToken = $sessionService->getFromToken($token);
             if ($sessionFromToken instanceof Session) {
                 $request->merge(['session' => $sessionFromToken]);

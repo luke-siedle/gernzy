@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Services;
+namespace Gernzy\Server\Services;
 
 use Illuminate\Http\Request;
-use Lab19\Cart\Models\Cart;
-use Lab19\Cart\Models\Order;
+use Gernzy\Server\Models\Cart;
+use Gernzy\Server\Models\Order;
 
 class CartService
 {

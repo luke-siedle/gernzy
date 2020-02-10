@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Exceptions;
+namespace Gernzy\Server\Exceptions;
 
 use Exception;
 use Nuwave\Lighthouse\Exceptions\RendersErrorsExtensions;

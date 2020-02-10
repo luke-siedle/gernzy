@@ -1,6 +1,6 @@
 <?php
 
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Testing\TestCase;
 
 /**
  * @group Orders

@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Services\CurrencyConversionInterface;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Services\CurrencyConversionInterface;
+use Gernzy\Server\Testing\TestCase;
 
 // just an example of how the controller in laravel may inject the CurrencyConverter dependency
 class ExampleObjectOrController

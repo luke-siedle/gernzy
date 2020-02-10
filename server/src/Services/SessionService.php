@@ -1,11 +1,11 @@
 <?php
 
-namespace Lab19\Cart\Services;
+namespace Gernzy\Server\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Lab19\Cart\Models\Session;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\Session;
+use Gernzy\Server\Models\User;
 
 class SessionService
 {

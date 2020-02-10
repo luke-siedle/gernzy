@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Tag;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\Tag;
 
 class ProductAttachTags
 {

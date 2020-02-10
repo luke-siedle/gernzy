@@ -1,12 +1,12 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Lab19\Cart\Models\Image as ImageModel;
+use Gernzy\Server\Models\Image as ImageModel;
 use \App;
 
 class Image

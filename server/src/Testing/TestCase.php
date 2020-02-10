@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Testing;
+namespace Gernzy\Server\Testing;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestResponse;
-use Lab19\Cart\Testing\Seeds\UsersSeeder;
+use Gernzy\Server\Testing\Seeds\UsersSeeder;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -41,7 +41,7 @@ abstract class TestCase extends BaseTestCase
     {
         // Setup required packages
         return [
-            'Lab19\\Cart\\CartServiceProvider',
+            'Gernzy\\Server\\GernzyServiceProvider',
         ];
     }
 

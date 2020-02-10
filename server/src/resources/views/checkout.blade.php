@@ -1,4 +1,4 @@
-@extends('lab19\cart::app')
+@extends('Gernzy\Server::app')
 
 @section('content')
 <div class="checkout-container">

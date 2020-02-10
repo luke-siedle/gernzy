@@ -1,8 +1,8 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
-use Lab19\Cart\Models\Order;
+use Gernzy\Server\Models\Order;
 
 class DeleteOrder
 {

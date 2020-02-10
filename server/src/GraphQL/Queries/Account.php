@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Queries;
+namespace Gernzy\Server\GraphQL\Queries;
 
 use \App;
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Services\OrderService;
+use Gernzy\Server\Services\OrderService;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Account
@@ -20,10 +20,10 @@ class Account
      */
     public function me($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $sessionService = App::make('Lab19\SessionService');
+        $sessionService = App::make('Gernzy\SessionService');
         $me = $sessionService->getUser();
         if (!$me->id) {
-            $cartService = App::make('Lab19\CartService');
+            $cartService = App::make('Gernzy\ServerService');
             $me = [
                 'cart' => $cartService->getCart(),
                 'session' => $sessionService->session

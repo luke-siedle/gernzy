@@ -1,16 +1,16 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Actions\CreateUser;
-use Lab19\Cart\Actions\DeleteUser;
-use Lab19\Cart\Actions\DemoteUser;
-use Lab19\Cart\Actions\ElevateUser;
-use Lab19\Cart\Actions\ResetPassword;
-use Lab19\Cart\Actions\SendPasswordReset;
-use Lab19\Cart\Actions\UpdateUser;
+use Gernzy\Server\Actions\CreateUser;
+use Gernzy\Server\Actions\DeleteUser;
+use Gernzy\Server\Actions\DemoteUser;
+use Gernzy\Server\Actions\ElevateUser;
+use Gernzy\Server\Actions\ResetPassword;
+use Gernzy\Server\Actions\SendPasswordReset;
+use Gernzy\Server\Actions\UpdateUser;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class User

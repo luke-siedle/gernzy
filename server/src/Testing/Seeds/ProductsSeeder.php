@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\Module\Products\Seeds;
+namespace Gernzy\Server\Module\Products\Seeds;
 
 use Illuminate\Database\Seeder;
-use Lab19\Cart\Models\Product;
+use Gernzy\Server\Models\Product;
 
 class ProductsSeeder extends Seeder
 {

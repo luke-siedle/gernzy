@@ -1,12 +1,12 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Actions\CreateTag;
-use Lab19\Cart\Actions\DeleteTag;
-use Lab19\Cart\Actions\UpdateTag;
+use Gernzy\Server\Actions\CreateTag;
+use Gernzy\Server\Actions\DeleteTag;
+use Gernzy\Server\Actions\UpdateTag;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Tag

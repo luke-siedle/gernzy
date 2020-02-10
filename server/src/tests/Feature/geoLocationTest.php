@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use \App;
 use GeoIp2\Database\Reader;
 use Illuminate\Foundation\Testing\WithFaker;
-use Lab19\Cart\Services\MaxmindGeoIP2;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Services\MaxmindGeoIP2;
+use Gernzy\Server\Testing\TestCase;
 
 class GelocationTest extends TestCase
 {
@@ -97,7 +97,7 @@ class GelocationTest extends TestCase
     {
         $token = $this->setupGeocodingSession();
 
-        $sessionService = App::make('Lab19\SessionService');
+        $sessionService = App::make('Gernzy\SessionService');
 
         $geoLocationRecord = $sessionService->get('geolocation_record');
 

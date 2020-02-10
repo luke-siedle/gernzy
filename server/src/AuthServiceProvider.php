@@ -1,19 +1,19 @@
 <?php
 
-namespace Lab19\Cart;
+namespace Gernzy\Server;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
-use Lab19\Cart\Models\Order;
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Tag;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\Order;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\Tag;
+use Gernzy\Server\Models\User;
 
-use Lab19\Cart\Policies\OrderPolicy;
-use Lab19\Cart\Policies\ProductPolicy;
-use Lab19\Cart\Policies\TagPolicy;
-use Lab19\Cart\Policies\UserPolicy;
+use Gernzy\Server\Policies\OrderPolicy;
+use Gernzy\Server\Policies\ProductPolicy;
+use Gernzy\Server\Policies\TagPolicy;
+use Gernzy\Server\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Notifications;
+namespace Gernzy\Server\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;

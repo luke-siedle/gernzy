@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Image;
-use Lab19\Cart\Actions\Helpers\Attributes;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\Image;
+use Gernzy\Server\Actions\Helpers\Attributes;
 
 class ProductAttachImages
 {
