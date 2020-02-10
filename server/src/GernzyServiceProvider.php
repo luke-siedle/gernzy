@@ -1,23 +1,23 @@
 <?php
 
-namespace Lab19\Cart;
+namespace Gernzy\Server;
 
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-use Lab19\Cart\Services\CartService;
-use Lab19\Cart\Services\CurrencyConversionInterface;
-use Lab19\Cart\Services\GeolocationInterface;
-use Lab19\Cart\Services\GeolocationService;
-use Lab19\Cart\Services\MaxmindGeoIP2;
-use Lab19\Cart\Services\OpenExchangeRates;
-use Lab19\Cart\Services\OrderService;
+use Gernzy\Server\Services\CartService;
+use Gernzy\Server\Services\CurrencyConversionInterface;
+use Gernzy\Server\Services\GeolocationInterface;
+use Gernzy\Server\Services\GeolocationService;
+use Gernzy\Server\Services\MaxmindGeoIP2;
+use Gernzy\Server\Services\OpenExchangeRates;
+use Gernzy\Server\Services\OrderService;
 
-use Lab19\Cart\Services\SessionService;
-use Lab19\Cart\Services\UserService;
+use Gernzy\Server\Services\SessionService;
+use Gernzy\Server\Services\UserService;
 use Nuwave\Lighthouse\LighthouseServiceProvider;
 
-class CartServiceProvider extends ServiceProvider
+class GernzyServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -49,7 +49,7 @@ class CartServiceProvider extends ServiceProvider
             \Barryvdh\Cors\HandleCors::class,
 
             // Add cart middleware
-            \Lab19\Cart\Middleware\CartMiddleware::class,
+            \Gernzy\Server\Middleware\CartMiddleware::class,
         ]));
 
 
@@ -67,11 +67,11 @@ class CartServiceProvider extends ServiceProvider
         );
 
         // Bind services
-        $this->app->bind('Lab19\SessionService', SessionService::class);
-        $this->app->bind('Lab19\UserService', UserService::class);
-        $this->app->bind('Lab19\OrderService', OrderService::class);
-        $this->app->bind('Lab19\CartService', CartService::class);
-        $this->app->bind('Lab19\GeolocationService', GeolocationService::class);
+        $this->app->bind('Gernzy\SessionService', SessionService::class);
+        $this->app->bind('Gernzy\UserService', UserService::class);
+        $this->app->bind('Gernzy\OrderService', OrderService::class);
+        $this->app->bind('Gernzy\ServerService', CartService::class);
+        $this->app->bind('Gernzy\GeolocationService', GeolocationService::class);
 
         $this->app->bind('GuzzleHttp\Client', function ($app) {
             return new Client([
@@ -81,7 +81,7 @@ class CartServiceProvider extends ServiceProvider
         });
 
         $directives = [
-            'Lab19\\Cart\\GraphQL\\Directives',
+            'Gernzy\\Server\\GraphQL\\Directives',
         ];
 
         $this->app['config']->set('lighthouse.namespaces.directives', $directives);
@@ -125,6 +125,6 @@ class CartServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/Http/routes/web.php');
 
-        $this->loadViewsFrom(__DIR__ . '/resources/views', 'lab19\cart');
+        $this->loadViewsFrom(__DIR__ . '/resources/views', 'Gernzy\Server');
     }
 }

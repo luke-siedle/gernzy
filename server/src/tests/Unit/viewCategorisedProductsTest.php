@@ -1,7 +1,7 @@
 <?php
-use Lab19\Cart\Models\Category;
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Models\Category;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Testing\TestCase;
 
 /**
  * @group ProductCategories

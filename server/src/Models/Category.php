@@ -1,12 +1,12 @@
 <?php
 
-    namespace Lab19\Cart\Models;
+    namespace Gernzy\Server\Models;
 
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
     use Illuminate\Database\Eloquent\Relations\MorphedByMany;
 
-    use Lab19\Cart\Models\Product;
+    use Gernzy\Server\Models\Product;
 
     class Category extends Model {
 

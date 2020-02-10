@@ -1,8 +1,8 @@
 <?php
 
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Tag;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\Tag;
+use Gernzy\Server\Testing\TestCase;
 
 /**
  * @group Products

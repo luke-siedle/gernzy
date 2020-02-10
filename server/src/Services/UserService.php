@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\Services;
+namespace Gernzy\Server\Services;
 
 use Illuminate\Http\Request;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Models\User;
 
 class UserService
 {

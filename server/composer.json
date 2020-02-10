@@ -1,5 +1,5 @@
 {
-    "name": "lab19/cart",
+    "name": "gernzy/server",
     "authors": [
         {
             "name": "Luke Siedle",
@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Lab19\\Cart\\": "src/"
+            "Gernzy\\Server\\": "src/"
         }
     },
     "require": {

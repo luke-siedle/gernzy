@@ -1,8 +1,8 @@
 <?php
 
-namespace Lab19\Cart\Models;
+namespace Gernzy\Server\Models;
 
-use Lab19\Cart\Models\Cart;
+use Gernzy\Server\Models\Cart;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 

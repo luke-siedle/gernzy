@@ -1,10 +1,10 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
 use Illuminate\Http\Request;
-use Lab19\Cart\Models\User;
-use Lab19\Cart\Services\SessionService;
+use Gernzy\Server\Models\User;
+use Gernzy\Server\Services\SessionService;
 
 class LogOut
 {

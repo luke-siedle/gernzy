@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Testing\TestCase;
 
 class GernzyCacheTest extends TestCase
 {

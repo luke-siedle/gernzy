@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Lab19\Cart\Model\User;
+use Gernzy\Server\Model\User;
 
 class UsersTableSeeder extends Seeder
 {

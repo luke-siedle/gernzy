@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -20,7 +20,7 @@ class CreateSession
      */
     public function create($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $sessionService = App::make('Lab19\SessionService');
+        $sessionService = App::make('Gernzy\SessionService');
 
         if (!$sessionService->get('cart_uuid')) {
             // Creates a uuid that will be associated with the cart

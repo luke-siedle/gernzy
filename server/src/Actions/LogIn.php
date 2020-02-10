@@ -1,11 +1,11 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Lab19\Cart\Models\User;
-use Lab19\Cart\Services\SessionService;
+use Gernzy\Server\Models\User;
+use Gernzy\Server\Services\SessionService;
 
 class LogIn
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Builders;
+namespace Gernzy\Server\GraphQL\Builders;
 
 use GraphQL\Type\Definition\ResolveInfo;
-use Lab19\Cart\Models\Product;
+use Gernzy\Server\Models\Product;
 
 class ProductsBuilder
 {

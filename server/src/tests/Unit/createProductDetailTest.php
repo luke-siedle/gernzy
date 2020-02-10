@@ -2,7 +2,7 @@
 
 use Faker\Factory as Faker;
 use Illuminate\Http\UploadedFile;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Testing\TestCase;
 
 /**
  * @group Products

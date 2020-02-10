@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use Lab19\Cart\Models\Order;
+use Gernzy\Server\Models\Order;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 

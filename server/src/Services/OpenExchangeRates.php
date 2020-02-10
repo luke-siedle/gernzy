@@ -1,8 +1,8 @@
 <?php
 
-namespace Lab19\Cart\Services;
+namespace Gernzy\Server\Services;
 
-use Lab19\Cart\Exceptions\GernzyException;
+use Gernzy\Server\Exceptions\GernzyException;
 
 class OpenExchangeRates implements CurrencyConversionInterface
 {

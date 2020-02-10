@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\Services;
+namespace Gernzy\Server\Services;
 
 class GeolocationService
 {

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Lab19\Cart\Testing\TestCase;
+use Gernzy\Server\Testing\TestCase;
 
 class PaymentGatewayTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Directives;
+namespace Gernzy\Server\GraphQL\Directives;
 
 use \App;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
-use Lab19\Cart\Services\ExhangeRatesManager;
+use Gernzy\Server\Services\ExhangeRatesManager;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\Directive;
 use Nuwave\Lighthouse\Support\Contracts\FieldMiddleware;

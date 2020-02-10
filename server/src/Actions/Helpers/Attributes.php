@@ -1,9 +1,9 @@
 <?php
-namespace Lab19\Cart\Actions\Helpers;
+namespace Gernzy\Server\Actions\Helpers;
 
-use Lab19\Cart\Models\Product;
-use Lab19\Cart\Models\Image;
-use Lab19\Cart\Models\ProductAttribute;
+use Gernzy\Server\Models\Product;
+use Gernzy\Server\Models\Image;
+use Gernzy\Server\Models\ProductAttribute;
 
 class Attributes
 {

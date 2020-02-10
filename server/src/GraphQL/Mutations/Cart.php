@@ -1,6 +1,6 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -21,7 +21,7 @@ class Cart
      */
     public function addToCart($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $cartService = App::make('Lab19\CartService');
+        $cartService = App::make('Gernzy\ServerService');
         if( $context->request->session ){
             $cart = $cartService->addItemsToCart( $args['input']['items'] );
             return [
@@ -43,7 +43,7 @@ class Cart
      */
     public function removeFromCart($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $cartService = App::make('Lab19\CartService');
+        $cartService = App::make('Gernzy\ServerService');
         if( $context->request->session ){
             $cart = $cartService->removeItemFromCart($args['input']['product_id']);
             return [
@@ -65,7 +65,7 @@ class Cart
      */
     public function updateCartQuantity($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $cartService = App::make('Lab19\CartService');
+        $cartService = App::make('Gernzy\ServerService');
         if( $context->request->session ){
             $cart = $cartService->updateCartItemQuantity(
                 $args['input']['product_id'],

@@ -1,7 +1,7 @@
 <?php
 
-    use Lab19\Cart\Testing\TestCase;
-    use Lab19\Cart\Models\User;
+    use Gernzy\Server\Testing\TestCase;
+    use Gernzy\Server\Models\User;
 
     class TestGraphQL extends TestCase
     {

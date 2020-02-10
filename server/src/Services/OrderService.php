@@ -1,14 +1,14 @@
 <?php
 
-    namespace Lab19\Cart\Services;
+    namespace Gernzy\Server\Services;
 
     use Illuminate\Support\Str;
-    use Lab19\Cart\Models\User;
-    use Lab19\Cart\Models\Cart;
-    use Lab19\Cart\Models\Order;
+    use Gernzy\Server\Models\User;
+    use Gernzy\Server\Models\Cart;
+    use Gernzy\Server\Models\Order;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
-    use Lab19\Cart\Services\SessionService;
+    use Gernzy\Server\Services\SessionService;
     use App;
 
     class OrderService {

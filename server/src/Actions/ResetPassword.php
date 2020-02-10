@@ -1,13 +1,13 @@
 <?php
 
-namespace Lab19\Cart\Actions;
+namespace Gernzy\Server\Actions;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Lab19\Cart\Exceptions\GernzyException;
-use Lab19\Cart\Models\PasswordResets;
-use Lab19\Cart\Models\User;
+use Gernzy\Server\Exceptions\GernzyException;
+use Gernzy\Server\Models\PasswordResets;
+use Gernzy\Server\Models\User;
 
 class ResetPassword
 {

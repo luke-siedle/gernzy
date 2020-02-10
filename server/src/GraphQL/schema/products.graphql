@@ -3,26 +3,26 @@ extend type Query {
         @gernzyConvertCurrency
         @paginate(
             type: "paginator"
-            model: "Lab19\\Cart\\Models\\Product"
+            model: "Gernzy\\Server\\Models\\Product"
             scopes: ["published", "inStock"]
-            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@search"
+            builder: "Gernzy\\Server\\GraphQL\\Builders\\ProductsBuilder@search"
         )
 
-    product(id: ID @eq): Product @find(model: "Lab19\\Cart\\Models\\Product")
+    product(id: ID @eq): Product @find(model: "Gernzy\\Server\\Models\\Product")
 
     productsByCategories(input: ProductsCategoriesInput): [Product!]!
         @paginate(
             type: "paginator"
-            model: "Lab19\\Cart\\Models\\Product"
+            model: "Gernzy\\Server\\Models\\Product"
             scopes: ["published", "inStock"]
-            builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@byCategory"
+            builder: "Gernzy\\Server\\GraphQL\\Builders\\ProductsBuilder@byCategory"
         )
 
     productsByTag(tag: Int!): [Product!]!
-        @paginate(type: "paginator", builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@productsbytag")
+        @paginate(type: "paginator", builder: "Gernzy\\Server\\GraphQL\\Builders\\ProductsBuilder@productsbytag")
 
     productsByTags(tags: [Int!]): [Product!]!
-        @paginate(type: "paginator", builder: "Lab19\\Cart\\GraphQL\\Builders\\ProductsBuilder@productsByTags")
+        @paginate(type: "paginator", builder: "Gernzy\\Server\\GraphQL\\Builders\\ProductsBuilder@productsByTags")
 }
 
 input ProductsQueryInput {
@@ -90,14 +90,14 @@ type ProductCategory {
 
 extend type Mutation {
     createProduct(input: CreateProductInput!): Product
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@create")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@create")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     updateProduct(id: ID!, input: UpdateProductInput!): Product
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@update")
-        @can(ability: "update", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@update")
+        @can(ability: "update", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     deleteProduct(id: ID!): DeleteResult
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@delete")
-        @can(ability: "delete", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@delete")
+        @can(ability: "delete", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
 }
 
 input CreateProductInput {
@@ -189,20 +189,20 @@ type ProductSize {
 
 extend type Mutation {
     createProductVariant(id: ID!, input: CreateProductInput!): Product
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@createVariant")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@createVariant")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     addImage(input: AddProductImage!): Image
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Image@create")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Image@create")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     addProductImages(product_id: ID!, images: [ID!]): AddProductImagesPayload!
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@attachImages")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@attachImages")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     setProductFeaturedImage(product_id: ID!, image_id: ID!): SetProductFeaturedImagePayload!
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@setFeaturedImage")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Product", policy: "Lab19\\Cart\\Policies\\ProductPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@setFeaturedImage")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Product", policy: "Gernzy\\Server\\Policies\\ProductPolicy")
     addProductTags(product_id: ID!, tags: [ID!]): AddProductTagsPayload!
-        @field(resolver: "Lab19\\Cart\\GraphQL\\Mutations\\Product@attachTags")
-        @can(ability: "create", model: "Lab19\\Cart\\Models\\Tag", policy: "Lab19\\Cart\\Policies\\TagPolicy")
+        @field(resolver: "Gernzy\\Server\\GraphQL\\Mutations\\Product@attachTags")
+        @can(ability: "create", model: "Gernzy\\Server\\Models\\Tag", policy: "Gernzy\\Server\\Policies\\TagPolicy")
 }
 
 input AddProductImage {

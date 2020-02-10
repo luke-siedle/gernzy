@@ -14,19 +14,19 @@
 // Password Reset Route
 Route::get(
     'password/reset/{token}',
-    'Lab19\Cart\Http\controllers\ResetPasswordController@index'
+    'Gernzy\Server\Http\controllers\ResetPasswordController@index'
 )
     ->name('password.reset.token');
 
 
 Route::get('shop', function () {
-    return view('lab19\cart::home');
+    return view('Gernzy\Server::home');
 });
 
 Route::get('cart', function () {
-    return view('lab19\cart::cart');
+    return view('Gernzy\Server::cart');
 });
 
 Route::get('checkout', function () {
-    return view('lab19\cart::checkout');
+    return view('Gernzy\Server::checkout');
 });

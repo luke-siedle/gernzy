@@ -1,13 +1,13 @@
 <?php
 
-namespace Lab19\Cart\GraphQL\Mutations;
+namespace Gernzy\Server\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Illuminate\Support\Str;
-use Lab19\Cart\Actions\LogIn;
-use Lab19\Cart\Actions\LogOut;
+use Gernzy\Server\Actions\LogIn;
+use Gernzy\Server\Actions\LogOut;
 use \App;
 
 class Account
