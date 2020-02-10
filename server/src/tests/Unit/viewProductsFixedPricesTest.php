@@ -33,11 +33,11 @@ class TestProductFixedPrices extends TestCase
         // Create the relationship
         $product->fixedPrices()->save($productFixedPrice);
 
-        $this->assertDatabaseHas('cart_products', [
+        $this->assertDatabaseHas('gernzy_products', [
             'id' => $product->id,
         ]);
 
-        $this->assertDatabaseHas('cart_product_prices', [
+        $this->assertDatabaseHas('gernzy_product_prices', [
             'id' => $productFixedPrice->id,
             'product_id' => $product->id
         ]);

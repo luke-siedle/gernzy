@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateCartProductAttributesTable extends Migration
+class CreateGernzyProductAttributesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCartProductAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_product_attributes', function (Blueprint $table) {
+        Schema::create('gernzy_product_attributes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('product_id');
             $table->string('group');
@@ -30,6 +30,6 @@ class CreateCartProductAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_product_attributes');
+        Schema::dropIfExists('gernzy_product_attributes');
     }
 }

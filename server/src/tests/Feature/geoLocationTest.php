@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use \App;
 use GeoIp2\Database\Reader;
-use Illuminate\Foundation\Testing\WithFaker;
 use Gernzy\Server\Services\MaxmindGeoIP2;
 use Gernzy\Server\Testing\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class GelocationTest extends TestCase
 {
@@ -101,7 +101,7 @@ class GelocationTest extends TestCase
 
         $geoLocationRecord = $sessionService->get('geolocation_record');
 
-        $this->assertDatabaseHas('cart_sessions', [
+        $this->assertDatabaseHas('gernzy_sessions', [
             'token' => $token,
         ]);
 

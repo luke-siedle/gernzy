@@ -12,7 +12,7 @@ class OrderItem extends Model
      *
      * @var string
      */
-    protected $table = 'cart_order_items';
+    protected $table = 'gernzy_order_items';
 
     /**
      * The attributes that are mass assignable.

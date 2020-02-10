@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartProductPricesTable extends Migration
+class CreateGernzyCategorizedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateCartProductPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_product_prices', function (Blueprint $table) {
+        Schema::create('gernzy_categorizables', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('product_id')->unsigned();
-            $table->string('country_code');
-            $table->string('price');
-            $table->foreign('product_id')->references('id')->on('cart_products')->onDelete('cascade');
+            $table->bigInteger('category_id');
+            $table->bigInteger('gernzy_categorizable_id');
+            $table->string('gernzy_categorizable_type');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateCartProductPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_product_prices');
+        Schema::dropIfExists('gernzy_categorizables');
     }
 }

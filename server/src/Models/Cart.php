@@ -13,7 +13,7 @@ class Cart extends Model
      *
      * @var string
      */
-    protected $table = 'cart_carts';
+    protected $table = 'gernzy_carts';
 
     /**
      * The attributes that are mass assignable.

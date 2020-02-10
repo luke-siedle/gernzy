@@ -10,7 +10,7 @@ return [
     //Database Cache Connection
     'connection' => null,
     //Database Cache Table
-    'table' => 'cart_cache',
+    'table' => 'gernzy_cache',
 
     //Memcached Servers
     'memcached' => [

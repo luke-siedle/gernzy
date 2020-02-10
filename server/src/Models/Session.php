@@ -3,8 +3,6 @@
 namespace Gernzy\Server\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Gernzy\Server\Models\Cart;
-use Gernzy\Server\Models\User;
 
 class Session extends Model
 {
@@ -14,7 +12,7 @@ class Session extends Model
      *
      * @var string
      */
-    protected $table = 'cart_sessions';
+    protected $table = 'gernzy_sessions';
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +42,8 @@ class Session extends Model
      *
      * @var array
      */
-    public function cart(){
+    public function cart()
+    {
         return $this->hasOne(Cart::class);
     }
 
@@ -53,8 +52,8 @@ class Session extends Model
      *
      * @var array
      */
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
 }
