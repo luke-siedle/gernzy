@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: digitalocean.com/php
-    container_name: app
+    container_name: gernzy_app
     restart: unless-stopped
     tty: true
     environment:
@@ -16,47 +16,50 @@ services:
     working_dir: /var/www
     volumes:
       - ./shop:/var/www
+      - ./server:/var/server
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - gernzy-app-network
 
   # Nginx Service
   webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: gernzy_webserver
     restart: unless-stopped
     tty: true
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:80"
+      - "8443:443"
     volumes:
       - ./shop:/var/www
+      - ./server:/var/server
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/certificates/:/etc/letsencrypt/live/ecommerce/
     networks:
-      - app-network
+      - gernzy-app-network
 
   # MySQL Service
   db:
     image: mysql:5.7.22
-    container_name: db
+    container_name: gernzy_db
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE:-gernzy}
+      MYSQL_USER: ${DB_USER:-gernzy}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-gernzy}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - ./.dbdata:/var/lib/mysql/
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
-      - app-network
+      - gernzy-app-network
 
 # Docker Networks
 networks:
-  app-network:
+  gernzy-app-network:
     driver: bridge
