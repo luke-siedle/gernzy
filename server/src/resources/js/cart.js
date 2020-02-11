@@ -38,7 +38,7 @@ class Cart {
                 return re;
             })
             .catch(error => {
-                console.log(error);
+                console.log(`viewProductsInCart: ${error}`);
             });
     }
 

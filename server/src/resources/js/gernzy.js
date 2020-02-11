@@ -17,10 +17,21 @@ $(document)
 let pathname = window.location.pathname; // Returns path only (/path/example.html)
 let graphQlService = new GraphqlService();
 
-// Session object in localStorage if it doesn't already exist
+// Session object in localStorage if it doesn't already exist, and verify
 let userObj = new User(graphQlService);
 if (!userObj.checkIfTokenInLocalStorage()) {
     userObj.createSession();
+} else {
+    userObj.checkTokenExistsInDatabase().then(re => {
+        try {
+            if (re.errors[0].debugMessage == 'Cannot return null for non-nullable field Session.id.') {
+                // Recreate session object
+                userObj.createSession();
+            }
+        } catch (error) {
+            // No error exist
+        }
+    });
 }
 
 // Load all products on the home page

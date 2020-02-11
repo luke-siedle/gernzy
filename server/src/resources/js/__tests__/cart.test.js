@@ -1,7 +1,6 @@
 import { Products } from '../products';
 import { GraphqlService } from '../graphqlService';
 import { Cart } from '../cart';
-// import cartProducts from '../jest_mock_objects/cartProducts';
 
 // __mocks__/jquery.js
 jest.mock('jquery');

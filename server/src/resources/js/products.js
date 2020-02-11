@@ -92,7 +92,7 @@ class Products {
                 });
             })
             .catch(error => {
-                console.log(error);
+                console.log(`addProductToCart: ${error}`);
             });
     }
 }

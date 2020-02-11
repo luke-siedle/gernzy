@@ -14,10 +14,6 @@ var mainSchema = `
 
     scalar Upload
 
-    schema {
-        query: Query
-    }
-
     type Query {
         sample: String
     }
