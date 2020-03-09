@@ -2,7 +2,7 @@
 
 namespace Gernzy\Server;
 
-use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
+use Fruitcake\Cors\CorsServiceProvider as CorsServiceProvider;
 use Gernzy\Server\Models\Cart;
 use Gernzy\Server\Observers\CartObserver;
 use Gernzy\Server\Services\CartService;
@@ -48,8 +48,7 @@ class GernzyServiceProvider extends ServiceProvider
         $this->app['config']->set('lighthouse.route.middleware', array_merge($middleware, [
 
             // Add CORS dependency package to middleware
-            \Barryvdh\Cors\HandleCors::class,
-
+            \Fruitcake\Cors\HandleCors::class,
             // Add cart middleware
             \Gernzy\Server\Middleware\CartMiddleware::class,
         ]));
