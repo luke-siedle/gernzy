@@ -97,12 +97,39 @@ class ExhangeRatesManager
     {
         $result = $this->result;
 
+        // This is a check to see if we're converting the cart total
+        if (isset($result['cart']) && !empty($result['cart']->cart_total)) {
+            return $this->convertPriceCartTotal($result);
+        }
+
+        // Need to ascertain if array of objects or just an object
+        try {
+            if (count($this->result) > 0) {
+                return $this->convertMultiplePrices($result);
+            }
+        } catch (\Throwable $th) {
+            return $this->convertSinglePrice($result);
+        }
+    }
+
+    public function convertPriceCartTotal($result)
+    {
+        $defaultCurrency = config('currency.default_currency.iso_code');
+        $cartTotal = $result['cart']->cart_total;
+
+        $result['cart']->cart_total = $this->getApiRateAndConvertPrice($defaultCurrency, $cartTotal);
+        return $result;
+    }
+
+    public function convertMultiplePrices($result)
+    {
         // TODO: Probably a good scenario for a singleton object
         foreach ($result as $key => $value) {
             $productCurrency = $result[$key]['price_currency']; //This becomes the base to convert from
             $productPriceCents = $result[$key]['price_cents'];
 
-            if (!isset($productCurrency) && !isset($productPriceCents)) {
+            // If either values not set then bail
+            if (!isset($productCurrency) || !isset($productPriceCents)) {
                 continue;
             }
 
@@ -119,6 +146,13 @@ class ExhangeRatesManager
 
         return $result;
     }
+
+    public function convertSinglePrice($result)
+    {
+        $result = $this->convertMultiplePrices([$result]);
+        return $result[0];
+    }
+
 
     /**
      * Convert between currency

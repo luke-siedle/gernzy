@@ -4,9 +4,9 @@ namespace Gernzy\Server\GraphQL\Directives;
 
 use \App;
 use Closure;
+use Gernzy\Server\Services\ExhangeRatesManager;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
-use Gernzy\Server\Services\ExhangeRatesManager;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\Directive;
 use Nuwave\Lighthouse\Support\Contracts\FieldMiddleware;
@@ -46,7 +46,6 @@ class GernzyConvertCurrencyDirective implements Directive, FieldMiddleware
             if (!isset($context->request->session)) {
                 return $result;
             }
-
 
             $session = $context->request->session;
 

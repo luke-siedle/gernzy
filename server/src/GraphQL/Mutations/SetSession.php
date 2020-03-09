@@ -4,9 +4,9 @@ namespace Gernzy\Server\GraphQL\Mutations;
 
 use \App;
 use GeoIp2\Database\Reader;
+use Gernzy\Server\Exceptions\GernzyException;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Facades\Cache;
-use Gernzy\Server\Exceptions\GernzyException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class SetSession
@@ -27,6 +27,13 @@ class SetSession
         $sessionService->update($args['input']);
 
         return $sessionService->get();
+    }
+
+    public function getData($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $sessionService = App::make('Gernzy\SessionService');
+        $data = $sessionService->get();
+        return ['cart_uuid' => $data['cart_uuid'], 'currency' => isset($data['currency']) ? $data['currency'] : null];
     }
 
     public function setCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)

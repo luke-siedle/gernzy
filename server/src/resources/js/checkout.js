@@ -1,8 +1,10 @@
 import successTemplate from './templates/successTemplate';
 import $ from 'jquery';
+
 class Checkout {
-    constructor(graphqlService) {
+    constructor(graphqlService, cart = null) {
         this.graphqlService = graphqlService;
+        this.cart = cart;
     }
 
     checkout() {
@@ -71,6 +73,72 @@ class Checkout {
             .catch(error => {
                 console.log(error);
             });
+    }
+
+    getBasketTotal() {
+        var userToken = localStorage.getItem('userToken');
+
+        let query = `{
+            me {
+                cart {
+                    cart_total
+                }
+            }
+        }`;
+
+        return this.graphqlService
+            .sendQuery(query, userToken)
+            .then(re => {
+                let currency = localStorage.getItem('currency');
+
+                // get the default currency from the shopConfig
+                if (!currency) {
+                    currency = localStorage.getItem('default_currency');
+                }
+
+                $('#checkout-cart-total').html(`${re.data.me.cart.cart_total / 100} ${currency}`);
+                return re;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    displayLineItems() {
+        return this.cart.viewProductsInCart().then(re => {
+            try {
+                // See if there is an error
+                let error = re.errors[0].debugMessage;
+                console.log(error);
+            } catch {
+                let items = re.data.me.cart.items;
+
+                if (items && items.length > 0) {
+                    this.cart.lookupProductsInCart(items).then(re => {
+                        let currency = localStorage.getItem('currency');
+
+                        // get the default currency from the shopConfig
+                        if (!currency) {
+                            currency = localStorage.getItem('default_currency');
+                        }
+
+                        re.forEach(element => {
+                            $('#table-body-line-item').append(
+                                $(`<tr>
+                                    <td>${element.title}</td>
+                                    <td>${element.quantity}</td>
+                                    <td>${element.price_cents / 100} ${currency}</td>
+                                </tr>`),
+                            );
+                        });
+                    });
+                } else {
+                    $('.checkout-container').html(errorTemplate('No products in cart.'));
+                }
+            }
+
+            return re;
+        });
     }
 }
 export { Checkout };

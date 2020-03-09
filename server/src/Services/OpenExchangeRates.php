@@ -33,16 +33,18 @@ class OpenExchangeRates implements CurrencyConversionInterface
     public function makeApiRequest()
     {
         // open exhange api token is set in a .env file so that is doesn't live in the code base
-        $token = env('currency_api_token', '');
-        $endpoint = "latest.json?app_id=" . $token . "&base=" . $this->baseCurrency;
+        $apiToken = config('currency.openexchangerates.api_key');
 
         // Make sure the token and base currency is available
-        if (!isset($token) && !isset($this->baseCurrency)) {
+        if (empty($apiToken) || !isset($this->baseCurrency)) {
             throw new GernzyException(
                 'An exception occured.',
-                'API Token or baseCurrency were not set.'
+                'Could not query currency exhange service, invalid token or no base currency set.'
             );
         }
+
+        // Create the endpoint
+        $endpoint = "latest.json?app_id=" . $apiToken . "&base=" . $this->baseCurrency;
 
         // Resolve the guzzle instance out of the container
         $client = resolve('GuzzleHttp\Client');

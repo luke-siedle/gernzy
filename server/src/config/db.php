@@ -1,4 +1,7 @@
 <?php
+$path = dirname(dirname(__FILE__)) . '/database/';
+
 return [
-    'maxmind_city_db' => 'src/database/maxmind/GeoLite2-City.mmdb'
+    'maxmind_city_db' => $path . 'maxmind/GeoLite2-City.mmdb'
+
 ];

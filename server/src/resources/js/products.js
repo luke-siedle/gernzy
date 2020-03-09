@@ -1,5 +1,6 @@
 import productTemplate from './templates/productTemplate';
 import $ from 'jquery';
+import errorTemplate from './templates/errorTemplate';
 
 class Products {
     constructor(graphqlService, cart) {
@@ -15,6 +16,8 @@ class Products {
                     status
                     published
                     short_description
+                    price_cents
+                    price_currency
                 }
                 paginatorInfo {
                     total
@@ -24,14 +27,35 @@ class Products {
             }
         }`;
 
+        let userToken = localStorage.getItem('userToken');
+
         return this.graphqlService
-            .sendQuery(query)
+            .sendQuery(query, userToken)
             .then(re => {
-                let mapFields = re.data.products.data.map(product => {
+                let productsArray;
+                try {
+                    productsArray = re.data.products.data;
+                } catch (error) {
+                    console.log(re);
+                    $('.products-container').html(
+                        errorTemplate(`There was an error loading products. <br> ${re.errors[0].extensions.reason}`),
+                    );
+                    return;
+                }
+
+                let mapFields = productsArray.map(product => {
+                    var currency = localStorage.getItem('currency');
+                    if (!currency) {
+                        currency = product.price_currency;
+                    }
+
                     return {
                         title: product.title,
+                        price_cents: product.price_cents / 100,
+                        price_currency: currency,
                         short_description: product.short_description,
                         id: product.id,
+                        quantity: 1,
                         buttonText: 'Add to cart',
                     };
                 });
@@ -55,10 +79,14 @@ class Products {
                     status
                     published
                     short_description
+                    price_cents
+                    price_currency
             }
         }`;
 
-        return this.graphqlService.sendQuery(query);
+        let userToken = localStorage.getItem('userToken');
+
+        return this.graphqlService.sendQuery(query, userToken);
     }
 
     addProductToCart(event) {

@@ -18,6 +18,7 @@ class CreateGernzyCartsTable extends Migration
             $table->bigInteger('order_id')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->bigInteger('session_id')->nullable();
+            $table->bigInteger('cart_total')->nullable();
             $table->smallInteger('item_count')->default(0);
             $table->json('items')->nullable();
             $table->timestamps();

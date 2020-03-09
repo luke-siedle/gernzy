@@ -4,7 +4,7 @@ import { User } from '../user';
 // __mocks__/jquery.js
 jest.mock('jquery');
 
-test('*&hyveUcdn9e user session test', () => {
+test('user session test', () => {
     let graphQlService = new GraphqlService();
     let userObj = new User(graphQlService);
 

@@ -2,8 +2,8 @@
 
 namespace Gernzy\Server\GraphQL\Queries;
 
-use GraphQL\Type\Definition\ResolveInfo;
 use Gernzy\Server\Exceptions\GernzyException;
+use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class ShopConfig
@@ -18,6 +18,11 @@ class ShopConfig
      * @return mixed
      */
 
+    public function index($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        return true;
+    }
+
     public function enabledCurrencies($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         // Throw error when there are missing values from the config, thus no currency specified
@@ -29,5 +34,17 @@ class ShopConfig
         }
 
         return $enabledCurrrencies;
+    }
+    public function defaultCurrency($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        // Throw error when there are missing values from the config, thus no currency specified
+        if (!$defaultCurrency = config('currency.default_currency.iso_code')) {
+            throw new GernzyException(
+                'An error occured.',
+                'An error occured when determining the default currency. None specified.'
+            );
+        }
+
+        return $defaultCurrency;
     }
 }

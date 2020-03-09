@@ -5,7 +5,7 @@ import { Cart } from '../cart';
 // __mocks__/jquery.js
 jest.mock('jquery');
 
-test('MJfc34Icn query for all products in cart', () => {
+test('query for all products in cart', () => {
     // Set up our document body
     document.body.innerHTML = '<div class="cart-products"></div>';
 
@@ -20,7 +20,7 @@ test('MJfc34Icn query for all products in cart', () => {
     });
 });
 
-test('Jfi934fho populateUIWithProducts() function cart test', () => {
+test('populateUIWithProducts() function cart test', () => {
     // Set up our document body
     document.body.innerHTML = '<div class="cart-products"></div>';
 

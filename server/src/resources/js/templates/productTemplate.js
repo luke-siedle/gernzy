@@ -1,4 +1,4 @@
-const productTemplate = ({ title, short_description, id, buttonText }) => `
+const productTemplate = ({ title, short_description, id, buttonText, price_cents, price_currency, quantity }) => `
 <div>
     <div class="uk-card uk-card-default uk-margin-left uk-margin-top">
         <div class="uk-card-header">
@@ -15,6 +15,10 @@ const productTemplate = ({ title, short_description, id, buttonText }) => `
         </div>
         <div class="uk-card-body">
             <p class="short-description">${short_description}</p>
+            <hr class="uk-divider-small">
+            <p class="product-price">${price_cents} ${price_currency}</p> 
+            <hr class="uk-divider-small">
+            <p class="product-quantity"><span class="uk-label">quantity</span> ${quantity}</p>
         </div>
         <div class="uk-card-footer">
             <a  href="#" class="uk-button uk-button-text add-to-cart" data-id="${id}">${buttonText}</a>
