@@ -13,10 +13,10 @@
     },
     "require": {
         "nuwave/lighthouse": "^4.6",
-        "barryvdh/laravel-cors": "^0.11.3",
         "guzzlehttp/guzzle": "~6.0",
         "geoip2/geoip2": "~2.0",
-        "fzaninotto/faker": "^1.9"
+        "fzaninotto/faker": "^1.9",
+        "fruitcake/laravel-cors": "^1.0"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",

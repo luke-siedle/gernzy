@@ -2,9 +2,9 @@
 
 namespace Gernzy\Server;
 
-use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
-use GuzzleHttp\Client;
-use Illuminate\Support\ServiceProvider;
+use Fruitcake\Cors\CorsServiceProvider as CorsServiceProvider;
+use Gernzy\Server\Models\Cart;
+use Gernzy\Server\Observers\CartObserver;
 use Gernzy\Server\Services\CartService;
 use Gernzy\Server\Services\CurrencyConversionInterface;
 use Gernzy\Server\Services\GeolocationInterface;
@@ -12,9 +12,11 @@ use Gernzy\Server\Services\GeolocationService;
 use Gernzy\Server\Services\MaxmindGeoIP2;
 use Gernzy\Server\Services\OpenExchangeRates;
 use Gernzy\Server\Services\OrderService;
-
 use Gernzy\Server\Services\SessionService;
 use Gernzy\Server\Services\UserService;
+
+use GuzzleHttp\Client;
+use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\LighthouseServiceProvider;
 
 class GernzyServiceProvider extends ServiceProvider
@@ -46,8 +48,7 @@ class GernzyServiceProvider extends ServiceProvider
         $this->app['config']->set('lighthouse.route.middleware', array_merge($middleware, [
 
             // Add CORS dependency package to middleware
-            \Barryvdh\Cors\HandleCors::class,
-
+            \Fruitcake\Cors\HandleCors::class,
             // Add cart middleware
             \Gernzy\Server\Middleware\CartMiddleware::class,
         ]));
@@ -126,5 +127,8 @@ class GernzyServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/Http/routes/web.php');
 
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'Gernzy\Server');
+
+        // Register observable for the cart model
+        Cart::observe(CartObserver::class);
     }
 }

@@ -9,11 +9,12 @@ class User {
             }
         }`;
 
-        this.graphqlService
+        return this.graphqlService
             .sendQuery(query)
             .then(re => {
                 let token = re.data.createSession.token;
                 this.addSessionTokenToLocalStorage(token);
+                return re;
             })
             .catch(error => {
                 console.log(error);
@@ -32,6 +33,21 @@ class User {
         } else {
             return false;
         }
+    }
+
+    checkTokenExistsInDatabase() {
+        let userTokenLocalStorage = localStorage.getItem('userToken');
+
+        let query = ` {
+            me {
+                session {
+                    id
+                    token
+                }
+            }
+        }`;
+
+        return this.graphqlService.sendQuery(query, userTokenLocalStorage);
     }
 }
 export { User };

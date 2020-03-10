@@ -57,6 +57,7 @@ type Cart {
     order: Cart @belongsTo
     items: [CartItem!]
     products: Int
+    cart_total: Int
 }
 
 type CartItem {

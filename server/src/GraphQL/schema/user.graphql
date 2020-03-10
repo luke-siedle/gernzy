@@ -128,7 +128,7 @@ input UpdateCartQuantityInput {
 }
 
 extend type Query {
-    me: User @field(resolver: "Gernzy\\Server\\GraphQL\\Queries\\Account@me")
+    me: User @gernzyConvertCurrency @field(resolver: "Gernzy\\Server\\GraphQL\\Queries\\Account@me")
     myOrders: [Order!] @field(resolver: "Gernzy\\Server\\GraphQL\\Queries\\Account@myOrders")
 }
 

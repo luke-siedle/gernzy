@@ -1,7 +1,9 @@
 import $ from 'jquery';
 
 class GraphqlService {
-    constructor() {}
+    constructor() {
+        this.userToken = localStorage.getItem('userToken');
+    }
     async sendQuery(graphqlQuery, userToken = '') {
         try {
             const data = await $.ajax({

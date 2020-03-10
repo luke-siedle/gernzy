@@ -2,17 +2,20 @@ const jQuery = require('jquery/dist/jquery.js');
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import { graphql } from 'graphql';
 // The schemas
-import mainSchema from '../graphql/shema';
-import productSchema from '../graphql/products';
-import userSchema from '../graphql/user';
-import ordersSchema from '../graphql/orders';
-import tagSchema from '../graphql/tags';
-import directives from '../graphql/directives';
+import mainSchema from '../../../../../shared/js/schema/schema.graphql';
+import productSchema from '../../../../../shared/js/schema/products.graphql';
+import userSchema from '../../../../../shared/js/schema/user.graphql';
+import ordersSchema from '../../../../../shared/js/schema/orders.graphql';
+import tagSchema from '../../../../../shared/js/schema/tags.graphql';
+import schemaDefinitions from '../../../../../shared/js/schema/common.schema';
 
 const { parse } = require('graphql');
 
 // Fill this in with the schema string
-const schemaString = directives + mainSchema + userSchema + productSchema + tagSchema + ordersSchema;
+const schemaString = schemaDefinitions + mainSchema + userSchema + productSchema + tagSchema + ordersSchema;
+
+// This is for testing mutations by only using a temporary simple schema on the checkout test. (works)
+// const schemaString = temp;
 
 // Make a GraphQL schema with no resolvers
 const schema = makeExecutableSchema({

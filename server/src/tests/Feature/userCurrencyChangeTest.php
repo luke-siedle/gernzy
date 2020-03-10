@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\WithFaker;
 use Gernzy\Server\Models\Product;
 use Gernzy\Server\Services\CurrencyConversionInterface;
 use Gernzy\Server\Testing\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 
 // just an example of how the controller in laravel may inject the CurrencyConverter dependency
 class ExampleObjectOrController
@@ -273,5 +273,42 @@ class CurrencyConversionTest extends TestCase
         $result = $response->decodeResponseJson();
 
         $this->assertEquals($result['errors'][0]['message'], 'Currency is invalid.');
+    }
+
+    public function testGuestUserCanViewInStockProductWithChosenCurrency(): void
+    {
+        $token = $this->setupCurrencySession();
+
+        $query = '
+            query {
+                product(id:1) {
+                        id
+                        title
+                        status
+                        published
+                        short_description
+                        price_cents
+                        price_currency
+                }
+            }
+        ';
+
+        $response = $this->postGraphQL(['query' => $query], [
+            'HTTP_Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $response->assertDontSee('errors');
+
+        $result = $response->decodeResponseJson();
+
+        $this->assertTrue(!empty($result['data']['product']));
+
+        $response->assertJsonStructure([
+            'data' => [
+                'product' => [
+                    'id', 'title', 'status', 'published', 'short_description', 'price_cents', 'price_currency',
+                ],
+            ],
+        ]);
     }
 }

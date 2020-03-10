@@ -46,6 +46,13 @@
                             <li><a href="#">Blog</a></li>
                             <li><a href="#">Clearance</a></li>
                         </ul>
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button" uk-icon="icon: chevron-down">Currency</button>
+                            <div uk-dropdown>
+                                <ul id="available-currencies" class="uk-nav uk-dropdown-nav">
+                                </ul>
+                            </div>
+                        </div>
                         <div class="uk-navbar-item">
                             <a href="/cart" class="uk-button uk-button-default tm-button-default uk-icon cart-button" uk-icon="icon: cart">Cart </a>
                         </div>
@@ -55,7 +62,7 @@
         </div>
 
         <main>
-            <span id="loadingDiv" uk-spinner="ratio: 3" class="uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle"></span>
+            <span id="loadingDiv" uk-spinner="ratio: 3" class="uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle" style="z-index: 99999"></span>
             @yield('content')
         </main>
     </div>
