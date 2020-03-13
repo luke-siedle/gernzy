@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { Products } from './products';
 import { Cart } from './cart';
 import { Checkout } from './checkout';

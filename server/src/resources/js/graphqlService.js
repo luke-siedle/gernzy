@@ -1,13 +1,14 @@
 import $ from 'jquery';
 
 class GraphqlService {
-    constructor() {
+    constructor(config) {
         this.userToken = localStorage.getItem('userToken');
+        this.config = config;
     }
     async sendQuery(graphqlQuery, userToken = '') {
         try {
             const data = await $.ajax({
-                url: 'http://laravel-gernzy.test/graphql',
+                url: this.config.apiUrl,
                 contentType: 'application/json',
                 type: 'POST',
                 headers: {
