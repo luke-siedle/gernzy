@@ -1,112 +1,9 @@
-import $$1 from 'jquery';
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-    try {
-        var info = gen[key](arg);
-        var value = info.value;
-    } catch (error) {
-        reject(error);
-        return;
-    }
-
-    if (info.done) {
-        resolve(value);
-    } else {
-        Promise.resolve(value).then(_next, _throw);
-    }
-}
-
-function _asyncToGenerator(fn) {
-    return function() {
-        var self = this,
-            args = arguments;
-        return new Promise(function(resolve, reject) {
-            var gen = fn.apply(self, args);
-
-            function _next(value) {
-                asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'next', value);
-            }
-
-            function _throw(err) {
-                asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'throw', err);
-            }
-
-            _next(undefined);
-        });
-    };
-}
-
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError('Cannot call a class as a function');
-    }
-}
-
-function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ('value' in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-    }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true,
-        });
-    } else {
-        obj[key] = value;
-    }
-
-    return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly)
-            symbols = symbols.filter(function(sym) {
-                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-            });
-        keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-}
-
-function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-
-        if (i % 2) {
-            ownKeys(Object(source), true).forEach(function(key) {
-                _defineProperty(target, key, source[key]);
-            });
-        } else if (Object.getOwnPropertyDescriptors) {
-            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-            ownKeys(Object(source)).forEach(function(key) {
-                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-            });
-        }
-    }
-
-    return target;
-}
+import _defineProperty from '@babel/runtime/helpers/defineProperty';
+import $ from 'jquery';
+import _classCallCheck from '@babel/runtime/helpers/classCallCheck';
+import _createClass from '@babel/runtime/helpers/createClass';
+import _regeneratorRuntime from '@babel/runtime/regenerator';
+import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
 
 var productTemplate = function productTemplate(_ref) {
     var title = _ref.title,
@@ -172,7 +69,7 @@ var Products = /*#__PURE__*/ (function() {
                             productsArray = re.data.products.data;
                         } catch (error) {
                             console.log(re);
-                            $$1('.products-container').html(
+                            $('.products-container').html(
                                 errorTemplate$1(
                                     'There was an error loading products. <br> '.concat(re.errors[0].extensions.reason),
                                 ),
@@ -197,8 +94,8 @@ var Products = /*#__PURE__*/ (function() {
                                 buttonText: 'Add to cart',
                             };
                         });
-                        $$1('.products-container').html(mapFields.map(productTemplate).join(''));
-                        $$1('.add-to-cart').on('click', _this.addProductToCart.bind(_this));
+                        $('.products-container').html(mapFields.map(productTemplate).join(''));
+                        $('.add-to-cart').on('click', _this.addProductToCart.bind(_this));
                         return re;
                     })
                     .catch(function(error) {
@@ -220,7 +117,7 @@ var Products = /*#__PURE__*/ (function() {
         {
             key: 'addProductToCart',
             value: function addProductToCart(event) {
-                var productID = $$1(event.target).attr('data-id');
+                var productID = $(event.target).attr('data-id');
                 var userToken = localStorage.getItem('userToken');
                 var query = ' mutation {\n            addToCart(input: {\n                    items: [\n                        { product_id: '.concat(
                     productID,
@@ -231,9 +128,9 @@ var Products = /*#__PURE__*/ (function() {
                     .then(function(re) {
                         re.data.addToCart.cart.items.forEach(function(element) {
                             if (element.product_id == productID) {
-                                $$1(event.target)
+                                $(event.target)
                                     .parent()
-                                    .append($$1('<span class="uk-badge">'.concat(element.quantity, '</span>')));
+                                    .append($('<span class="uk-badge">'.concat(element.quantity, '</span>')));
                             }
                         });
                     })
@@ -246,6 +143,37 @@ var Products = /*#__PURE__*/ (function() {
 
     return Products;
 })();
+
+function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly)
+            symbols = symbols.filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+            });
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+
+function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i] != null ? arguments[i] : {};
+        if (i % 2) {
+            ownKeys(Object(source), true).forEach(function(key) {
+                _defineProperty(target, key, source[key]);
+            });
+        } else if (Object.getOwnPropertyDescriptors) {
+            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+            ownKeys(Object(source)).forEach(function(key) {
+                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+            });
+        }
+    }
+    return target;
+}
 
 var Cart = /*#__PURE__*/ (function() {
     function Cart(productObj, graphqlService) {
@@ -272,9 +200,9 @@ var Cart = /*#__PURE__*/ (function() {
                         if (items && items.length > 0) {
                             _this.lookupProductsInCart(re.data.me.cart.items);
                         } else {
-                            $$1('.cart-products').html(errorTemplate$1('No products in cart.')); // Disable checkout as there are no products in the cart
+                            $('.cart-products').html(errorTemplate$1('No products in cart.')); // Disable checkout as there are no products in the cart
 
-                            $$1('#cart-checkout').addClass('uk-disabled');
+                            $('#cart-checkout').addClass('uk-disabled');
                         }
 
                         return re;
@@ -288,10 +216,10 @@ var Cart = /*#__PURE__*/ (function() {
             key: 'lookupProductsInCart',
             value: (function() {
                 var _lookupProductsInCart = _asyncToGenerator(
-                    /*#__PURE__*/ regeneratorRuntime.mark(function _callee2(products) {
+                    /*#__PURE__*/ _regeneratorRuntime.mark(function _callee2(products) {
                         var _this2 = this;
 
-                        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
                             while (1) {
                                 switch ((_context2.prev = _context2.next)) {
                                     case 0:
@@ -300,11 +228,13 @@ var Cart = /*#__PURE__*/ (function() {
                                             products.map(
                                                 /*#__PURE__*/ (function() {
                                                     var _ref = _asyncToGenerator(
-                                                        /*#__PURE__*/ regeneratorRuntime.mark(function _callee(
+                                                        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee(
                                                             product,
                                                         ) {
                                                             var queriedProduct, quantityObje, mergedObj;
-                                                            return regeneratorRuntime.wrap(function _callee$(_context) {
+                                                            return _regeneratorRuntime.wrap(function _callee$(
+                                                                _context,
+                                                            ) {
                                                                 while (1) {
                                                                     switch ((_context.prev = _context.next)) {
                                                                         case 0:
@@ -318,7 +248,7 @@ var Cart = /*#__PURE__*/ (function() {
                                                                             quantityObje = {
                                                                                 quantity: product.quantity,
                                                                             };
-                                                                            mergedObj = _objectSpread2(
+                                                                            mergedObj = _objectSpread(
                                                                                 {},
                                                                                 queriedProduct.data.product,
                                                                                 {},
@@ -331,7 +261,8 @@ var Cart = /*#__PURE__*/ (function() {
                                                                             return _context.stop();
                                                                     }
                                                                 }
-                                                            }, _callee);
+                                                            },
+                                                            _callee);
                                                         }),
                                                     );
 
@@ -389,7 +320,7 @@ var Cart = /*#__PURE__*/ (function() {
                         buttonText: 'Remove',
                     };
                 });
-                $$1('.cart-products').html(mapFields.map(productTemplate).join(''));
+                $('.cart-products').html(mapFields.map(productTemplate).join(''));
             },
         },
     ]);
@@ -417,19 +348,19 @@ var Checkout = /*#__PURE__*/ (function() {
             value: function checkout() {
                 // This is to keep the object context of and access it's methods
                 var self = this;
-                $$1('#checkout-form').submit(function(event) {
+                $('#checkout-form').submit(function(event) {
                     event.preventDefault(); // get all the inputs into an array.
 
-                    var inputs = $$1('#checkout-form :input'); // not sure if you wanted this, but I thought I'd add it.
+                    var inputs = $('#checkout-form :input'); // not sure if you wanted this, but I thought I'd add it.
                     // get an associative array of just the values.
 
                     var values = {};
                     inputs.each(function() {
-                        values[this.name] = $$1(this).val();
+                        values[this.name] = $(this).val();
                     }); // Checkbox values
 
-                    values['use_shipping_for_billing'] = $$1('#use_shipping_for_billing').prop('checked');
-                    values['agree_to_terms'] = $$1('#agree_to_terms').prop('checked');
+                    values['use_shipping_for_billing'] = $('#use_shipping_for_billing').prop('checked');
+                    values['agree_to_terms'] = $('#agree_to_terms').prop('checked');
                     self.sendOfCheckoutInfo(values);
                 });
             },
@@ -469,7 +400,7 @@ var Checkout = /*#__PURE__*/ (function() {
                 return this.graphqlService
                     .sendQuery(query, userToken)
                     .then(function(re) {
-                        $$1('.checkout-container').html(successTemplate);
+                        $('.checkout-container').html(successTemplate);
                         return re;
                     })
                     .catch(function(error) {
@@ -492,7 +423,7 @@ var Checkout = /*#__PURE__*/ (function() {
                             currency = localStorage.getItem('default_currency');
                         }
 
-                        $$1('#checkout-cart-total').html(
+                        $('#checkout-cart-total').html(
                             ''.concat(re.data.me.cart.cart_total / 100, ' ').concat(currency),
                         );
                         return re;
@@ -524,8 +455,8 @@ var Checkout = /*#__PURE__*/ (function() {
                                 }
 
                                 re.forEach(function(element) {
-                                    $$1('#table-body-line-item').append(
-                                        $$1(
+                                    $('#table-body-line-item').append(
+                                        $(
                                             '<tr>\n                                    <td>'
                                                 .concat(
                                                     element.title,
@@ -542,7 +473,7 @@ var Checkout = /*#__PURE__*/ (function() {
                                 });
                             });
                         } else {
-                            $$1('.checkout-container').html(errorTemplate('No products in cart.'));
+                            $('.checkout-container').html(errorTemplate('No products in cart.'));
                         }
                     }
 
@@ -560,7 +491,7 @@ var GraphqlService = /*#__PURE__*/ (function() {
         _classCallCheck(this, GraphqlService);
 
         this.userToken = localStorage.getItem('userToken');
-        this.apiUrl = config.apiUrl;
+        this.config = config;
     }
 
     _createClass(GraphqlService, [
@@ -568,11 +499,11 @@ var GraphqlService = /*#__PURE__*/ (function() {
             key: 'sendQuery',
             value: (function() {
                 var _sendQuery = _asyncToGenerator(
-                    /*#__PURE__*/ regeneratorRuntime.mark(function _callee(graphqlQuery) {
+                    /*#__PURE__*/ _regeneratorRuntime.mark(function _callee(graphqlQuery) {
                         var userToken,
                             data,
                             _args = arguments;
-                        return regeneratorRuntime.wrap(
+                        return _regeneratorRuntime.wrap(
                             function _callee$(_context) {
                                 while (1) {
                                     switch ((_context.prev = _context.next)) {
@@ -580,8 +511,8 @@ var GraphqlService = /*#__PURE__*/ (function() {
                                             userToken = _args.length > 1 && _args[1] !== undefined ? _args[1] : '';
                                             _context.prev = 1;
                                             _context.next = 4;
-                                            return $$1.ajax({
-                                                url: this.apiUrl,
+                                            return $.ajax({
+                                                url: this.config.apiUrl,
                                                 contentType: 'application/json',
                                                 type: 'POST',
                                                 headers: {
@@ -719,13 +650,13 @@ var SessionService = /*#__PURE__*/ (function() {
                     '\n            query {\n                shopConfig {\n                    enabled_currencies\n                    default_currency\n                }\n            }\n        ';
                 return this.graphqlService.sendQuery(query, userToken).then(function(re) {
                     re.data.shopConfig.enabled_currencies.forEach(function(element) {
-                        $$1('#available-currencies').append(
+                        $('#available-currencies').append(
                             "<li><a href='#' class='available-currency' data-currency=\""
                                 .concat(element, '">')
                                 .concat(element, '</a></li>'),
                         );
                     });
-                    $$1('.available-currency').on('click', _this.changeUserCurrency.bind(_this));
+                    $('.available-currency').on('click', _this.changeUserCurrency.bind(_this));
                     localStorage.setItem('default_currency', re.data.shopConfig.default_currency);
                 });
             },
@@ -752,7 +683,7 @@ var SessionService = /*#__PURE__*/ (function() {
             key: 'changeUserCurrency',
             value: function changeUserCurrency(event) {
                 var userToken = localStorage.getItem('userToken');
-                var currrency = $$1(event.target).attr('data-currency');
+                var currrency = $(event.target).attr('data-currency');
                 var query = '\n            mutation {\n                setSessionCurrency(input: {\n                    currency: "'.concat(
                     currrency,
                     '"\n                }){\n                    currency\n                }\n            }\n        ',
@@ -798,11 +729,41 @@ var SessionService = /*#__PURE__*/ (function() {
     return SessionService;
 })();
 
+function ownKeys$1(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly)
+            symbols = symbols.filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+            });
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+
+function _objectSpread$1(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i] != null ? arguments[i] : {};
+        if (i % 2) {
+            ownKeys$1(Object(source), true).forEach(function(key) {
+                _defineProperty(target, key, source[key]);
+            });
+        } else if (Object.getOwnPropertyDescriptors) {
+            Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+            ownKeys$1(Object(source)).forEach(function(key) {
+                Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+            });
+        }
+    }
+    return target;
+}
 var gernzy = {
     init: function init() {
         var userConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-        var config = _objectSpread2(
+        var config = _objectSpread$1(
             {},
             {
                 apiUrl: 'http://laravel-gernzy.test/graphql',
