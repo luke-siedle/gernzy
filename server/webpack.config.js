@@ -9,6 +9,17 @@ module.exports = {
     output: {
         filename: 'gernzy.js',
         path: path.resolve(__dirname, './src/resources/js/dist'),
+        libraryTarget: 'umd',
+        library: 'Gernzy',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js?$/,
+                exclude: /(node_modules)/,
+                use: 'babel-loader',
+            },
+        ],
     },
     plugins: [
         new FileManagerPlugin({
