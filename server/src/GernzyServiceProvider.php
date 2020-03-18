@@ -98,6 +98,9 @@ class GernzyServiceProvider extends ServiceProvider
 
         // Make cache config publishment optional by merging the config from the package.
         $this->mergeConfigFrom(__DIR__ . '/config/currency.php', 'currency');
+
+        // Make cache config publishment optional by merging the config from the package.
+        $this->mergeConfigFrom(__DIR__ . '/config/events.php', 'events');
     }
 
     /**
