@@ -14,6 +14,31 @@ class GernzyHookSystemTest extends TestCase
 {
     use WithFaker;
 
+    public $checkoutData = [
+        "name" => "Luke",
+        "email" => "cart@example.com",
+        "telephone" => "082456748",
+        "mobile" => "08357684758",
+        "billing_address" => [
+            "line_1" => "1 London Way",
+            "line_2" => "",
+            "state" => "London",
+            "postcode" => "SW1A 1AA",
+            "country" => "UK"
+        ],
+        "shipping_address" => [
+            "line_1" => "1 London Way",
+            "line_2" => "",
+            "state" => "London",
+            "postcode" => "SW1A 1AA",
+            "country" => "UK"
+        ],
+        "use_shipping_for_billing" => true,
+        "payment_method" => "",
+        "agree_to_terms" => true,
+        "notes" => ""
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -52,37 +77,11 @@ class GernzyHookSystemTest extends TestCase
 
     public function testEventServiceWithData()
     {
-        // Some arbitrary data used as an example of what a third party may need, and then change
-        $checkoutData = [
-            "name" => "Luke",
-            "email" => "cart@example.com",
-            "telephone" => "082456748",
-            "mobile" => "08357684758",
-            "billing_address" => [
-                "line_1" => "1 London Way",
-                "line_2" => "",
-                "state" => "London",
-                "postcode" => "SW1A 1AA",
-                "country" => "UK"
-            ],
-            "shipping_address" => [
-                "line_1" => "1 London Way",
-                "line_2" => "",
-                "state" => "London",
-                "postcode" => "SW1A 1AA",
-                "country" => "UK"
-            ],
-            "use_shipping_for_billing" => true,
-            "payment_method" => "",
-            "agree_to_terms" => true,
-            "notes" => ""
-        ];
-
         // Set actions for event at run time, for testing purposes
         config(['events.' . BeforeCheckout::class => [StripeBeforeCheckout::class, FooBeforeCheckout::class, BarBeforeCheckout::class]]);
 
         // Trigger the event through EventService
-        $eventService = EventService::triggerEvent(BeforeCheckout::class, $checkoutData);
+        $eventService = EventService::triggerEvent(BeforeCheckout::class, $this->checkoutData);
 
         // Preventing defaults
         if (!$eventService->isEventPreventDefault()) {
@@ -102,5 +101,20 @@ class GernzyHookSystemTest extends TestCase
         $this->assertArrayHasKey('coupon', $historyOfAllModifiedData[0]['data'][0]);
         $this->assertArrayHasKey('user_id_foo', $historyOfAllModifiedData[1]['data'][1]);
         $this->assertArrayHasKey('token_bar', $historyOfAllModifiedData[2]['data'][2]);
+    }
+
+
+    public function testExamplePackageProvider()
+    {
+        // Trigger the event through EventService
+        $eventService = EventService::triggerEvent(BeforeCheckout::class, $this->checkoutData);
+
+        // Check that the last element of the array contains modified data from each action that associated
+        $lastModifiedData = $eventService->getLastModifiedData();
+        $this->assertNotEmpty($lastModifiedData);
+
+        // Check that the 'history' array contains modified data  from each action that associated
+        $historyOfAllModifiedData = $eventService->getAllModifiedData();
+        $this->assertNotEmpty($historyOfAllModifiedData);
     }
 }

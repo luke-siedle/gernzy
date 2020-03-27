@@ -6,14 +6,12 @@ use Gernzy\Server\Exceptions\GernzyException;
 
 class ActionClass
 {
-    protected $meta;
+    protected $meta = [];
     protected $dataModified = [];
     protected $dataOriginal = [];
 
     public function __construct($dataOriginal = null)
     {
-        $this->meta = [];
-        $this->dataModified = [];
         $this->dataOriginal = $dataOriginal;
         $this->eventPreventDefault = false;
     }
@@ -67,7 +65,12 @@ class ActionClass
     public function getLastModifiedData()
     {
         $data = end($this->dataModified);
-        return $data['data'];
+
+        if (isset($data['data'])) {
+            return $data['data'];
+        } else {
+            return $this->getAllModifiedData();
+        }
     }
 
     /**
