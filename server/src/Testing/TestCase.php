@@ -37,6 +37,12 @@ abstract class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+        $app['config']->set([
+            'auth.providers.users' => [
+                'driver' => 'eloquent',
+                'model' => \Gernzy\Server\Models\User::class,
+            ],
+        ]);
 
         $app->useEnvironmentPath(__DIR__ . '/..');
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
